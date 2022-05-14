@@ -1,28 +1,110 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TextInput, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import React from "react";
+import * as NavigationBar from "expo-navigation-bar";
+import {
+  createStackNavigator,
+  StackViewTransitionConfigs,
+} from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import Home from "./screens/Home/Home";
-import Settings from "./screens/Settings/Settings";
+
+import CustomTabBar from "./components/ui/CustomTabBar/CustomTabBar";
+import "react-native-gesture-handler";
+import Mypet from "./screens/MyPet/MyPet";
+import Activities from "./screens/Activities/Activities";
+import Health from "./screens/Health/Health";
+import Menu from "./screens/Menu/Menu";
+
+import Welcome from "./screens/Start/Welcome/Welcome";
+import PetSpicie from "./screens/Start/PetSpicie/PetSpicie";
+import PetInfoFirst from "./screens/Start/PetInfo/PetInfoFirst";
+import PetInfoSecond from "./screens/Start/PetInfo/PetInfoSecond";
 
 const Tab = createBottomTabNavigator();
+const StartingStack = createStackNavigator();
 
 export default function App() {
+  if (Platform.OS === "android") {
+    NavigationBar.setBackgroundColorAsync("#FFFFFF");
+  }
+
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Settings" component={Settings} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <StartingStack.Navigator initialRouteName="Welcome">
+          <StartingStack.Screen
+            name="Welcome"
+            options={{
+              headerShown: false,
+            }}
+            component={Welcome}
+          />
+          <StartingStack.Screen
+            name="PetSpicie"
+            options={{
+              headerStyle: {
+                shadowColor: "transparent", // this covers iOS
+                elevation: 0, // this covers Android
+              },
+              headerTitleAlign: "center",
+              title: "Add  Pet",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
+            }}
+            component={PetSpicie}
+          />
+          <StartingStack.Screen
+            name="PetInfoFirst"
+            options={{
+              headerStyle: {
+                shadowColor: "transparent", // this covers iOS
+                elevation: 0, // this covers Android
+              },
+              headerTitleAlign: "center",
+              title: "Add  Pet",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
+            }}
+            component={PetInfoFirst}
+          />
+          <StartingStack.Screen
+            name="PetInfoSecond"
+            options={{
+              headerStyle: {
+                shadowColor: "transparent", // this covers iOS
+                elevation: 0, // this covers Android
+              },
+              headerTitleAlign: "center",
+              title: "Add  Pet",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
+            }}
+            component={PetInfoSecond}
+          />
+        </StartingStack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
+
+  // return (
+  //   <SafeAreaProvider>
+  //     <NavigationContainer>
+  //       <Tab.Navigator tabBar={(props) => <CustomTabBar {...props} />}>
+  //         <Tab.Screen name="My Pet" component={Mypet} />
+  //         <Tab.Screen name="Activities" component={Activities} />
+  //         <Tab.Screen name="Health" component={Health} />
+  //         <Tab.Screen name="Menu" component={Menu} />
+  //       </Tab.Navigator>
+  //     </NavigationContainer>
+  //   </SafeAreaProvider>
+  // );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "start",
   },
