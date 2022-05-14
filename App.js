@@ -21,6 +21,7 @@ import Welcome from "./screens/Start/Welcome/Welcome";
 import PetSpicie from "./screens/Start/PetSpicie/PetSpicie";
 import PetInfoFirst from "./screens/Start/PetInfo/PetInfoFirst";
 import PetInfoSecond from "./screens/Start/PetInfo/PetInfoSecond";
+import Owner from "./screens/Start/Owner/Owner";
 
 const Tab = createBottomTabNavigator();
 const StartingStack = createStackNavigator();
@@ -30,76 +31,101 @@ export default function App() {
     NavigationBar.setBackgroundColorAsync("#FFFFFF");
   }
 
-  return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <StartingStack.Navigator initialRouteName="Welcome">
-          <StartingStack.Screen
-            name="Welcome"
-            options={{
-              headerShown: false,
-            }}
-            component={Welcome}
-          />
-          <StartingStack.Screen
-            name="PetSpicie"
-            options={{
-              headerStyle: {
-                shadowColor: "transparent", // this covers iOS
-                elevation: 0, // this covers Android
-              },
-              headerTitleAlign: "center",
-              title: "Add  Pet",
-              headerBackTitleVisible: false,
-              headerTintColor: "black",
-            }}
-            component={PetSpicie}
-          />
-          <StartingStack.Screen
-            name="PetInfoFirst"
-            options={{
-              headerStyle: {
-                shadowColor: "transparent", // this covers iOS
-                elevation: 0, // this covers Android
-              },
-              headerTitleAlign: "center",
-              title: "Add  Pet",
-              headerBackTitleVisible: false,
-              headerTintColor: "black",
-            }}
-            component={PetInfoFirst}
-          />
-          <StartingStack.Screen
-            name="PetInfoSecond"
-            options={{
-              headerStyle: {
-                shadowColor: "transparent", // this covers iOS
-                elevation: 0, // this covers Android
-              },
-              headerTitleAlign: "center",
-              title: "Add  Pet",
-              headerBackTitleVisible: false,
-              headerTintColor: "black",
-            }}
-            component={PetInfoSecond}
-          />
-        </StartingStack.Navigator>
-      </NavigationContainer>
-    </SafeAreaProvider>
-  );
+  const forFade = ({ current }) => ({
+    cardStyle: {
+      opacity: current.progress,
+    },
+  });
 
   // return (
   //   <SafeAreaProvider>
   //     <NavigationContainer>
-  //       <Tab.Navigator tabBar={(props) => <CustomTabBar {...props} />}>
-  //         <Tab.Screen name="My Pet" component={Mypet} />
-  //         <Tab.Screen name="Activities" component={Activities} />
-  //         <Tab.Screen name="Health" component={Health} />
-  //         <Tab.Screen name="Menu" component={Menu} />
-  //       </Tab.Navigator>
+  //       <StartingStack.Navigator initialRouteName="Welcome">
+  //         <StartingStack.Screen
+  //           name="Welcome"
+  //           options={{
+  //             headerShown: false,
+  //           }}
+  //           component={Welcome}
+  //         />
+  //         <StartingStack.Screen
+  //           name="PetSpicie"
+  //           options={{
+  //             cardStyleInterpolator: forFade,
+  //             headerStyle: {
+  //               shadowColor: "transparent", // this covers iOS
+  //               elevation: 0, // this covers Android
+  //             },
+  //             headerTitleAlign: "center",
+  //             title: "Add Pet",
+  //             headerBackTitleVisible: false,
+  //             headerTintColor: "black",
+  //           }}
+  //           component={PetSpicie}
+  //         />
+  //         <StartingStack.Screen
+  //           name="PetInfoFirst"
+  //           options={{
+  //             cardStyleInterpolator: forFade,
+  //             headerStyle: {
+  //               shadowColor: "transparent", // this covers iOS
+  //               elevation: 0, // this covers Android
+  //             },
+  //             headerTitleAlign: "center",
+  //             title: "Add Pet",
+  //             headerBackTitleVisible: false,
+  //             headerTintColor: "black",
+  //           }}
+  //           component={PetInfoFirst}
+  //         />
+  //         <StartingStack.Screen
+  //           name="PetInfoSecond"
+  //           options={{
+  //             cardStyleInterpolator: forFade,
+  //             headerStyle: {
+  //               shadowColor: "transparent", // this covers iOS
+  //               elevation: 0, // this covers Android
+  //             },
+  //             headerTitleAlign: "center",
+  //             title: "Add Pet",
+  //             headerBackTitleVisible: false,
+  //             headerTintColor: "black",
+  //           }}
+  //           component={PetInfoSecond}
+  //         />
+  //         <StartingStack.Screen
+  //           name="Owner"
+  //           options={{
+  //             headerStyle: {
+  //               shadowColor: "transparent", // this covers iOS
+  //               elevation: 0, // this covers Android
+  //               backgroundColor: "#FEE8DC",
+  //               borderBottomWidth: 0,
+  //             },
+  //             headerTitleAlign: "center",
+  //             title: "Owner",
+  //             headerBackTitleVisible: false,
+  //             headerTintColor: "black",
+  //           }}
+  //           component={Owner}
+  //         />
+  //       </StartingStack.Navigator>
   //     </NavigationContainer>
   //   </SafeAreaProvider>
   // );
+
+  return (
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Tab.Navigator tabBar={(props) => <CustomTabBar {...props} />}>
+          <Tab.Screen name="My Pet" component={Mypet} />
+          <Tab.Screen name="Activities" component={Activities} />
+          <Tab.Screen name="Health" component={Health} />
+          <Tab.Screen name="Menu" component={Menu} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
+  );
 }
 
 const styles = StyleSheet.create({
