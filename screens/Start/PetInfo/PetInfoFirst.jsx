@@ -2,11 +2,12 @@ import {
   StyleSheet,
   Text,
   View,
+  Pressable,
   Keyboard,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Level from "../../../components/level/Level";
 import Input from "../../../components/ui/Input/Input";
 import Button from "../../../components/ui/Button/Button";
@@ -15,6 +16,8 @@ import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const PetInfoFirst = ({ navigation }) => {
+
+
   const petInfoSecondHandler = () => {
     navigation.navigate("PetInfoSecond");
   };
@@ -27,7 +30,8 @@ const PetInfoFirst = ({ navigation }) => {
       <Text style={styles.headerText}>Fill Your Pet Info</Text>
       <Photo />
       <Input placeholder="Pet Name" type="default" label="Pet Name" />
-      <Input placeholder="Birth Date" type="numeric" label="Birth Date" />
+      {/* <Input placeholder="Birth Date" type="numeric" label="Birth Date" /> */}
+      <DatePickerInput />
       <View style={styles.buttonContainer}>
         <Button text="Next" onPress={petInfoSecondHandler} />
       </View>
@@ -48,6 +52,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "500",
     marginTop: 20,
+  },
+  buttonDateContainer: {
+    widht: "80%",
+    paddingHorizontal: 20,
   },
   buttonContainer: {
     widht: "100%",

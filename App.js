@@ -21,14 +21,12 @@ import {
   CustomMainHeaderRight,
 } from "./components/ui/CustomHeader/CustomMainHeader";
 
-
 import Welcome from "./screens/Start/Welcome/Welcome";
 import PetSpicie from "./screens/Start/PetSpicie/PetSpicie";
 import PetInfoFirst from "./screens/Start/PetInfo/PetInfoFirst";
 import PetInfoSecond from "./screens/Start/PetInfo/PetInfoSecond";
 import Owner from "./screens/Start/Owner/Owner";
 import IconButton from "./components/ui/IconButton/IconButton";
-
 
 const Tab = createBottomTabNavigator();
 const StartingStack = createStackNavigator();
@@ -127,11 +125,19 @@ export default function App() {
     <SafeAreaProvider>
       <StatusBar style="dark" />
       <NavigationContainer>
-        <Tab.Navigator tabBar={(props) => <CustomTabBar {...props} />}>
+        <Tab.Navigator
+          tabBar={(props) => <CustomTabBar {...props} />}
+          screenOptions={{
+            tabBarHideOnKeyboard: false,
+            style: {
+              position: "absolute",
+            },
+          }}
+        >
           <Tab.Screen
             name="My Pet"
             component={Mypet}
-            options={{
+            options={({ navigation }) => ({
               headerStyle: {
                 shadowColor: "transparent", // this covers iOS
                 elevation: 0, // this covers Android
@@ -141,8 +147,18 @@ export default function App() {
                 display: "none",
               },
               headerLeft: () => <CustomMainHeaderLeft isNameVisible={true} />,
-              headerRight: () => <CustomMainHeaderRight />,
-            }}
+              headerRight: () => {
+                const pressHandler = () => {
+                  navigation.navigate("Activities", {
+                    screen: "NewActivity",
+                    // params: { date: new Date() },
+                  });
+                };
+                return (
+                  <CustomMainHeaderRight dateIconpressHandler={pressHandler} />
+                );
+              },
+            })}
           />
           <Tab.Screen
             name="Activities"

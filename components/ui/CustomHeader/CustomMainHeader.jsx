@@ -18,7 +18,7 @@ export const CustomMainHeaderLeft = ({ isNameVisible }) => {
   );
 };
 
-export const CustomMainHeaderRight = () => {
+export const CustomMainHeaderRight = ({ dateIconpressHandler }) => {
   const date = new Date();
   const day = date.getDate();
   const dayShort = date
@@ -28,7 +28,11 @@ export const CustomMainHeaderRight = () => {
     .split(" ")[0];
   return (
     <View style={styles.rightContainer}>
-      <TouchableOpacity style={styles.rightDateContainer} activeOpacity={0.7}>
+      <TouchableOpacity
+        style={styles.rightDateContainer}
+        activeOpacity={0.7}
+        onPress={dateIconpressHandler}
+      >
         <Text style={styles.date}>{day}</Text>
         <Text style={styles.day}>{dayShort}</Text>
       </TouchableOpacity>

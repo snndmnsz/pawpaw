@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import React from "react";
 
-const Input = ({ placeholder, type, label }) => {
+const Input = ({ placeholder, type, label, showLabel = true }) => {
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.inputText}>{label}</Text>
+      {showLabel && <Text style={styles.inputText}>{label}</Text>}
       <TextInput
         style={styles.input}
         placeholder={placeholder}
