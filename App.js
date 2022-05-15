@@ -17,6 +17,11 @@ import Activities from "./screens/Activities/Activities";
 import Health from "./screens/Health/Health";
 import Menu from "./screens/Menu/Menu";
 
+import {
+  CustomMainHeaderLeft,
+  CustomMainHeaderRight,
+} from "./components/ui/CustomHeader/CustomMainHeader";
+
 import Welcome from "./screens/Start/Welcome/Welcome";
 import PetSpicie from "./screens/Start/PetSpicie/PetSpicie";
 import PetInfoFirst from "./screens/Start/PetInfo/PetInfoFirst";
@@ -118,7 +123,22 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Tab.Navigator tabBar={(props) => <CustomTabBar {...props} />}>
-          <Tab.Screen name="My Pet" component={Mypet} />
+          <Tab.Screen
+            name="My Pet"
+            component={Mypet}
+            options={{
+              headerStyle: {
+                shadowColor: "transparent", // this covers iOS
+                elevation: 0, // this covers Android
+                height: 120,
+              },
+              headerTitleStyle: {
+                display: "none",
+              },
+              headerLeft: () => <CustomMainHeaderLeft />,
+              headerRight: () => <CustomMainHeaderRight />,
+            }}
+          />
           <Tab.Screen name="Activities" component={Activities} />
           <Tab.Screen name="Health" component={Health} />
           <Tab.Screen name="Menu" component={Menu} />

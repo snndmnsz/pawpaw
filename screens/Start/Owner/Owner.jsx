@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FEE8DC",
     position: "absolute",
     top: -320,
-    left: -158,
+    left: -160,
     margin: "auto",
     zIndex: -1,
   },
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   image: {
     width: 300,
     height: 345,
-    left: 40,
+    left: 30,
   },
   buttonContainer: {
     widht: "100%",

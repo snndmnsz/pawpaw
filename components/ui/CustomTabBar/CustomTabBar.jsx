@@ -41,8 +41,9 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
         };
 
         return (
-          <Pressable
+          <TouchableOpacity
             key={index}
+            activeOpacity={0.7}
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
@@ -88,7 +89,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                 {label}
               </Text>
             )}
-          </Pressable>
+          </TouchableOpacity>
         );
       })}
     </View>

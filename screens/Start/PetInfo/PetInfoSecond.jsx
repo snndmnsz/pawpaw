@@ -31,7 +31,7 @@ const PetInfoSecond = ({ navigation }) => {
           <Text style={styles.maleText}>Male</Text>
         </Pressable>
         <Pressable style={styles.female}>
-          <Text style={styles.femaleText}>Male</Text>
+          <Text style={styles.femaleText}>Female</Text>
         </Pressable>
       </View>
       <Input placeholder="Breed" type="default" label="Breed" />
