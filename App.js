@@ -13,7 +13,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import CustomTabBar from "./components/ui/CustomTabBar/CustomTabBar";
 import "react-native-gesture-handler";
 import Mypet from "./screens/MyPet/MyPet";
-import Activities from "./screens/Activities/Activities";
 import Health from "./screens/Health/Health";
 import Menu from "./screens/Menu/Menu";
 
@@ -22,14 +21,19 @@ import {
   CustomMainHeaderRight,
 } from "./components/ui/CustomHeader/CustomMainHeader";
 
+
 import Welcome from "./screens/Start/Welcome/Welcome";
 import PetSpicie from "./screens/Start/PetSpicie/PetSpicie";
 import PetInfoFirst from "./screens/Start/PetInfo/PetInfoFirst";
 import PetInfoSecond from "./screens/Start/PetInfo/PetInfoSecond";
 import Owner from "./screens/Start/Owner/Owner";
+import IconButton from "./components/ui/IconButton/IconButton";
+
 
 const Tab = createBottomTabNavigator();
 const StartingStack = createStackNavigator();
+
+import ActivitiesNavigation from "./navigations/ActivitiesNavigation";
 
 export default function App() {
   if (Platform.OS === "android") {
@@ -121,6 +125,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
+      <StatusBar style="dark" />
       <NavigationContainer>
         <Tab.Navigator tabBar={(props) => <CustomTabBar {...props} />}>
           <Tab.Screen
@@ -135,11 +140,17 @@ export default function App() {
               headerTitleStyle: {
                 display: "none",
               },
-              headerLeft: () => <CustomMainHeaderLeft />,
+              headerLeft: () => <CustomMainHeaderLeft isNameVisible={true} />,
               headerRight: () => <CustomMainHeaderRight />,
             }}
           />
-          <Tab.Screen name="Activities" component={Activities} />
+          <Tab.Screen
+            name="Activities"
+            options={{
+              headerShown: false,
+            }}
+            component={ActivitiesNavigation}
+          />
           <Tab.Screen name="Health" component={Health} />
           <Tab.Screen name="Menu" component={Menu} />
         </Tab.Navigator>

@@ -2,16 +2,18 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import dog from "../../../assets/images/dog-ex.png";
 
-export const CustomMainHeaderLeft = () => {
+export const CustomMainHeaderLeft = ({ isNameVisible }) => {
   return (
     <View style={styles.leftContainer}>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={dog} />
       </View>
-      <View style={styles.leftTextContainer}>
-        <Text style={styles.spicie}>German Shepherd</Text>
-        <Text style={styles.name}>Maximus</Text>
-      </View>
+      {isNameVisible && (
+        <View style={styles.leftTextContainer}>
+          <Text style={styles.spicie}>German Shepherd</Text>
+          <Text style={styles.name}>Maximus</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -65,10 +67,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    left: Platform.OS === "android" ? 5 : 25,
   },
   imageContainer: {
     // left: 20,
-    left: Platform.OS === "android" ? 5 : 25,
     width: 70,
     height: "100%",
     justifyContent: "center",
@@ -78,11 +80,11 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30 / 2,
-    borderColor: "#FFFFFF",
+    borderColor: "#EAEFF3",
     borderWidth: 2,
   },
   leftTextContainer: {
-    left: Platform.OS === "android" ? 5 : 25,
+    // left: Platform.OS === "android" ? 5 : 25,
     height: "50%",
     justifyContent: "space-evenly",
     alignItems: "flex-start",

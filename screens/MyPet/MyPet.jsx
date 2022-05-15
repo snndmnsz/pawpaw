@@ -3,7 +3,7 @@ import React from "react";
 import StatsContainer from "../../components/MainStats/StatsContainer/StatsContainer";
 import UpcomingEvents from "../../components/UpcomingEvents/UpcomingEvents";
 import ActivityRing from "../../components/ui/charts/ActivityRings/ActivityRing";
-
+import CustomBarChart from "../../components/ui/charts/BarChart/CustomBarChart";
 const MyPet = ({ navigation }) => {
   return (
     <ScrollView
