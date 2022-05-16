@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View, Dimensions } from "react-native";
 import React from "react";
-import { BarChart } from "react-native-chart-kit";
+import { LineChart } from "react-native-chart-kit";
 
-const CustomBarChart = ({title}) => {
+const CustomLineChart = ({title}) => {
   const screenWidth = Dimensions.get("window").width * 0.8;
 
   const data = {
@@ -10,14 +10,16 @@ const CustomBarChart = ({title}) => {
     datasets: [
       {
         data: [20, 45, 28, 80, 99, 43],
-        colors: [
-          (opacity = 1) => `#1DA8B1`,
-          (opacity = 1) => `#FC3090`,
-          (opacity = 1) => `#F66816`,
-          (opacity = 1) => `#2871C8`,
-          (opacity = 1) => `#67C5A3`,
-          (opacity = 1) => `#707BFB`,
-        ],
+        color: (opacity = 1) => `#FD5B71`, // optional
+        strokeWidth: 2, // optional
+        // colors: [
+        //   (opacity = 1) => `#1DA8B1`,
+        //   (opacity = 1) => `#FC3090`,
+        //   (opacity = 1) => `#F66816`,
+        //   (opacity = 1) => `#2871C8`,
+        //   (opacity = 1) => `#67C5A3`,
+        //   (opacity = 1) => `#707BFB`,
+        // ],
       },
     ],
   };
@@ -25,11 +27,13 @@ const CustomBarChart = ({title}) => {
   return (
     <View style={styles.barContainer}>
       <View style={styles.textContainer}>
-        <Text style={styles.headerText}>{title}</Text>
+        <Text style={styles.headerText}>Vaccine History Stats</Text>
         <Text style={styles.headerSmallText}>Last 6 Months</Text>
       </View>
-      <BarChart
+      <LineChart
         // style={graphStyle}
+        bezier={true}
+        bezierCurve={1}
         data={data}
         width={screenWidth}
         height={168}
@@ -44,29 +48,30 @@ const CustomBarChart = ({title}) => {
           strokeWidth: 2, // optional, default 3
           barPercentage: 0.5,
           useShadowColorFromDataset: false, // optional
-          fillShadowGradientFrom: "#8991FB",
-          fillShadowGradientTo: "#8991FB",
-          fillShadowGradientFromOpacity: 1,
+          fillShadowGradientFrom: "#FD5B71",
+          fillShadowGradientTo: "#FFF1F3",
+          fillShadowGradientFromOpacity: 0.8,
           fillShadowGradientFromOffset: 1,
-          fillShadowGradientToOffset: 1,
+          fillShadowGradientToOffset: 0.1,
           barRadius: 5,
         }}
-        withHorizontalLabels={false}
-        withInnerLines={false}
+        withHorizontalLabels={true}
+        withInnerLines={true}
         showBarTops={false}
         flatColor={true}
         fromZero={true}
         withCustomBarColorFromData={true}
         showValuesOnTopOfBars={true}
         style={{
-          marginLeft: -55,
+          marginLeft: -20,
+          marginTop: 10,
         }}
       />
     </View>
   );
 };
 
-export default CustomBarChart;
+export default CustomLineChart;
 
 const styles = StyleSheet.create({
   barContainer: {

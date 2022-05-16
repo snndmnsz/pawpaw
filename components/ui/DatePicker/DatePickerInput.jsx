@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import Button from "../Button/Button";
 import DatePicker from "react-native-modern-datepicker";
 
-const DatePickerInput = () => {
+const DatePickerInput = ({ showLabel = true, buttonText , customLabel }) => {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toLocaleDateString()
   );
@@ -19,7 +19,7 @@ const DatePickerInput = () => {
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <Text style={styles.labelText}>Birth Date</Text>
+        {showLabel && <Text style={styles.labelText}>{customLabel ? customLabel : "Birth Date"}</Text>}
         <Pressable style={styles.input} onPress={() => setModalVisible(true)}>
           <Text style={styles.inputText}>{selectedDate}</Text>
           <Icons name="calendar-outline" size={24} color="#7D7D7D" />
@@ -45,7 +45,9 @@ const DatePickerInput = () => {
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(!modalVisible)}
             >
-              <Text style={styles.textStyle}>Pick Birth Date</Text>
+              <Text style={styles.textStyle}>
+                {buttonText ? buttonText : "Pick Birth Date"}
+              </Text>
             </Pressable>
           </View>
         </View>
@@ -58,7 +60,7 @@ export default DatePickerInput;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    marginTop: 30,
+    marginTop: 15,
     marginHorizontal: 20,
     flexDirection: "column",
   },

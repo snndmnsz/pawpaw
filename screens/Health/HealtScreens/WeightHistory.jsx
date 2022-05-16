@@ -1,7 +1,11 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import CustomBarChart from "../../../components/ui/charts/BarChart/CustomBarChart";
 import Icons from "react-native-vector-icons/Ionicons";
+import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
+import Input from "../../../components/ui/Input/Input";
+import Button from "../../../components/ui/Button/Button";
+import { useIsFocused } from "@react-navigation/native";
 
 const DUMMY_DATA = [
   {
@@ -56,13 +60,25 @@ const DUMMY_DATA = [
 
 const WeightHistory = ({ route, navigation }) => {
   const isEdit = route.params?.edit;
+  const addButton = route.params?.addButton;
+  //console.log(isEdit);
+
   return (
     <View style={styles.weightContainer}>
       <Text style={styles.headerText}>Pet Weight History</Text>
-      <CustomBarChart />
+      <CustomBarChart title="Weight Stats" />
       {isEdit ? (
         <View style={styles.editContainer}>
-          <Text style={styles.editText}>Edit</Text>
+          <DatePickerInput showLabel={false} buttonText="Pick Date and Hour" />
+          <Input
+            placeholder="Weight (kg)"
+            type="numeric"
+            label="Weight (kg)"
+            showLabel={false}
+          />
+          <View style={styles.buttonContainer}>
+            <Button text="Add Weight" />
+          </View>
         </View>
       ) : (
         <FlatList
@@ -163,5 +179,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#828282",
     fontWeight: "500",
+  },
+  buttonContainer: {
+    marginTop: 35,
   },
 });

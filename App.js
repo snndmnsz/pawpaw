@@ -175,7 +175,32 @@ export default function App() {
             }}
             component={HealtNavigations}
           />
-          <Tab.Screen name="Menu" component={Menu} />
+          <Tab.Screen
+            name="Menu"
+            component={Menu}
+            options={({ navigation }) => ({
+              headerStyle: {
+                shadowColor: "transparent", // this covers iOS
+                elevation: 0, // this covers Android
+                height: 120,
+              },
+              headerTitleStyle: {
+                display: "none",
+              },
+              headerLeft: () => <CustomMainHeaderLeft isNameVisible={true} />,
+              headerRight: () => {
+                const pressHandler = () => {
+                  navigation.navigate("Activities", {
+                    screen: "NewActivity",
+                    // params: { date: new Date() },
+                  });
+                };
+                return (
+                  <CustomMainHeaderRight dateIconpressHandler={pressHandler} />
+                );
+              },
+            })}
+          />
         </Tab.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

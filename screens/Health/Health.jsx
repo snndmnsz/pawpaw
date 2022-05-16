@@ -66,14 +66,13 @@ const Health = ({ navigation }) => {
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => {
-              // if (item.id === 1) {
-              //   navigation.navigate("VaccineHistory");
-              // } else if (item.id === 2) {
-              //   navigation.navigate("MedicalHistory");
-              // } else if (item.id === 3) {
-              //   navigation.navigate("VetAppointments");
-              // } else
-              if (item.id === 4) {
+              if (item.id === 1) {
+                navigation.navigate("VaccineHistory");
+              } else if (item.id === 2) {
+                navigation.navigate("MedicalHistory");
+              } else if (item.id === 3) {
+                navigation.navigate("VetAppoitments");
+              } else if (item.id === 4) {
                 navigation.navigate("WeightHistory");
               }
             }}

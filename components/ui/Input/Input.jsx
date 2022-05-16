@@ -21,7 +21,7 @@ export default Input;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    marginTop: 30,
+    marginTop: 15,
     marginHorizontal: 20,
     flexDirection: "column",
   },

@@ -4,6 +4,8 @@ import StatsContainer from "../../components/MainStats/StatsContainer/StatsConta
 import UpcomingEvents from "../../components/UpcomingEvents/UpcomingEvents";
 import ActivityRing from "../../components/ui/charts/ActivityRings/ActivityRing";
 import CustomBarChart from "../../components/ui/charts/BarChart/CustomBarChart";
+import CustomLineChart from "../../components/ui/charts/LineChart/CustomLineChart";
+import CustomStackedBarChart from "../../components/ui/charts/StackedBarChart/CustomStackedBarChart";
 const MyPet = ({ navigation }) => {
   return (
     <ScrollView
@@ -16,6 +18,8 @@ const MyPet = ({ navigation }) => {
       <UpcomingEvents />
       <ActivityRing />
       <CustomBarChart />
+      <CustomLineChart />
+      <CustomStackedBarChart />
     </ScrollView>
   );
 };
