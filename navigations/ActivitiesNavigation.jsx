@@ -77,7 +77,6 @@ const ActivitiesNavigation = () => {
           headerTitleAlign: "center",
           headerBackTitleVisible: false,
           title: "Add Food Activity",
-          headerBackTitleVisible: false,
           headerTintColor: "black",
         }}
       />

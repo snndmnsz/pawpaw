@@ -8,6 +8,7 @@ import {
 } from "react-native-calendars";
 import Icons from "react-native-vector-icons/Ionicons";
 import { Platform } from "react-native-web";
+import { useIsFocused } from "@react-navigation/native";
 
 LocaleConfig.locales["en"] = {
   monthNames: [
@@ -56,11 +57,12 @@ const massage = { key: "massage", color: "blue", selectedDotColor: "blue" };
 const workout = { key: "workout", color: "green" };
 
 const CustomCalender = ({ selectedDateFunction }) => {
+  const isFocused = useIsFocused();
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [markedDates, setMarkedDates] = useState({
     "2022-05-25": {
       dots: [vacation, massage, workout],
-      selected: true,
     },
     "2022-05-23": { dots: [massage, workout] },
   });
@@ -83,6 +85,17 @@ const CustomCalender = ({ selectedDateFunction }) => {
     });
     selectedDateFunction(day);
   };
+
+  useEffect(() => {
+    if (isFocused) {
+      const today = new Date().toLocaleDateString("en-US");
+      const todayFormatted = today.split("/");
+      const todayFormattedString = `2022-${todayFormatted[0]}-${todayFormatted[1]}`;
+      setSelectedDateHandler(todayFormattedString);
+    }
+  }, [isFocused]);
+
+  //TODO baska aya gecince onuda duzelt
 
   return (
     <View style={styles.calenderContainer}>

@@ -32,6 +32,7 @@ const Tab = createBottomTabNavigator();
 const StartingStack = createStackNavigator();
 
 import ActivitiesNavigation from "./navigations/ActivitiesNavigation";
+import HealtNavigations from "./navigations/HealtNavigations";
 
 export default function App() {
   if (Platform.OS === "android") {
@@ -167,7 +168,13 @@ export default function App() {
             }}
             component={ActivitiesNavigation}
           />
-          <Tab.Screen name="Health" component={Health} />
+          <Tab.Screen
+            name="Health"
+            options={{
+              headerShown: false,
+            }}
+            component={HealtNavigations}
+          />
           <Tab.Screen name="Menu" component={Menu} />
         </Tab.Navigator>
       </NavigationContainer>

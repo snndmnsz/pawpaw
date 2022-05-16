@@ -15,6 +15,7 @@ const MyPet = ({ navigation }) => {
       <StatsContainer />
       <UpcomingEvents />
       <ActivityRing />
+      <CustomBarChart />
     </ScrollView>
   );
 };

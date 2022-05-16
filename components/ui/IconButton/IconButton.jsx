@@ -1,8 +1,8 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, Image, View } from "react-native";
 import React from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 
-const IconButton = ({ onPress, text, iconName }) => {
+const IconButton = ({ onPress, text, iconName, imagePath }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -10,7 +10,12 @@ const IconButton = ({ onPress, text, iconName }) => {
       style={styles.buttonContainer}
     >
       <Text style={styles.text}>{text}</Text>
-      <Icon name={iconName} size={26} color="#FFFFFF" />
+      {iconName && <Icon name={iconName} size={26} color="#FFFFFF" />}
+      {imagePath && (
+        <View style={styles.imageContainer}>
+          <Image style={styles.image} source={imagePath} />
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
@@ -35,6 +40,16 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 17,
     fontWeight: "bold",
-    marginLeft: 7,
+    marginLeft: 8,
+  },
+  imageContainer: {
+    width: 28,
+    height: 28,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  image: {
+    width: 24,
+    height: 24,
   },
 });
