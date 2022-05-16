@@ -16,15 +16,13 @@ import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const PetInfoFirst = ({ navigation }) => {
-
-
   const petInfoSecondHandler = () => {
     navigation.navigate("PetInfoSecond");
   };
   return (
     <KeyboardAwareScrollView
-      style={styles.petInfoFirstContainer}
       showsVerticalScrollIndicator={false}
+      style={styles.petInfoFirstContainer}
     >
       <Level level="2" />
       <Text style={styles.headerText}>Fill Your Pet Info</Text>

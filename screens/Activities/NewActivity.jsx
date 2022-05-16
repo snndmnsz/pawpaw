@@ -14,21 +14,21 @@ import sleep from "../../assets/activityImages/sleep.png";
 import toilet from "../../assets/activityImages/toilet.png";
 import walk from "../../assets/activityImages/walk.png";
 
-const NewActivity = ({navigation}) => {
+const NewActivity = ({ navigation }) => {
   const playPressHandler = () => {
-    alert("Play");
+    navigation.navigate("Play");
   };
   const walkPressHandler = () => {
-    alert("Walk");
+    navigation.navigate("Walk");
   };
   const foodPressHandler = () => {
     navigation.navigate("Food");
   };
   const sleepPressHandler = () => {
-    alert("Sleep");
+    navigation.navigate("Sleep");
   };
   const toiletPressHandler = () => {
-    alert("Toilet");
+    navigation.navigate("Toilet");
   };
 
   return (

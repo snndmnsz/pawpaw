@@ -7,6 +7,10 @@ import IconButton from "../components/ui/IconButton/IconButton";
 
 import NewActivity from "../screens/Activities/NewActivity";
 import Food from "../screens/Activities/AllActivities/Food";
+import Play from "../screens/Activities/AllActivities/Play";
+import Sleep from "../screens/Activities/AllActivities/Sleep";
+import Toilet from "../screens/Activities/AllActivities/Toilet";
+import Walk from "../screens/Activities/AllActivities/Walk";
 
 const StartingStack = createStackNavigator();
 
@@ -73,6 +77,74 @@ const ActivitiesNavigation = () => {
           headerTitleAlign: "center",
           headerBackTitleVisible: false,
           title: "Add Food Activity",
+          headerBackTitleVisible: false,
+          headerTintColor: "black",
+        }}
+      />
+      <StartingStack.Screen
+        name="Play"
+        component={Play}
+        options={{
+          headerStyle: {
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+            backgroundColor: "#E6FCF4",
+            borderBottomWidth: 0,
+          },
+          headerTitleAlign: "center",
+          headerBackTitleVisible: false,
+          title: "Add Play Activity",
+          headerBackTitleVisible: false,
+          headerTintColor: "black",
+        }}
+      />
+      <StartingStack.Screen
+        name="Sleep"
+        component={Sleep}
+        options={{
+          headerStyle: {
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+            backgroundColor: "#E6EDFA",
+            borderBottomWidth: 0,
+          },
+          headerTitleAlign: "center",
+          headerBackTitleVisible: false,
+          title: "Add Sleep Activity",
+          headerBackTitleVisible: false,
+          headerTintColor: "black",
+        }}
+      />
+      <StartingStack.Screen
+        name="Toilet"
+        component={Toilet}
+        options={{
+          headerStyle: {
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+            backgroundColor: "#F5EEFC",
+            borderBottomWidth: 0,
+          },
+          headerTitleAlign: "center",
+          headerBackTitleVisible: false,
+          title: "Add Toilet Activity",
+          headerBackTitleVisible: false,
+          headerTintColor: "black",
+        }}
+      />
+      <StartingStack.Screen
+        name="Walk"
+        component={Walk}
+        options={{
+          headerStyle: {
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+            backgroundColor: "#FEE8DC",
+            borderBottomWidth: 0,
+          },
+          headerTitleAlign: "center",
+          headerBackTitleVisible: false,
+          title: "Add Walk Activity",
           headerBackTitleVisible: false,
           headerTintColor: "black",
         }}

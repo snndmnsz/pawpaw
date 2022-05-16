@@ -1,7 +1,13 @@
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import React from "react";
 
-const Input = ({ placeholder, type, label, showLabel = true, ...props }) => {
+const MultiLineInput = ({
+  placeholder,
+  type,
+  label,
+  showLabel = true,
+  ...props
+}) => {
   return (
     <View style={styles.inputContainer}>
       {showLabel && <Text style={styles.inputText}>{label}</Text>}
@@ -11,13 +17,15 @@ const Input = ({ placeholder, type, label, showLabel = true, ...props }) => {
         placeholderTextColor="#7D7D7D"
         underlineColorAndroid="transparent"
         keyboardType={type}
+        multiline={true}
+        textAlignVertical={"top"}
         {...props}
       />
     </View>
   );
 };
 
-export default Input;
+export default MultiLineInput;
 
 const styles = StyleSheet.create({
   inputContainer: {
@@ -26,11 +34,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   input: {
-    height: 50,
+    height: 80,
     borderColor: "#E7ECF3",
     borderWidth: 1,
     marginTop: 8,
-    paddingHorizontal: 10,
+    padding: 10,
     borderRadius: 8,
     backgroundColor: "#F8FAFD",
   },

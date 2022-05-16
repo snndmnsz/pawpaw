@@ -1,25 +1,51 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import React from "react";
 import food from "../../../assets/activityImages/food.png";
 import Input from "../../../components/ui/Input/Input";
+import ClockPicker from "../../../components/ui/ClockPicker/ClockPicker";
+import Button from "../../../components/ui/Button/Button";
+import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 const Food = () => {
   return (
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image style={styles.image} source={food} />
+    <KeyboardAwareScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.scrollContainer}
+    >
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image style={styles.image} source={food} />
+        </View>
+        <View style={styles.inputContainer}>
+          <MultiLineInput
+            placeholder="What did the good boi eat today?"
+            type="default"
+            label="Note"
+            showLabel={false}
+          />
+          <ClockPicker placeHolder="Start Time" buttonPlaceHolder="Set Time" />
+          <ClockPicker placeHolder="End Time" buttonPlaceHolder="Set Time" />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button
+            text="Create Food Activity"
+            onPress={() => alert("Activity Created")}
+          />
+        </View>
+        <View style={styles.circle}></View>
       </View>
-      <View style={styles.inputs}>
-        <Input placeholder="Food" />
-      </View>
-
-      <View style={styles.circle}></View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
 export default Food;
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    backgroundColor: "#FFFFFF",
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
@@ -36,7 +62,8 @@ const styles = StyleSheet.create({
     width: 700,
     height: 700,
     borderRadius: 700 / 2,
-    top: -420,
+    top: -430,
+    // left: -15,
     backgroundColor: "#FFEFF1",
     position: "absolute",
     zIndex: -1,
@@ -51,5 +78,12 @@ const styles = StyleSheet.create({
     // width: null,
     // height: null,
     resizeMode: "contain",
+  },
+  inputContainer: {
+    width: "100%",
+  },
+  buttonContainer: {
+    width: "90%",
+    marginTop: 20,
   },
 });
