@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   imageContainer: {
-    marginTop: 30,
+    marginTop: 50,
     width: "100%",
     height: 220,
     justifyContent: "center",
@@ -52,6 +52,6 @@ const styles = StyleSheet.create({
     // width: null,
     // height: null,
     resizeMode: "contain",
-    left: 22,
+    left: 47,
   },
 });

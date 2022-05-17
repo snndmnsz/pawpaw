@@ -17,7 +17,7 @@ const MyPet = ({ navigation }) => {
       <StatsContainer />
       <UpcomingEvents />
       <ActivityRing />
-      <CustomBarChart />
+      <CustomBarChart title="Weight History" />
       <CustomLineChart />
       <CustomStackedBarChart />
     </ScrollView>

@@ -58,7 +58,17 @@ const HealtNavigations = () => {
             display: "none",
           },
           headerLeft: () => <CustomMainHeaderLeft isNameVisible={true} />,
-          headerRight: () => <CustomMainHeaderRight />,
+          headerRight: () => {
+            const pressHandler = () => {
+              navigation.navigate("Activities", {
+                screen: "NewActivity",
+                // params: { date: new Date() },
+              });
+            };
+            return (
+              <CustomMainHeaderRight dateIconpressHandler={pressHandler} />
+            );
+          },
         })}
       />
       <StartingStack.Screen
