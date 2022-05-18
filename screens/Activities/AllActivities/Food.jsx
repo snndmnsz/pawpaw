@@ -25,7 +25,13 @@ const Food = () => {
             showLabel={false}
           />
           <ClockPicker placeHolder="Start Time" buttonPlaceHolder="Set Time" />
-          <ClockPicker placeHolder="End Time" buttonPlaceHolder="Set Time" />
+          {/* <ClockPicker placeHolder="End Time" buttonPlaceHolder="Set Time" /> */}
+          <Input
+            placeholder="Calorie (cal)"
+            type="numeric"
+            label=""
+            showLabel={false}
+          />
         </View>
         <View style={styles.buttonContainer}>
           <Button

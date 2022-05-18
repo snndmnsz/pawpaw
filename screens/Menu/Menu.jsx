@@ -61,7 +61,7 @@ const Menu = () => {
           <View style={styles.driveImageContainer}>
             <Image source={driveImage} style={styles.driveImage} />
           </View>
-          <Text style={styles.syncText}>Sync with Google Drive</Text>
+          <Text style={styles.syncText}>Google Drive</Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
@@ -90,6 +90,12 @@ const Menu = () => {
           <Text style={styles.aboutText}>About Us</Text>
         </TouchableOpacity> */}
       </View>
+      <View style={styles.abotUsContainer}>
+        <View style={styles.abotUsIconContainer}>
+          <Icon name={"paw"} size={35} color={"#FFFFFF"} />
+        </View>
+        <Text style={styles.aboutUsText}>PawPaw 2022</Text>
+      </View>
     </ScrollView>
   );
 };
@@ -100,6 +106,28 @@ const styles = StyleSheet.create({
   menuContainer: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+  },
+  abotUsContainer: {
+    flexDirection: "column",
+    width: "100%",
+    paddingHorizontal: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  abotUsIconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 12,
+    backgroundColor: "#8D94F4",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  aboutUsText: {
+    marginTop: 5,
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#7D7D7D",
   },
   profileContainer: {
     paddingHorizontal: 12,
@@ -210,9 +238,9 @@ const styles = StyleSheet.create({
     top: -13,
   },
   bottomButtonContainers: {
-    paddingHorizontal: 12,
-    flexDirection: "column",
-    justifyContent: "center",
+    paddingHorizontal: 10,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
     alignItems: "center",
     marginTop: 20,
   },
@@ -224,12 +252,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#171717",
     borderRadius: 8,
     paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingVertical: 5,
   },
   driveImageContainer: {
     height: 30,
     width: 30,
-    marginRight: 10,
+    marginRight: 5,
   },
   driveImage: {
     flex: 1,
@@ -243,21 +271,20 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   deleteData: {
-    marginTop: 20,
     height: 45,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#F05454",
     borderRadius: 8,
-    paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
   },
   deleteImageContainer: {
-    marginRight: 10,
+    marginRight: 5,
   },
   deleteText: {
-    fontSize: 14,
+    fontSize: 13,
     color: "#FFFFFF",
     fontWeight: "600",
   },

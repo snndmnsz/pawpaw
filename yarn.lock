@@ -3283,6 +3283,13 @@
   "resolved" "https://registry.npmjs.org/expo-linear-gradient/-/expo-linear-gradient-11.3.0.tgz"
   "version" "11.3.0"
 
+"expo-location@~14.2.2":
+  "integrity" "sha512-P1v+huBWhuerV4okRhN0+Htx3Nw8LGWTUF66E5iwuZEWvLTYQEQ+Od0j2CvD4FY6rhncNpoIZcWVlIy5NmG4fg=="
+  "resolved" "https://registry.npmjs.org/expo-location/-/expo-location-14.2.2.tgz"
+  "version" "14.2.2"
+  dependencies:
+    "@expo/config-plugins" "^4.0.14"
+
 "expo-manifests@~0.3.0":
   "integrity" "sha512-HegANp+KpZlMX0T2Zb8X7mAVkCThFDq1wjLIjkrSLHhKLczYI2xa/Z5Nk0Tm7qPdGT8NTInCDoOL/nUMtKdNyQ=="
   "resolved" "https://registry.npmjs.org/expo-manifests/-/expo-manifests-0.3.0.tgz"
@@ -3333,6 +3340,14 @@
   "integrity" "sha512-UszYUsT8A8jSUebrXht095Iwv5VIdg61LPuyNNoC5gFP0E9G+8LgX68deqR4zhJOlbsgSH2cixxKhrGW+1HPZg=="
   "resolved" "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-1.3.0.tgz"
   "version" "1.3.0"
+
+"expo-task-manager@~10.2.1":
+  "integrity" "sha512-peT1ZG7VjQkdyTLWsPFTU5/W2dZwz2Il/Q6jjLowMPNN9iIq1qHU273+65PRR3zMRt1YfWh8vQSiHEIypKkxgg=="
+  "resolved" "https://registry.npmjs.org/expo-task-manager/-/expo-task-manager-10.2.1.tgz"
+  "version" "10.2.1"
+  dependencies:
+    "@expo/config-plugins" "^4.0.14"
+    "unimodules-app-loader" "~3.1.0"
 
 "expo-updates-interface@~0.6.0":
   "integrity" "sha512-oQcGTsE8mSkSxENPlWjZPGoJpt3RFDNPuO5d8shBDxBb4ZNH/W2ojavSFQMaLbNMoS0bYQQhzbRNEIBd306QMg=="
@@ -3661,6 +3676,11 @@
   "integrity" "sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg=="
   "resolved" "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
   "version" "1.0.0-beta.2"
+
+"geolib@^3.3.3":
+  "integrity" "sha512-YO704pzdB/8QQekQuDmFD5uv5RAwAf4rOUPdcMhdEOz+HoPWD0sC7Qqdwb+LAvwIjXVRawx0QgZlocKYh8PFOQ=="
+  "resolved" "https://registry.npmjs.org/geolib/-/geolib-3.3.3.tgz"
+  "version" "3.3.3"
 
 "get-caller-file@^2.0.1", "get-caller-file@^2.0.5":
   "integrity" "sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg=="
@@ -5912,6 +5932,13 @@
     "react-freeze" "^1.0.0"
     "warn-once" "^0.1.0"
 
+"react-native-stopwatch-timer@^0.0.21":
+  "integrity" "sha512-qFFsD85NkBT1nxo32HMGq3XAtQyMC09p9ZDIEuOED2BOxgs0UpWg/FSTA0MmEoIKMyXUwSE5VxEzBaGP3z1HFw=="
+  "resolved" "https://registry.npmjs.org/react-native-stopwatch-timer/-/react-native-stopwatch-timer-0.0.21.tgz"
+  "version" "0.0.21"
+  dependencies:
+    "prop-types" "^15.7.2"
+
 "react-native-svg@^12.1.0", "react-native-svg@^12.3.0", "react-native-svg@> 6.4.1":
   "integrity" "sha512-ESG1g1j7/WLD7X3XRFTQHVv0r6DpbHNNcdusngAODIxG88wpTWUZkhcM3A2HJTb+BbXTFDamHv7FwtRKWQ/ALg=="
   "resolved" "https://registry.npmjs.org/react-native-svg/-/react-native-svg-12.3.0.tgz"
@@ -7023,6 +7050,11 @@
   "integrity" "sha512-5Zfuy9q/DFr4tfO7ZPeVXb1aPoeQSdeFMLpYuFebehDAhbuevLs5yxSZmIFN1tP5F9Wl4IpJrYojg85/zgyZHQ=="
   "resolved" "https://registry.npmjs.org/unicode-property-aliases-ecmascript/-/unicode-property-aliases-ecmascript-2.0.0.tgz"
   "version" "2.0.0"
+
+"unimodules-app-loader@~3.1.0":
+  "integrity" "sha512-ykDpkZY3ZUckNQN83YP1eY0uxLHK6cLP4WMa4RWsjx5JX38dFvcXpoE/+X2RZSbIgRcCR1fjyd7H1NHjDuXhuQ=="
+  "resolved" "https://registry.npmjs.org/unimodules-app-loader/-/unimodules-app-loader-3.1.0.tgz"
+  "version" "3.1.0"
 
 "union-value@^1.0.0":
   "integrity" "sha512-tJfXmxMeWYnczCVs7XAEvIV7ieppALdyepWMkHkwciRpZraG/xwT+s2JN8+pr1+8jCRf80FFzvr+MpQeeoF4Xg=="

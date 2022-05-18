@@ -1,8 +1,94 @@
-import { StyleSheet, Text, View, Image } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import {
+  Platform,
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import * as Location from "expo-location";
+import Icons from "react-native-vector-icons/Ionicons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import walk from "../../../assets/activityImages/walk.png";
+import * as TaskManager from "expo-task-manager";
+import { getDistance, getPreciseDistance } from "geolib";
+import { Stopwatch, Timer } from "react-native-stopwatch-timer";
+import Button from "../../../components/ui/Button/Button";
+import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
+import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput";
+
+const LOCATION_TASK_NAME = "LOCATION_TASK_NAME";
+let foregroundSubscription = null;
+
 const Walk = () => {
+  const [isScheduled, setIsScheduled] = useState(false);
+  const [isStopwatchStart, setIsStopwatchStart] = useState(false);
+  const [resetStopwatch, setResetStopwatch] = useState(false);
+
+  const [position, setPosition] = useState(null);
+  const [initialPosition, setInitialPosition] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
+  const [liveMeters, setLiveMeters] = useState({
+    distance: 0,
+  });
+
+  const calculatePreciseDistance = () => {
+    var pdis = getPreciseDistance(
+      {
+        latitude: initialPosition.latitude,
+        longitude: initialPosition.longitude,
+      },
+      { latitude: position?.latitude, longitude: position?.longitude }
+    );
+    setLiveMeters({
+      distance: parseInt(pdis),
+    });
+  };
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      const foreground = await Location.requestForegroundPermissionsAsync();
+      if (foreground.granted)
+        await Location.requestBackgroundPermissionsAsync();
+    };
+    requestPermissions();
+  }, []);
+
+  const startForegroundUpdate = async () => {
+    const { granted } = await Location.getForegroundPermissionsAsync();
+    const { coords } = await Location.getCurrentPositionAsync({});
+    setInitialPosition({
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+    });
+
+    if (!granted) {
+      console.log("location tracking denied");
+      return;
+    }
+    foregroundSubscription?.remove();
+    foregroundSubscription = await Location.watchPositionAsync(
+      {
+        accuracy: Location.Accuracy.BestForNavigation,
+      },
+      (location) => {
+        setPosition(location.coords);
+      }
+    );
+  };
+
+  const stopForegroundUpdate = () => {
+    setLiveMeters({
+      distance: 0,
+    });
+    calculatePreciseDistance();
+    foregroundSubscription?.remove();
+    setPosition(null);
+  };
+
   return (
     <KeyboardAwareScrollView
       showsVerticalScrollIndicator={false}
@@ -13,6 +99,146 @@ const Walk = () => {
           <Image style={styles.image} source={walk} />
         </View>
         <View style={styles.circle}></View>
+        {isScheduled ? (
+          <View style={styles.meterCountContainer}>
+            <MultiLineInput
+              placeholder="What do you want to do in walk?"
+              type="default"
+              label="Note"
+              showLabel={false}
+            />
+            <DatePickerInput
+              showLabel={false}
+              buttonText="asd"
+              customLabel="aslkdj"
+            />
+            <View
+              style={[
+                styles.submitButtonContainer,
+                {
+                  marginTop: 35,
+                },
+              ]}
+            >
+              <Button onPress={() => {}} text="Add Walk Schedule" />
+              <TouchableOpacity
+                style={styles.scheduleButton}
+                activeOpacity={0.8}
+                onPress={() => {
+                  // stopForegroundUpdate();
+                  setIsScheduled(!isScheduled);
+                }}
+              >
+                <Icons name="stopwatch-outline" size={28} color="#FFFFFF" />
+                <Text style={styles.scheduleButtonText}>Go Walk Now</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.meterCountContainer}>
+            <View style={styles.meterContainer}>
+              <Text style={styles.meterValue}>{liveMeters.distance}</Text>
+              <Text style={styles.meterFix}>m</Text>
+            </View>
+            <View style={styles.sectionStyle}>
+              <Stopwatch
+                laps
+                start={isStopwatchStart}
+                reset={resetStopwatch}
+                options={{
+                  container: {
+                    backgroundColor: "#FFF4EA",
+                    paddingVertical: 18,
+                    borderRadius: 8,
+                    marginTop: 15,
+                    width: "70%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    alignSelf: "center",
+                  },
+                  text: {
+                    fontSize: 35,
+                    color: "#27323A",
+                    marginLeft: 7,
+                    fontWeight: "bold",
+                  },
+                }}
+                getTime={(time) => {
+                  // console.log(time);
+                }}
+              />
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.startButton}
+                  onPress={() => {
+                    startForegroundUpdate();
+                    setIsStopwatchStart(!isStopwatchStart);
+                    setResetStopwatch(false);
+                  }}
+                >
+                  <Text style={styles.startButtonText}>
+                    {!isStopwatchStart ? "START" : "STOP"}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.resetButton}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    stopForegroundUpdate();
+                    setIsStopwatchStart(false);
+                    setResetStopwatch(true);
+                  }}
+                >
+                  <Text style={styles.resetButtonText}>RESET</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.submitButtonContainer}>
+              <Button onPress={() => {}} text="Submit Walk Distance" />
+              <TouchableOpacity
+                style={styles.scheduleButton}
+                activeOpacity={0.8}
+                onPress={() => {
+                  // stopForegroundUpdate();
+                  setIsScheduled(!isScheduled);
+                }}
+              >
+                <Icons name="alarm-outline" size={26} color="#FFFFFF" />
+                <Text style={styles.scheduleButtonText}>
+                  Schedule to Later Time
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        {/* <Text>Longitude: {position?.longitude}</Text>
+        <Text>Latitude: {position?.latitude}</Text> */}
+        {/* <View style={styles.separator} /> */}
+        {/* <Button
+          onPress={startForegroundUpdate}
+          title="Start in foreground"
+          color="green"
+        />
+        <View style={styles.separator} />
+        <Button
+          onPress={stopForegroundUpdate}
+          title="Stop in foreground"
+          color="red"
+        /> */}
+        {/* <View style={styles.separator} />
+        <Button
+          onPress={startBackgroundUpdate}
+          title="Start in background"
+          color="green"
+        />
+        <View style={styles.separator} />
+        <Button
+          onPress={stopBackgroundUpdate}
+          title="Stop in background"
+          color="red"
+        /> */}
       </View>
     </KeyboardAwareScrollView>
   );
@@ -34,14 +260,14 @@ const styles = StyleSheet.create({
     width: 700,
     height: 700,
     borderRadius: 700 / 2,
-    top: -440,
+    top: -460,
     // left: -15,
     backgroundColor: "#FEE8DC",
     position: "absolute",
     zIndex: -1,
   },
   imageContainer: {
-    marginTop: 50,
+    marginTop: 30,
     width: "100%",
     height: 220,
     justifyContent: "center",
@@ -53,5 +279,89 @@ const styles = StyleSheet.create({
     // height: null,
     resizeMode: "contain",
     left: 47,
+  },
+
+  meterCountContainer: {
+    width: "100%",
+  },
+
+  sectionStyle: {
+    flexDirection: "column",
+    width: "100%",
+    paddingHorizontal: 20,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    marginTop: 14,
+  },
+  startButton: {
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#4E9F3D",
+    borderRadius: 10,
+    paddingHorizontal: 25,
+    paddingVertical: 8,
+  },
+  startButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  resetButton: {
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#C84B31",
+    borderRadius: 10,
+    paddingHorizontal: 25,
+    paddingVertical: 8,
+  },
+  resetButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  meterContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 5,
+  },
+  meterValue: {
+    fontSize: 55,
+    fontWeight: "bold",
+    color: "#071C21",
+  },
+  meterFix: {
+    fontSize: 15,
+    color: "#071C21",
+    fontWeight: "bold",
+    alignSelf: "flex-end",
+    top: -10,
+  },
+  submitButtonContainer: {
+    width: "100%",
+    marginTop: 20,
+    paddingHorizontal: 20,
+    justifyContent: "center",
+  },
+  scheduleButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#112B3C",
+    borderRadius: 8,
+    marginHorizontal: 45,
+    paddingVertical: 8,
+    marginTop: 15,
+  },
+  scheduleButtonText: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "bold",
+    marginLeft: 10,
   },
 });
