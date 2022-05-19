@@ -1,13 +1,48 @@
 import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import food from "../../../assets/activityImages/food.png";
 import Input from "../../../components/ui/Input/Input";
 import ClockPicker from "../../../components/ui/ClockPicker/ClockPicker";
 import Button from "../../../components/ui/Button/Button";
 import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useSelector } from "react-redux";
 
 const Food = () => {
+  const selectedDate = useSelector(
+    (state) => state.myPet.calender.selectedDate
+  );
+  const [note, setNote] = useState("");
+  const [time, setTime] = useState("");
+  const [calorie, setCalorie] = useState("");
+
+  const noteHandler = (note) => {
+    setNote(note);
+  };
+
+  const clockHandler = (time) => {
+    setTime(`${time}:00`);
+  };
+
+  const caloriehandler = (calorie) => {
+    setCalorie(calorie);
+  };
+
+  const foodSubmithandler = () => {
+    const activityFormattedDate = selectedDate.split("T")[0];
+    const newActivityDate = new Date(`${activityFormattedDate}T${time}`);
+    if (note.length === 0 || time.length === 0 || calorie.length === 0) {
+      return alert("Please fill all the fields");
+    } else if (calorie < 0) {
+      return alert("Please enter a valid calorie more than 0");
+    } else if (calorie > 5000) {
+      return alert("Please enter a calorie less than 5000");
+    } else if (note.length > 100) {
+      return alert("Please enter a note less than 100 characters");
+    }
+    console.log(note, "==", time, "==", calorie, "==", newActivityDate);
+  };
+
   return (
     <KeyboardAwareScrollView
       showsVerticalScrollIndicator={false}
@@ -23,21 +58,24 @@ const Food = () => {
             type="default"
             label="Note"
             showLabel={false}
+            onChange={noteHandler}
           />
-          <ClockPicker placeHolder="Start Time" buttonPlaceHolder="Set Time" />
+          <ClockPicker
+            placeHolder="Start Time"
+            buttonPlaceHolder="Set Time"
+            onChange={clockHandler}
+          />
           {/* <ClockPicker placeHolder="End Time" buttonPlaceHolder="Set Time" /> */}
           <Input
             placeholder="Calorie (cal)"
             type="numeric"
             label=""
             showLabel={false}
+            onChange={caloriehandler}
           />
         </View>
         <View style={styles.buttonContainer}>
-          <Button
-            text="Create Food Activity"
-            onPress={() => alert("Activity Created")}
-          />
+          <Button text="Create Food Activity" onPress={foodSubmithandler} />
         </View>
         <View style={styles.circle}></View>
       </View>
@@ -87,6 +125,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: "100%",
+    marginTop: 20,
   },
   buttonContainer: {
     width: "90%",

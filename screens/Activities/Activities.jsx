@@ -4,18 +4,14 @@ import CustomCalender from "../../components/Calender/CustomCalender";
 import CalenderDateDetail from "../../components/CalenderDateDetail/CalenderDateDetail";
 
 const Activities = () => {
-  const [date, setDate] = useState("");
-  const selectedDateHandler = (date) => {
-    setDate(date);
-  };
 
   return (
     <View style={styles.activityContainer}>
       <View style={styles.calender}>
-        <CustomCalender selectedDateFunction={selectedDateHandler} />
+        <CustomCalender />
       </View>
       <View style={styles.date}>
-        <CalenderDateDetail date={date} />
+        <CalenderDateDetail />
       </View>
     </View>
   );

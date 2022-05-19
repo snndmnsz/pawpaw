@@ -1,9 +1,28 @@
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
-import React from "react";
+import { useIsFocused } from "@react-navigation/native";
+import React, { useEffect } from "react";
 import Level from "../../../components/level/Level";
 import Button from "../../../components/ui/Button/Button";
+import { setPetSpicie } from "../../../redux/slice/myPetSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 const PetSpicie = ({ navigation }) => {
+  const [spicie, setSpice] = React.useState("");
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  const currentPetInfo = useSelector((state) => state.myPet.currentPetInfo);
+
+  useEffect(() => {
+    if (isFocused) {
+      setSpice(currentPetInfo.spicie);
+    }
+  }, [isFocused]);
+
   const petInfoFirstHandler = () => {
+    if (spicie === "") {
+      return alert("Please select a spicie");
+    }
+    dispatch(setPetSpicie(spicie));
     navigation.navigate("PetInfoFirst");
   };
 
@@ -12,7 +31,20 @@ const PetSpicie = ({ navigation }) => {
       <Level level="1" />
       <Text style={styles.headerText}>Choose Your Pet Specie</Text>
       <View style={styles.spicies}>
-        <Pressable style={[styles.spicie, styles.cat]}>
+        <Pressable
+          onPress={() => {
+            setSpice("cat");
+          }}
+          style={[
+            styles.spicie,
+            styles.cat,
+            {
+              borderStyle: spicie === "cat" ? "dotted" : "solid",
+              borderWidth: spicie === "cat" ? 3 : 0,
+              borderColor: spicie === "cat" ? "#8D94F4" : "#FFFFFF",
+            },
+          ]}
+        >
           <View style={[styles.spiciePhoto, styles.spiciePhotoCat]}>
             <Image
               style={styles.spicieImage}
@@ -21,7 +53,20 @@ const PetSpicie = ({ navigation }) => {
           </View>
           <Text style={[styles.spicieText, styles.spicieTextCat]}>Cat</Text>
         </Pressable>
-        <Pressable style={[styles.spicie, styles.dog]}>
+        <Pressable
+          onPress={() => {
+            setSpice("dog");
+          }}
+          style={[
+            styles.spicie,
+            styles.dog,
+            {
+              borderStyle: spicie === "dog" ? "dotted" : "solid",
+              borderWidth: spicie === "dog" ? 3 : 0,
+              borderColor: spicie === "dog" ? "#EE7942" : "#FFFFFF",
+            },
+          ]}
+        >
           <View style={[styles.spiciePhoto, styles.spiciePhotoDog]}>
             <Image
               style={styles.spicieImage}
@@ -80,6 +125,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#E6EAF2",
     border: 1,
     borderRadius: 12,
+    borderStyle: "solid",
+    borderWidth: 0,
+    borderColor: "#FFFFFF",
   },
   spiciePhoto: {
     width: "60%",

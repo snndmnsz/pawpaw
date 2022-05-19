@@ -1,22 +1,20 @@
 import { StyleSheet, Text, View, Dimensions } from "react-native";
 import React from "react";
 import DetailListContainer from "./DayDetail/DetailListContainer";
+import { useSelector } from "react-redux";
+import moment from "moment";
 
-const CalenderDateDetail = ({ date }) => {
-  const dateFormatter = (date) => {
-    //format date to  day number day week name
-    const dateObj = new Date(date === "" ? new Date() : date);
-    const day = dateObj.getDate();
-    const dayName = dateObj
-      .toLocaleString("en", { weekday: "long" })
-      .split(" ")[0];
-    return `${day}th ${dayName}`;
-  };
+const CalenderDateDetail = () => {
+  const selectedDate = useSelector(
+    (state) => state.myPet.calender.selectedDate
+  );
 
   return (
     <View style={styles.detailsContainer}>
       <View style={styles.detailDateContainer}>
-        <Text style={styles.dateText}>{dateFormatter(date)}</Text>
+        <Text style={styles.dateText}>
+          {moment(selectedDate).format("MMM Do")}
+        </Text>
         <View style={styles.dateLine}></View>
       </View>
       <DetailListContainer />

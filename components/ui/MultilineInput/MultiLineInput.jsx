@@ -6,6 +6,7 @@ const MultiLineInput = ({
   type,
   label,
   showLabel = true,
+  onChange,
   ...props
 }) => {
   return (
@@ -19,6 +20,7 @@ const MultiLineInput = ({
         keyboardType={type}
         multiline={true}
         textAlignVertical={"top"}
+        onChangeText={(text)=> onChange(text)}
         {...props}
       />
     </View>
@@ -29,7 +31,7 @@ export default MultiLineInput;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    marginTop: 30,
+    marginTop: 10,
     marginHorizontal: 20,
     flexDirection: "column",
   },

@@ -48,7 +48,7 @@ const HealtNavigations = () => {
       <StartingStack.Screen
         name="HealthMain"
         component={Health}
-        options={({ navigation }) => ({
+        options={({ navigation}) => ({
           headerStyle: {
             shadowColor: "transparent", // this covers iOS
             elevation: 0, // this covers Android
@@ -58,17 +58,7 @@ const HealtNavigations = () => {
             display: "none",
           },
           headerLeft: () => <CustomMainHeaderLeft isNameVisible={true} />,
-          headerRight: () => {
-            const pressHandler = () => {
-              navigation.navigate("Activities", {
-                screen: "NewActivity",
-                // params: { date: new Date() },
-              });
-            };
-            return (
-              <CustomMainHeaderRight dateIconpressHandler={pressHandler} />
-            );
-          },
+          headerRight: () => <CustomMainHeaderRight navigation={navigation} />,
         })}
       />
       <StartingStack.Screen

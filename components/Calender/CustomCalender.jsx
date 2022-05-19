@@ -9,6 +9,9 @@ import {
 import Icons from "react-native-vector-icons/Ionicons";
 import { Platform } from "react-native-web";
 import { useIsFocused } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedDate } from "../../redux/slice/myPetSlice";
+import moment from "moment";
 
 LocaleConfig.locales["en"] = {
   monthNames: [
@@ -56,10 +59,13 @@ const vacation = { key: "vacation", color: "red", selectedDotColor: "blue" };
 const massage = { key: "massage", color: "blue", selectedDotColor: "blue" };
 const workout = { key: "workout", color: "green" };
 
-const CustomCalender = ({ selectedDateFunction }) => {
+const CustomCalender = () => {
+  const selectedDate = useSelector(
+    (state) => state.myPet.calender.selectedDate
+  );
+  const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [markedDates, setMarkedDates] = useState({
     "2022-05-25": {
       dots: [vacation, massage, workout],
@@ -83,15 +89,16 @@ const CustomCalender = ({ selectedDateFunction }) => {
         selected: true,
       },
     });
-    selectedDateFunction(day);
   };
 
   useEffect(() => {
     if (isFocused) {
-      const today = new Date().toLocaleDateString("en-US");
-      const todayFormatted = today.split("/");
-      const todayFormattedString = `2022-${todayFormatted[0]}-${todayFormatted[1]}`;
-      setSelectedDateHandler(todayFormattedString);
+      const today = new Date();
+      const todayDate = moment(today).format("YYYY-MM-DD");
+      setSelectedDateHandler(todayDate);
+      dispatch(setSelectedDate(today.toISOString()));
+      //console.log(todayFormattedFormatted);
+      //console.log(new Date());
     }
   }, [isFocused]);
 
@@ -109,19 +116,21 @@ const CustomCalender = ({ selectedDateFunction }) => {
         maxDate={"2023-05-30"}
         // Handler which gets executed on day press. Default = undefined
         onDayPress={(day) => {
-          //console.log("selected day", day);
-
+          //console.log("selected day", day.timestamp);
+          const today = new Date().toISOString().split("T")[1];
+          dispatch(setSelectedDate(`${day.dateString}T${today}`));
+          console.log(`${day.dateString}T${today}`);
           setSelectedDateHandler(day.dateString);
         }}
         // Handler which gets executed on day long press. Default = undefined
         onDayLongPress={(day) => {
-          console.log("selected day", day);
+          //console.log("selected day", day);
         }}
         // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
         monthFormat={"yyyy MM"}
         // Handler which gets executed when visible month changes in calendar. Default = undefined
         onMonthChange={(month) => {
-          console.log("month changed", month);
+          //console.log("month changed", month);
         }}
         // Hide month navigation arrows. Default = false
         // hideArrows={false}
@@ -164,16 +173,13 @@ const CustomCalender = ({ selectedDateFunction }) => {
               <Text
                 style={{ fontSize: 20, fontWeight: "bold", marginRight: 10 }}
               >
-                {date.getFullYear()}
+                {new Date(selectedDate)?.getFullYear()}
               </Text>
               <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                {
-                  new Date(date)
-                    .toLocaleString("en", {
-                      month: "long",
-                    })
-                    .split(" ")[index]
-                }
+                {moment(selectedDate)
+                  ?.locale("en")
+                  .format("MMMM  DD")
+                  .toUpperCase()}
               </Text>
             </View>
           );

@@ -5,6 +5,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Alert
 } from "react-native";
 import React from "react";
 import food from "../../assets/activityImages/food.png";
@@ -19,7 +20,20 @@ const NewActivity = ({ navigation }) => {
     navigation.navigate("Play");
   };
   const walkPressHandler = () => {
-    navigation.navigate("Walk");
+    //navigation.navigate("Walk");
+
+    Alert.alert(
+      "Upssss...",
+      "Still working on it bro, a little patiences",
+      [
+        // {
+        //   text: "Cancel",
+        //   onPress: () => console.log("Cancel Pressed"),
+        //   style: "cancel"
+        // },
+        { text: "ok", onPress: () => console.log("OK Pressed") }
+      ]
+    );
   };
   const foodPressHandler = () => {
     navigation.navigate("Food");

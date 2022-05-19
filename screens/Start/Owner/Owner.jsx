@@ -1,28 +1,70 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import image from "../../../assets/images/owner.png";
 import Input from "../../../components/ui/Input/Input";
 import Button from "../../../components/ui/Button/Button";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {
+  setId,
+  setOwnerName,
+} from "../../../redux/slice/myPetSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Owner = () => {
+  const [owner, setOwner] = useState("");
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+  const currentPetInfo = useSelector((state) => state.myPet.currentPetInfo);
+
+  const pressHandler = () => {
+    if (owner === "") {
+      return alert("Please enter your name");
+    }
+    if (owner.length > 20 || owner.length < 1) {
+      return alert("Please enter your name(max 20 chracter and min 1)");
+    }
+    dispatch(setOwnerName(owner));
+
+    console.log(currentPetInfo);
+
+    dispatch(setId("1"));
+  };
+
+  const ownerHandler = (owner) => {
+    setOwner(owner);
+  };
+
+  useEffect(() => {
+    if (isFocused) {
+      setOwner(currentPetInfo.ownerName);
+    }
+  }, [isFocused]);
+
   return (
     <KeyboardAwareScrollView
-      style={styles.ownerPageContainer}
+      style={styles.scrollContainer}
       showsVerticalScrollIndicator={false}
     >
-      <View style={styles.circle}></View>
-      <Text style={styles.headerText}>Please Fill Your Info</Text>
-      <View style={styles.imageContainer}>
-        <Image style={styles.image} source={image} />
-      </View>
-      <Input
-        placeholder="Your Name and Surname"
-        type="default"
-        label="Name Surname"
-      />
-      <View style={styles.buttonContainer}>
-        <Button text="Finish" />
+      <View style={styles.container}>
+        <View style={styles.circle}></View>
+        <Text style={styles.headerText}>Please Fill Your Info</Text>
+        <View style={styles.imageContainer}>
+          <Image style={styles.image} source={image} />
+        </View>
+        <View style={styles.inputContainer}>
+          <Input
+            placeholder="Your Name and Surname"
+            type="default"
+            label="Name Surname"
+            onChange={ownerHandler}
+            value={owner}
+          />
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <Button text="Finish" onPress={pressHandler} />
+        </View>
       </View>
     </KeyboardAwareScrollView>
   );
@@ -31,11 +73,14 @@ const Owner = () => {
 export default Owner;
 
 const styles = StyleSheet.create({
-  ownerPageContainer: {
+  scrollContainer: {
+    backgroundColor: "#FFFFFF",
+    flex: 1,
+  },
+  container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    flexDirection: "column",
-    position: "relative",
+    alignItems: "center",
   },
   headerText: {
     fontSize: 20,
@@ -48,30 +93,31 @@ const styles = StyleSheet.create({
     width: 700,
     height: 700,
     borderRadius: 700 / 2,
+    top: -380,
+    // left: -15,
     backgroundColor: "#FEE8DC",
     position: "absolute",
-    top: -320,
-    left: -160,
-    margin: "auto",
     zIndex: -1,
   },
   imageContainer: {
-    marginTop: 20,
+    marginTop: 15,
     width: "100%",
-    height: 345,
-    aliginItems: "center",
+    height: 300,
+    alignItems: "center",
     justifyContent: "center",
   },
   image: {
-    width: 300,
-    height: 345,
-    left: 30,
+    flex: 1,
+    // width: null,
+    // height: null,
+    resizeMode: "contain",
+    left: 5,
+  },
+  inputContainer: {
+    width: "90%",
   },
   buttonContainer: {
-    widht: "100%",
-    marginTop: 30,
-    marginBottom: 95,
-    paddingHorizontal: 20,
-    flexDirection: "column",
+    width: "90%",
+    marginTop: 60,
   },
 });

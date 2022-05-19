@@ -1,13 +1,41 @@
 import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import toilet from "../../../assets/activityImages/toilet.png";
 import Input from "../../../components/ui/Input/Input";
 import ClockPicker from "../../../components/ui/ClockPicker/ClockPicker";
 import Button from "../../../components/ui/Button/Button";
 import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useSelector } from "react-redux";
 
 const Toilet = () => {
+  const selectedDate = useSelector(
+    (state) => state.myPet.calender.selectedDate
+  );
+  const [note, setNote] = useState("");
+  const [time, setTime] = useState("");
+
+  const noteHandler = (note) => {
+    setNote(note);
+  };
+
+  const clockHandler = (time) => {
+    setTime(`${time}:00`);
+  };
+
+  const toiletSubmitHandler = () => {
+    const activityFormattedDate = selectedDate.split("T")[0];
+    const newActivityDate = new Date(`${activityFormattedDate}T${time}`);
+    console.log(newActivityDate);
+
+    if (note.length === 0 || time.length === 0) {
+      return alert("Please fill all the fields");
+    } else if (note.length > 100) {
+      return alert("Please enter a note less than 100 characters");
+    }
+    console.log(note, "==", time, "==", newActivityDate);
+  };
+
   return (
     <KeyboardAwareScrollView
       showsVerticalScrollIndicator={false}
@@ -23,14 +51,16 @@ const Toilet = () => {
             type="default"
             label="Note"
             showLabel={false}
+            onChange={noteHandler}
           />
-          <ClockPicker placeHolder="Time" buttonPlaceHolder="Set Time" />
+          <ClockPicker
+            onChange={clockHandler}
+            placeHolder="Time"
+            buttonPlaceHolder="Set Time"
+          />
         </View>
         <View style={styles.buttonContainer}>
-          <Button
-            text="Create Toilet Activity"
-            onPress={() => alert("Toilet Created")}
-          />
+          <Button text="Create Toilet Activity" onPress={toiletSubmitHandler} />
         </View>
         <View style={styles.circle}></View>
       </View>

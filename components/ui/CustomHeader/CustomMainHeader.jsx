@@ -1,8 +1,12 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import dog from "../../../assets/images/dog-ex.png";
+import { useSelector, useDispatch } from "react-redux";
+import { setSelectedDate } from "../../../redux/slice/myPetSlice";
+import moment from "moment";
 
 export const CustomMainHeaderLeft = ({ isNameVisible }) => {
+  const currentPetInfo = useSelector((state) => state.myPet.currentPetInfo);
   return (
     <View style={styles.leftContainer}>
       <View style={styles.imageContainer}>
@@ -10,31 +14,36 @@ export const CustomMainHeaderLeft = ({ isNameVisible }) => {
       </View>
       {isNameVisible && (
         <View style={styles.leftTextContainer}>
-          <Text style={styles.spicie}>German Shepherd</Text>
-          <Text style={styles.name}>Maximus</Text>
+          <Text style={styles.spicie}>{currentPetInfo.breed}</Text>
+          <Text style={styles.name}>{currentPetInfo.name}</Text>
         </View>
       )}
     </View>
   );
 };
 
-export const CustomMainHeaderRight = ({ dateIconpressHandler }) => {
-  const date = new Date();
-  const day = date.getDate();
-  const dayShort = date
-    .toLocaleString("en-us", {
-      weekday: "short",
-    })
-    .split(" ")[0];
+export const CustomMainHeaderRight = ({ navigation }) => {
+  const currentDay = moment().format("ddd");
+  const currentDayNumber = moment().format("D");
+  const date = new Date().toISOString();
+  const dispatch = useDispatch();
+
+  const pressHandler = () => {
+    navigation.navigate("Activities", {
+      screen: "NewActivity",
+    });
+    dispatch(setSelectedDate(date));
+  };
+
   return (
     <View style={styles.rightContainer}>
       <TouchableOpacity
         style={styles.rightDateContainer}
         activeOpacity={0.7}
-        onPress={dateIconpressHandler}
+        onPress={pressHandler}
       >
-        <Text style={styles.date}>{day}</Text>
-        <Text style={styles.day}>{dayShort}</Text>
+        <Text style={styles.date}>{currentDayNumber}</Text>
+        <Text style={styles.day}>{currentDay}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -89,8 +98,8 @@ const styles = StyleSheet.create({
   },
   leftTextContainer: {
     // left: Platform.OS === "android" ? 5 : 25,
-    height: "50%",
-    justifyContent: "space-evenly",
+    height: "58%",
+    justifyContent: "center",
     alignItems: "flex-start",
     flexDirection: "column",
   },

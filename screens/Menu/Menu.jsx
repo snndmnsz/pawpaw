@@ -11,15 +11,42 @@ import profile from "../../assets/images/profile.png";
 import petImage from "../../assets/images/dog-ex.png";
 import Icon from "react-native-vector-icons/Ionicons";
 import driveImage from "../../assets/images/drive.png";
+import { useSelector } from "react-redux";
 
 const Menu = () => {
+  const currentPetInfo = useSelector((state) => state.myPet.currentPetInfo);
+  let yearOld = 0;
+
+  const calculateYearOldwithMonth = () => {
+    if (currentPetInfo.birthDate !== "") {
+      let birthday = new Date(currentPetInfo.birthDate.split("-")[0]);
+      let today = new Date();
+      let age = today.getFullYear() - birthday.getFullYear();
+      let m = today.getMonth() - birthday.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
+        age--;
+      }
+      if (m === 0) {
+        //calculate day
+        let day = today.getDate() - birthday.getDate();
+        return `${day} days`;
+      }
+      if (age === 0) {
+        yearOld = m + " months";
+      } else {
+        yearOld = age + " years";
+      }
+      return yearOld;
+    }
+  };
+
   return (
     <ScrollView style={styles.menuContainer}>
       <View style={styles.profileContainer}>
         <View style={styles.profileImageContainer}>
           <Image source={profile} style={styles.profile} />
         </View>
-        <Text style={styles.profileText}>Sinan Dumansiz</Text>
+        <Text style={styles.profileText}>{currentPetInfo.ownerName}</Text>
       </View>
       <View style={styles.petControlContainer}>
         <View style={styles.pet}>
@@ -27,9 +54,9 @@ const Menu = () => {
             <Image source={petImage} style={styles.petImage} />
           </View>
           <View style={styles.petInfoContainer}>
-            <Text style={styles.petName}>Maximus</Text>
-            <Text style={styles.petAge}>1 year old</Text>
-            <Text style={styles.petBreed}>German Shephard</Text>
+            <Text style={styles.petName}>{currentPetInfo.name}</Text>
+            <Text style={styles.petAge}>{calculateYearOldwithMonth()}</Text>
+            <Text style={styles.petBreed}>{currentPetInfo.breed}</Text>
           </View>
           {/* <View style={styles.buttonContainer}>
             <TouchableOpacity

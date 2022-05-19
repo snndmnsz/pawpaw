@@ -1,7 +1,16 @@
 import { StyleSheet, Text, View, TextInput } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 
-const Input = ({ placeholder, type, label, showLabel = true, ...props }) => {
+const Input = ({
+  placeholder,
+  type,
+  label,
+  showLabel = true,
+  onChange,
+  value,
+  ...props
+}) => {
+
   return (
     <View style={styles.inputContainer}>
       {showLabel && <Text style={styles.inputText}>{label}</Text>}
@@ -12,6 +21,8 @@ const Input = ({ placeholder, type, label, showLabel = true, ...props }) => {
         underlineColorAndroid="transparent"
         keyboardType={type}
         {...props}
+        onChangeText={(text) => onChange(text)}
+        value={value}
       />
     </View>
   );

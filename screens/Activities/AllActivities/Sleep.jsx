@@ -1,13 +1,46 @@
 import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import sleep from "../../../assets/activityImages/sleep.png";
 import Input from "../../../components/ui/Input/Input";
 import ClockPicker from "../../../components/ui/ClockPicker/ClockPicker";
 import Button from "../../../components/ui/Button/Button";
 import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useSelector } from "react-redux";
 
 const Sleep = () => {
+  const selectedDate = useSelector(
+    (state) => state.myPet.calender.selectedDate
+  );
+  const [note, setNote] = useState("");
+  const [bedTime, setBedTime] = useState("");
+  const [wakeupTime, setWakeupTime] = useState("");
+
+  const noteHandler = (note) => {
+    setNote(note);
+  };
+
+  const wakeUpHandler = (time) => {
+    setWakeupTime(`${time}:00`);
+  };
+
+  const bedTimeHandler = (time) => {
+    setBedTime(`${time}:00`);
+  };
+
+  const sleepSubmitHandler = () => {
+    const activityFormattedDate = selectedDate.split("T")[0];
+    const newActivityDate = new Date(`${activityFormattedDate}T${bedTime}`);
+    console.log(newActivityDate);
+
+    if (note.length === 0 || bedTime.length === 0 || wakeupTime.length === 0) {
+      return alert("Please fill all the fields");
+    } else if (note.length > 100) {
+      return alert("Please enter a note less than 100 characters");
+    }
+    console.log(note, "==", bedTime, "==", wakeupTime, "==", newActivityDate);
+  };
+
   return (
     <KeyboardAwareScrollView
       showsVerticalScrollIndicator={false}
@@ -23,18 +56,21 @@ const Sleep = () => {
             type="default"
             label="Note"
             showLabel={false}
+            onChange={noteHandler}
           />
-          <ClockPicker placeHolder="Bed Time" buttonPlaceHolder="Set Time" />
           <ClockPicker
+            onChange={bedTimeHandler}
+            placeHolder="Bed Time"
+            buttonPlaceHolder="Set Time"
+          />
+          <ClockPicker
+            onChange={wakeUpHandler}
             placeHolder="Wake Up Time"
             buttonPlaceHolder="Set Time"
           />
         </View>
         <View style={styles.buttonContainer}>
-          <Button
-            text="Create Sleep Activity"
-            onPress={() => alert("Sleep Created")}
-          />
+          <Button text="Create Sleep Activity" onPress={sleepSubmitHandler} />
         </View>
         <View style={styles.circle}></View>
       </View>
@@ -65,14 +101,14 @@ const styles = StyleSheet.create({
     width: 700,
     height: 700,
     borderRadius: 700 / 2,
-    top: -430,
+    top: -450,
     // left: -15,
     backgroundColor: "#E6EDFA",
     position: "absolute",
     zIndex: -1,
   },
   imageContainer: {
-    marginTop: 28,
+    marginTop: 20,
     width: "100%",
     height: 260,
     alignItems: "center",
