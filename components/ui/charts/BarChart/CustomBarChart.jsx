@@ -1,26 +1,42 @@
 import { StyleSheet, Text, View, Dimensions } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BarChart } from "react-native-chart-kit";
+import moment from "moment";
+import { useIsFocused } from "@react-navigation/native";
+import { getAllWeightbyPetId } from "../../../../database/tables/weight";
+import { useSelector, useDispatch } from "react-redux";
 
-const CustomBarChart = ({title}) => {
+const CustomBarChart = ({ title }) => {
   const screenWidth = Dimensions.get("window").width * 0.8;
+  const isFocused = useIsFocused();
+  const [weightData, setWeightData] = useState([0, 0, 0, 0, 0, 0]);
+  const [dataLabels, setDataLabels] = useState();
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
 
-  const data = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    datasets: [
-      {
-        data: [20, 45, 28, 80, 99, 43],
-        colors: [
-          (opacity = 1) => `#1DA8B1`,
-          (opacity = 1) => `#FC3090`,
-          (opacity = 1) => `#F66816`,
-          (opacity = 1) => `#2871C8`,
-          (opacity = 1) => `#67C5A3`,
-          (opacity = 1) => `#707BFB`,
-        ],
-      },
-    ],
-  };
+  useEffect(() => {
+    const lastSixMont = [];
+    for (let i = 0; i < 6; i++) {
+      lastSixMont.push(moment().subtract(i, "month").format("MMM"));
+    }
+    setDataLabels(lastSixMont.reverse());
+    console.log(title);
+
+    if ((title === "Weight Stats" || title === "Weight History")) {
+      getAllWeightbyPetId(currentPetId)
+        .then((res) => {
+          res.forEach((element) => {
+            const date = moment(element.date).format("MMM");
+            const index = lastSixMont.indexOf(date);
+            if (index !== -1) {
+              weightData[index] += parseFloat(element.weight);
+            }
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, []);
 
   return (
     <View style={styles.barContainer}>
@@ -30,7 +46,22 @@ const CustomBarChart = ({title}) => {
       </View>
       <BarChart
         // style={graphStyle}
-        data={data}
+        data={{
+          labels: dataLabels,
+          datasets: [
+            {
+              data: weightData,
+              colors: [
+                (opacity = 1) => `#1DA8B1`,
+                (opacity = 1) => `#FC3090`,
+                (opacity = 1) => `#F66816`,
+                (opacity = 1) => `#2871C8`,
+                (opacity = 1) => `#67C5A3`,
+                (opacity = 1) => `#707BFB`,
+              ],
+            },
+          ],
+        }}
         width={screenWidth}
         height={168}
         // yAxisLabel="$"

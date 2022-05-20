@@ -11,21 +11,22 @@ import walk from "../../../assets/IconImages/walk.png";
 const backgroundColorConverter = (activity) => {
   switch (activity) {
     case "food":
-      return "#FD5B71";
-    case "vet":
-      return "#1DA8B1";
-    case "toilet":
-      return "#FFA500";
-    case "play":
-      return "#00BFFF";
-    case "walk":
       return "#FC3090";
+    case "vet":
+      return "#00BFFF";
+    case "toilet":
+      return "#9B51E0";
+    case "play":
+      return "#1DA8B1";
+    case "walk":
+      return "#FFA500";
     case "sleep":
       return "#2871C8";
     default:
       return "#FFFFFF";
   }
 };
+
 
 const DetailListItem = ({ item }) => {
   return (

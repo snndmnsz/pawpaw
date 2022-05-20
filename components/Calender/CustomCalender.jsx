@@ -60,11 +60,12 @@ LocaleConfig.locales["en"] = {
 };
 LocaleConfig.defaultLocale = "en";
 
-const food = { key: "food", color: "#FD5B71" };
+const food = { key: "food", color: "#FC3090" };
 const play = { key: "play", color: "#1DA8B1" };
 const sleep = { key: "sleep", color: "#2871C8" };
 const toilet = { key: "toilet", color: "#9B51E0" };
-const walk = { key: "walk", color: "#EE7942" };
+const walk = { key: "walk", color: "#FFA500" };
+const vet = { key: "vet", color: "#00BFFF" };
 
 const CustomCalender = () => {
   const dotsData = {
@@ -73,6 +74,7 @@ const CustomCalender = () => {
     sleep: sleep,
     toilet: toilet,
     walk: walk,
+    vet: vet,
   };
 
   const selectedDate = useSelector(
@@ -84,26 +86,22 @@ const CustomCalender = () => {
 
   const [markedDates, setMarkedDates] = useState({});
 
-  // {
-  //   // "2022-05-25": {
-  //   //   dots: [vacation, massage, workout],
-  //   // },
-  //   // "2022-05-23": { dots: [massage, workout] },
-  // }
-
   const setSelectedDateHandler = (day) => {
-    //  check if markedDates has selected property in it and if it does then remove it
-    const selectedsInMarkedDates = Object.keys(markedDates).filter(
-      (date) => markedDates[date].selected
-    );
-    // make selected false all selectedsInMarkedDates propery
-    selectedsInMarkedDates.forEach((date) => {
-      markedDates[date]["selected"] = false;
+    const newMarkedDates = { ...markedDates };
+    Object.keys(newMarkedDates).forEach((key) => {
+      if (newMarkedDates[key].selected) {
+        newMarkedDates[key].selected = false;
+      }
     });
-    setMarkedDates((prev) => {
-      return { ...prev, ...markedDates };
-    });
-    console.log(markedDates);
+    if (newMarkedDates[day]) {
+      newMarkedDates[day].selected = true;
+    } else {
+      newMarkedDates[day] = {
+        selected: true,
+        dots: [],
+      };
+    }
+    setMarkedDates(newMarkedDates);
   };
 
   useEffect(() => {
@@ -112,39 +110,40 @@ const CustomCalender = () => {
       const today = new Date();
       const todayDate = moment(today).format("YYYY-MM-DD");
       dispatch(setSelectedDate(today.toISOString()));
-      setMarkedDates({
-        ...markedDates,
-        [todayDate]: {
-          ...markedDates[todayDate],
-          selected: true,
-          dots: [dotsData.food, dotsData.play, dotsData.sleep],
-        },
-      });
+      // setSelectedDateHandler(todayDate);
 
-      setSelectedDateHandler(todayDate);
-
-      // getAllActivities(currentPetId)
-      //   .then((activities) => {
-      //     activities.forEach((activity) => {
-      //       const activityDate = moment(activity.date).format("YYYY-MM-DD");
-      //       if (markedDates[activityDate]) {
-      //         setMarkedDates({
-      //           ...markedDates,
-      //           [activityDate]: {
-      //             ...markedDates[activityDate],
-      //             dots: [...markedDates[activityDate].dots, activity.activityType],
-      //           },
-      //         });
-      //       }
-      //     });
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
+      getAllActivities(currentPetId)
+        .then((activities) => {
+          const openingMarkedDates = {};
+          openingMarkedDates[todayDate] = {
+            selected: true,
+            dots: [],
+          };
+          activities.forEach((activity) => {
+            const activityDate = moment(activity.date).format("YYYY-MM-DD");
+            //check if  date is not in openingMarkedDates then create new object
+            if (!openingMarkedDates[activityDate]) {
+              openingMarkedDates[activityDate] = {
+                selected: todayDate === activityDate ? true : false,
+                dots: [dotsData[activity.activityType]],
+              };
+            } else if (openingMarkedDates[activityDate]) {
+              openingMarkedDates[activityDate] = {
+                selected: todayDate === activityDate ? true : false,
+                dots: [
+                  ...openingMarkedDates[activityDate].dots,
+                  dotsData[activity.activityType],
+                ],
+              };
+            }
+          });
+          setMarkedDates(openingMarkedDates);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, [isFocused]);
-
-  //TODO baska aya gecince onuda duzelt
 
   return (
     <View style={styles.calenderContainer}>
@@ -162,6 +161,7 @@ const CustomCalender = () => {
           const today = new Date().toISOString().split("T")[1];
           dispatch(setSelectedDate(`${day.dateString}T${today}`));
           // console.log(`${day.dateString}T${today}`);
+
           setSelectedDateHandler(day.dateString);
         }}
         // Handler which gets executed on day long press. Default = undefined
@@ -263,6 +263,6 @@ export default CustomCalender;
 
 const styles = StyleSheet.create({
   calenderContainer: {
-    height: "100%",
+    // height: "100%",
   },
 });

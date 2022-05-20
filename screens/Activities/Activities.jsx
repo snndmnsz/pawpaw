@@ -4,7 +4,6 @@ import CustomCalender from "../../components/Calender/CustomCalender";
 import CalenderDateDetail from "../../components/CalenderDateDetail/CalenderDateDetail";
 
 const Activities = () => {
-
   return (
     <View style={styles.activityContainer}>
       <View style={styles.calender}>
@@ -21,17 +20,23 @@ export default Activities;
 
 const styles = StyleSheet.create({
   activityContainer: {
-    flex: 1,
+    // flex: 1,
     alignitems: "center",
-    justifyContent: "flex-start",
+    // justifyContent: "flex-start",
     backgroundColor: "#FFFFFF",
+    width: "100%",
+    height: "100%",
   },
   calender: {
-    width: "100%",
-    height: "61%",
+    // width: "100%",
+    // height: "61%",
+    // flex: 1,
+
+    flexShrink: 1,
   },
   date: {
-    width: "100%",
-    height: "35%",
+    flex: 1,
+    // width: "100%",
+    // height: "35%",
   },
 });

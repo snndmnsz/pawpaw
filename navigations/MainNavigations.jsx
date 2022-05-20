@@ -13,6 +13,8 @@ import * as SplashScreen from "expo-splash-screen";
 
 import { myPetInit, getMyPets } from "../database/tables/myPet";
 import { activitiesInit } from "../database/tables/activities";
+import { weightInit } from "../database/tables/weight";
+import { vetInit } from "../database/tables/vet";
 
 const MainNavigations = () => {
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
@@ -31,6 +33,16 @@ const MainNavigations = () => {
                 console.log(myPets);
                 if (myPets.length > 0) {
                   activitiesInit()
+                    .then(() => {})
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                  weightInit()
+                    .then(() => {})
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                  vetInit()
                     .then(() => {})
                     .catch((err) => {
                       console.log(err);

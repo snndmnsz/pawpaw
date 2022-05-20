@@ -11,7 +11,8 @@ export default function App() {
   //TODO: loading fecth data from database
 
   if (Platform.OS === "android") {
-    NavigationBar.setBackgroundColorAsync("#FFFFFF");
+    NavigationBar.setBackgroundColorAsync("white");
+    NavigationBar.setButtonStyleAsync("dark");
   }
 
   return (

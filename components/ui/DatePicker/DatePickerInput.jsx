@@ -20,6 +20,7 @@ const DatePickerInput = ({
   title,
 }) => {
   const [selectedDate, setSelectedDate] = useState("");
+  const [time, setTime] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <View style={styles.container}>
@@ -53,8 +54,8 @@ const DatePickerInput = ({
               }}
               onTimeChange={(selectedTime) => {
                 setTime(selectedTime);
-                setModalVisible(!modalVisible);
                 onChange(selectedTime);
+                // setModalVisible(!modalVisible);
               }}
               options={{
                 backgroundColor: "#FFFFFF",

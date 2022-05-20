@@ -53,73 +53,75 @@ const Health = ({ navigation }) => {
     <View style={styles.healtContainer}>
       <Text style={styles.headerText}>Pet Health Calender</Text>
       <UpcomingHealthEvents />
-      <FlatList
-        data={listData}
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-        }}
-        style={styles.flatList}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => {
-              if (item.id === 1) {
-                navigation.navigate("VaccineHistory");
-              } else if (item.id === 2) {
-                navigation.navigate("MedicalHistory");
-              } else if (item.id === 3) {
-                navigation.navigate("VetAppoitments");
-              } else if (item.id === 4) {
-                navigation.navigate("WeightHistory");
-              }
-            }}
-            activeOpacity={0.8}
-            style={[
-              styles.listItemContainer,
-              {
-                backgroundColor: item.bg,
-                borderWidth: 2,
-                borderColor: item.borderColor,
-              },
-            ]}
-          >
-            <View
+      <View style={styles.flatListContainer}>
+        <FlatList
+          data={listData}
+          // contentContainerStyle={{
+          //   alignItems: "center",
+          //   justifyContent: "center",
+          //   width: "100%",
+          // }}
+          style={styles.flatList}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => {
+                if (item.id === 1) {
+                  navigation.navigate("VaccineHistory");
+                } else if (item.id === 2) {
+                  navigation.navigate("MedicalHistory");
+                } else if (item.id === 3) {
+                  navigation.navigate("VetAppoitments");
+                } else if (item.id === 4) {
+                  navigation.navigate("WeightHistory");
+                }
+              }}
+              activeOpacity={0.8}
               style={[
-                styles.imageContainer,
+                styles.listItemContainer,
                 {
-                  backgroundColor: item.backgroundColor,
+                  backgroundColor: item.bg,
+                  borderWidth: 2,
+                  borderColor: item.borderColor,
                 },
               ]}
             >
-              <Image
+              <View
                 style={[
-                  styles.image,
+                  styles.imageContainer,
                   {
-                    width: item.title === "Vaccine History" ? 39 : 30,
-                    height: item.title === "Vaccine History" ? 39 : 30,
-                  },
-                ]}
-                source={item.image}
-              />
-            </View>
-            <View style={styles.textContainer}>
-              <Text
-                style={[
-                  styles.title,
-                  {
-                    color: item.backgroundColor,
+                    backgroundColor: item.backgroundColor,
                   },
                 ]}
               >
-                {item.title}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+                <Image
+                  style={[
+                    styles.image,
+                    {
+                      width: item.title === "Vaccine History" ? 39 : 30,
+                      height: item.title === "Vaccine History" ? 39 : 30,
+                    },
+                  ]}
+                  source={item.image}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Text
+                  style={[
+                    styles.title,
+                    {
+                      color: item.backgroundColor,
+                    },
+                  ]}
+                >
+                  {item.title}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
     </View>
   );
 };
@@ -128,8 +130,11 @@ export default Health;
 
 const styles = StyleSheet.create({
   healtContainer: {
-    flex: 1,
     backgroundColor: "#FFFFFF",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
   },
   headerText: {
     fontSize: 20,
@@ -139,13 +144,19 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 8,
   },
+  flatListContainer: {
+    paddingHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    // width: "100%",
+  },
   flatList: {
+    width: "100%",
     marginTop: 10,
-    paddingHorizontal: 5,
   },
   listItemContainer: {
     margin: 10,
-    width: "44%",
+    flexBasis: "45%",
     height: 150,
     borderRadius: 12,
     justifyContent: "center",

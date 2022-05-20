@@ -67,24 +67,25 @@ export const getAllActivities = (petId) => {
 //   return promise;
 // };
 
-// export const getActivitiesForADate = (petId, date) => {
-//   const promise = new Promise((resolve, reject) => {
-//     db.transaction((tx) => {
-//       tx.executeSql(
-//         `select * from activities where petId = ? and date = ?`,
-//         [petId, date],
-//         (_, { rows }) => {
-//           resolve(rows._array);
-//         },
-//         (_, err) => {
-//           console.log(err);
-//           reject(err);
-//         }
-//       );
-//     });
-//   });
-//   return promise;
-// };
+export const getActivitiesForADate = (petId, date) => {
+  const dateObj = date.split("T")[0];
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `select * from activities where petId = ? and SUBSTR(date,1, 10) = ?`,
+        [+petId, dateObj],
+        (_, { rows }) => {
+          resolve(rows._array);
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+    });
+  });
+  return promise;
+};
 
 export const addAnActivity = (petId, activity) => {
   const promise = new Promise((resolve, reject) => {

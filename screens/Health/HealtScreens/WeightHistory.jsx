@@ -6,62 +6,21 @@ import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
 import Input from "../../../components/ui/Input/Input";
 import Button from "../../../components/ui/Button/Button";
 import { useIsFocused } from "@react-navigation/native";
-
-const DUMMY_DATA = [
-  {
-    id: 1,
-    month: "January",
-    date: "13th Wednesday",
-    weight: "12.5",
-  },
-  {
-    id: 2,
-    month: "February",
-    date: "13th Wednesday",
-    weight: "12.5",
-  },
-  {
-    id: 3,
-    month: "February",
-    date: "13th Wednesday",
-    weight: "12.5",
-  },
-  {
-    id: 4,
-    month: "February",
-    date: "13th Wednesday",
-    weight: "12.5",
-  },
-  {
-    id: 5,
-    month: "February",
-    date: "13th Wednesday",
-    weight: "12.5",
-  },
-  {
-    id: 6,
-    month: "February",
-    date: "13th Wednesday",
-    weight: "12.5",
-  },
-  {
-    id: 7,
-    month: "February",
-    date: "13th Wednesday",
-    weight: "12.5",
-  },
-  {
-    id: 8,
-    month: "February",
-    date: "13th Wednesday",
-    weight: "12.5",
-  },
-];
+import {
+  getAllWeightbyPetId,
+  addWeight,
+} from "../../../database/tables/weight";
+import { useSelector } from "react-redux";
+import moment from "moment";
 
 const WeightHistory = ({ route, navigation }) => {
-  const isEdit = route.params?.edit;
+  let isEdit = route.params?.edit;
   const addButton = route.params?.addButton;
   //console.log(isEdit);
+
+  const [weightData, setWeightData] = useState([]);
+  const isFocused = useIsFocused();
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
 
   const [weitgh, setWeight] = useState(0);
   const [date, setDate] = useState("");
@@ -74,6 +33,10 @@ const WeightHistory = ({ route, navigation }) => {
   };
 
   const addWeightHandler = () => {
+    const onlyDate = date.split(" ");
+    const time = onlyDate[1]+":00"
+    const dates = moment(onlyDate[0]).format("YYYY-MM-DD");
+    const formattedDateString = new Date(dates + "T" + time).toISOString();
     if (weitgh === "" || date === "") {
       alert("Please enter weight and date");
     } else if (isNaN(weitgh)) {
@@ -82,7 +45,39 @@ const WeightHistory = ({ route, navigation }) => {
       alert("Please enter a valid weight");
     }
     console.log(weitgh, date);
+
+    addWeight(currentPetId, weitgh, formattedDateString)
+      .then(() => {
+        navigation.navigate("WeightHistory");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
+  useEffect(() => {
+    if (isFocused) {
+      getAllWeightbyPetId(currentPetId)
+        .then((weight) => {
+          // sort weight by date 
+          const sortedWeight = weight.sort((a, b) => {
+            return new Date(a.date) - new Date(b.date);
+          })
+          const data = sortedWeight.map((item) => {
+            return {
+              id: item.id,
+              month: moment(item.date).format("MMM"),
+              date: moment(item.date).format("Do dddd"),
+              weight: parseFloat(item.weight),
+            };
+          });
+          setWeightData(data.reverse());
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isFocused, isEdit]);
 
   return (
     <View style={styles.weightContainer}>
@@ -109,7 +104,7 @@ const WeightHistory = ({ route, navigation }) => {
         </View>
       ) : (
         <FlatList
-          data={DUMMY_DATA}
+          data={weightData}
           contentContainerStyle={{
             width: "100%",
             justifyContent: "center",

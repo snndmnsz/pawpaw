@@ -7,60 +7,18 @@ import Button from "../../../components/ui/Button/Button";
 import { useIsFocused } from "@react-navigation/native";
 import CustomBarChart from "../../../components/ui/charts/BarChart/CustomBarChart";
 
-const DUMMY_DATA = [
-  {
-    id: 1,
-    month: "January",
-    date: "13th Wednesday",
-    time: "12:00",
-  },
-  {
-    id: 2,
-    month: "February",
-    date: "13th Wednesday",
-    time: "12:00",
-  },
-  {
-    id: 3,
-    month: "February",
-    date: "13th Wednesday",
-    time: "12:00",
-  },
-  {
-    id: 4,
-    month: "February",
-    date: "13th Wednesday",
-    time: "12:00",
-  },
-  {
-    id: 5,
-    month: "February",
-    date: "13th Wednesday",
-    time: "12:00",
-  },
-  {
-    id: 6,
-    month: "February",
-    date: "13th Wednesday",
-    time: "12:00",
-  },
-  {
-    id: 7,
-    month: "February",
-    date: "13th Wednesday",
-    time: "12:00",
-  },
-  {
-    id: 8,
-    month: "February",
-    date: "13th Wednesday",
-    time: "12:00",
-  },
-];
+import { getAllVetbyPetId, addVet } from "../../../database/tables/vet";
+import { addAnActivity } from "../../../database/tables/activities";
+import { useSelector } from "react-redux";
+import moment from "moment";
 
 const VetAppoitments = ({ route, navigation }) => {
   const isEdit = route.params?.edit;
   const addButton = route.params?.addButton;
+
+  const [vetData, setVetData] = useState([]);
+  const isFocused = useIsFocused();
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
 
   const [date, setDate] = useState("");
 
@@ -69,11 +27,62 @@ const VetAppoitments = ({ route, navigation }) => {
   };
 
   const vetAddHandler = () => {
+    const onlyDate = date.split(" ");
+    const time = onlyDate[1]+":00"
+    const dates = moment(onlyDate[0]).format("YYYY-MM-DD");
+    const formattedDateString = new Date(dates + "T" + time).toISOString();
     if (date === "") {
       alert("Please select a date");
     }
-    console.log(date);
+    const vetActivityData = {
+      petId: currentPetId,
+      activityType: "vet",
+      date: formattedDateString,
+      note: "Veterinary Appointment",
+      startTime: time,
+      endTime: "",
+      calorie: "",
+      meter: "",
+    };
+
+    addVet(currentPetId, formattedDateString)
+      .then(() => {
+        addAnActivity(currentPetId, vetActivityData)
+          .then((res) => {
+            navigation.navigate("VetAppoitments");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
+  useEffect(() => {
+    if (isFocused) {
+      getAllVetbyPetId(currentPetId)
+        .then((vet) => {
+          // sort weight by date
+          const sortedVet = vet.sort((a, b) => {
+            return new Date(a.date) - new Date(b.date);
+          });
+          const data = sortedVet.map((item) => {
+            return {
+              id: item.id,
+              month: moment(item.date).format("MMM"),
+              date: moment(item.date).format("Do dddd"),
+              time: moment(item.date).format("HH:mm"),
+            };
+          });
+          setVetData(data.reverse());
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isFocused, isEdit]);
 
   return (
     <View style={styles.vetContainer}>
@@ -93,7 +102,7 @@ const VetAppoitments = ({ route, navigation }) => {
         </View>
       ) : (
         <FlatList
-          data={DUMMY_DATA}
+          data={vetData}
           contentContainerStyle={{
             width: "100%",
             justifyContent: "center",
