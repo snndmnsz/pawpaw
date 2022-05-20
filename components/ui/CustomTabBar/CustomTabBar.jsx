@@ -61,13 +61,13 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                 />
               ) : label === "Activities" ? (
                 <Icon
-                  name={isFocused ? "bar-chart" : "bar-chart-outline"}
+                  name={isFocused ? "time" : "time-outline"}
                   size={25}
                   color={isFocused ? "#EE7942" : "#222"}
                 />
               ) : label === "Health" ? (
                 <Icon
-                  name={isFocused ? "medical" : "medical-outline"}
+                  name={isFocused ? "fitness" : "fitness-outline"}
                   size={25}
                   color={isFocused ? "#EE7942" : "#222"}
                 />
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    paddingBottom: Platform.OS === "android" ? 12 : 35,
+    paddingBottom: Platform.OS === "android" ? 5 : 30,
   },
   button: {
     flex: 1,

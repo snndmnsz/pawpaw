@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Dimensions } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
   Calendar,
   CalendarList,
@@ -12,6 +12,11 @@ import { useIsFocused } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedDate } from "../../redux/slice/myPetSlice";
 import moment from "moment";
+
+import {
+  getAllActivities,
+  deleteAActivity,
+} from "../../database/tables/activities";
 
 LocaleConfig.locales["en"] = {
   monthNames: [
@@ -55,23 +60,36 @@ LocaleConfig.locales["en"] = {
 };
 LocaleConfig.defaultLocale = "en";
 
-const vacation = { key: "vacation", color: "red", selectedDotColor: "blue" };
-const massage = { key: "massage", color: "blue", selectedDotColor: "blue" };
-const workout = { key: "workout", color: "green" };
+const food = { key: "food", color: "#FD5B71" };
+const play = { key: "play", color: "#1DA8B1" };
+const sleep = { key: "sleep", color: "#2871C8" };
+const toilet = { key: "toilet", color: "#9B51E0" };
+const walk = { key: "walk", color: "#EE7942" };
 
 const CustomCalender = () => {
+  const dotsData = {
+    food: food,
+    play: play,
+    sleep: sleep,
+    toilet: toilet,
+    walk: walk,
+  };
+
   const selectedDate = useSelector(
     (state) => state.myPet.calender.selectedDate
   );
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
-  const [markedDates, setMarkedDates] = useState({
-    "2022-05-25": {
-      dots: [vacation, massage, workout],
-    },
-    "2022-05-23": { dots: [massage, workout] },
-  });
+  const [markedDates, setMarkedDates] = useState({});
+
+  // {
+  //   // "2022-05-25": {
+  //   //   dots: [vacation, massage, workout],
+  //   // },
+  //   // "2022-05-23": { dots: [massage, workout] },
+  // }
 
   const setSelectedDateHandler = (day) => {
     //  check if markedDates has selected property in it and if it does then remove it
@@ -82,23 +100,47 @@ const CustomCalender = () => {
     selectedsInMarkedDates.forEach((date) => {
       markedDates[date]["selected"] = false;
     });
-    setMarkedDates({
-      ...markedDates,
-      [day]: {
-        ...markedDates[day],
-        selected: true,
-      },
+    setMarkedDates((prev) => {
+      return { ...prev, ...markedDates };
     });
+    console.log(markedDates);
   };
 
   useEffect(() => {
     if (isFocused) {
+      setMarkedDates({});
       const today = new Date();
       const todayDate = moment(today).format("YYYY-MM-DD");
-      setSelectedDateHandler(todayDate);
       dispatch(setSelectedDate(today.toISOString()));
-      //console.log(todayFormattedFormatted);
-      //console.log(new Date());
+      setMarkedDates({
+        ...markedDates,
+        [todayDate]: {
+          ...markedDates[todayDate],
+          selected: true,
+          dots: [dotsData.food, dotsData.play, dotsData.sleep],
+        },
+      });
+
+      setSelectedDateHandler(todayDate);
+
+      // getAllActivities(currentPetId)
+      //   .then((activities) => {
+      //     activities.forEach((activity) => {
+      //       const activityDate = moment(activity.date).format("YYYY-MM-DD");
+      //       if (markedDates[activityDate]) {
+      //         setMarkedDates({
+      //           ...markedDates,
+      //           [activityDate]: {
+      //             ...markedDates[activityDate],
+      //             dots: [...markedDates[activityDate].dots, activity.activityType],
+      //           },
+      //         });
+      //       }
+      //     });
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     }
   }, [isFocused]);
 
@@ -119,7 +161,7 @@ const CustomCalender = () => {
           //console.log("selected day", day.timestamp);
           const today = new Date().toISOString().split("T")[1];
           dispatch(setSelectedDate(`${day.dateString}T${today}`));
-          console.log(`${day.dateString}T${today}`);
+          // console.log(`${day.dateString}T${today}`);
           setSelectedDateHandler(day.dateString);
         }}
         // Handler which gets executed on day long press. Default = undefined

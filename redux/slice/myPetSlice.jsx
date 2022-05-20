@@ -2,16 +2,17 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   myPets: [],
-  currentPetId: "132",
+  currentPetId: null,
   currentPetInfo: {
-    id: "123",
-    name: "Kuttie",
-    spicie: "cat",
-    birthDate: "2022/04/11 00:00",
-    breed: "Brıths",
-    gender: "male",
-    weight: "12",
-    ownerName: "Sinan dz",
+    id: "",
+    name: "",
+    photoURL: "",
+    spicie: "",
+    birthDate: "",
+    breed: "",
+    gender: "",
+    weight: "",
+    ownerName: "",
   },
   loading: false,
   error: null,
@@ -46,6 +47,21 @@ const myPetSlice = createSlice({
     setSelectedDate: (state, action) => {
       state.calender.selectedDate = action.payload;
     },
+    setPetData(state, action) {
+      state.currentPetInfo = action.payload;
+      state.currentPetId = action.payload.id;
+    },
+    resetPetInfo(state) {
+      state.currentPetInfo = {
+        id: "",
+        name: "",
+        photoURL: "",
+        spicie: "",
+        birthDate: "",
+        breed: "",
+      };
+      state.currentPetId = null;
+    },
   },
 });
 
@@ -56,6 +72,8 @@ export const {
   setGenderBreedWeight,
   setOwnerName,
   setSelectedDate,
+  setPetData,
+  resetPetInfo
 } = myPetSlice.actions;
 
 export default myPetSlice.reducer;

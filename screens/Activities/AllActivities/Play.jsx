@@ -8,10 +8,13 @@ import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSelector } from "react-redux";
 
-const Play = () => {
+import { addAnActivity } from "../../../database/tables/activities";
+
+const Play = ({ navigation }) => {
   const selectedDate = useSelector(
     (state) => state.myPet.calender.selectedDate
   );
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
   const [note, setNote] = useState("");
   const [time, setTime] = useState("");
 
@@ -25,15 +28,31 @@ const Play = () => {
 
   const playSubmitHandler = () => {
     const activityFormattedDate = selectedDate.split("T")[0];
-    const newActivityDate = new Date(`${activityFormattedDate}T${time}`);
-    console.log(newActivityDate);
-
+    const newActivityDate = new Date(
+      `${activityFormattedDate}T${time}`
+    ).toISOString();
     if (note.length === 0 || time.length === 0) {
       return alert("Please fill all the fields");
     } else if (note.length > 100) {
       return alert("Please enter a note less than 100 characters");
     }
-    console.log(note, "==", time, "==", newActivityDate);
+    const playActivity = {
+      petId: +currentPetId,
+      activityType: "play",
+      date: newActivityDate,
+      note: note,
+      startTime: time,
+      endTime: "",
+      calorie: "",
+      meter: "",
+    };
+    addAnActivity(currentPetId, playActivity)
+      .then(() => {
+        navigation.navigate("ActivitiesMain");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

@@ -9,28 +9,28 @@ const StatsContainer = () => {
         backgroundC="#FEE8DC"
         textC="#EE7942"
         activity="Walk"
-        data="3.5"
-        small="km"
+        data="680"
+        small="m"
       />
       <StatsBox
         backgroundC="#FFEFF1"
         textC="#FD5B71"
         activity="Calories"
-        data="500"
-        small="kcal"
+        data="350"
+        small="cal"
       />
       <StatsBox
         backgroundC="#E6EDFA"
         textC="#2871C8"
         activity="Sleep"
-        data="12"
+        data="12.2"
         small="h"
       />
       <StatsBox
         backgroundC="#F5EEFC"
         textC="#9B51E0"
         activity="Weight"
-        data="10"
+        data="7.6"
         small="kg"
       />
     </View>

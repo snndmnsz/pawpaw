@@ -73,6 +73,8 @@ const styles = StyleSheet.create({
   textSmall: {
     height: "100%",
     fontSize: 13,
+    marginLeft:2,
+    top:26,
   },
   boxTextName: {
     left: "-20%",

@@ -16,7 +16,7 @@ import Photo from "../../../components/ui/ImagePhoto/Photo";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setGenderBreedWeight } from "../../../redux/slice/myPetSlice"
+import { setGenderBreedWeight } from "../../../redux/slice/myPetSlice";
 
 const PetInfoSecond = ({ navigation }) => {
   const [gender, setGender] = useState("");
@@ -59,8 +59,8 @@ const PetInfoSecond = ({ navigation }) => {
 
   return (
     <KeyboardAwareScrollView
-      style={styles.petInfoSecondContainer}
       showsVerticalScrollIndicator={false}
+      style={styles.petInfoSecondContainer}
     >
       <Level level="3" />
       <Text style={styles.headerText}>Fill Your Pet Info</Text>

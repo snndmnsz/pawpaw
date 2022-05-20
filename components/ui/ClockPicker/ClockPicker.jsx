@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import Button from "../Button/Button";
 import DatePicker from "react-native-modern-datepicker";
 
-const ClockPicker = ({ placeHolder, buttonPlaceHolder ,onChange }) => {
+const ClockPicker = ({ placeHolder, buttonPlaceHolder, onChange }) => {
   const [time, setTime] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   return (
@@ -45,6 +45,12 @@ const ClockPicker = ({ placeHolder, buttonPlaceHolder ,onChange }) => {
                   setModalVisible(!modalVisible);
                   onChange(selectedTime);
                 }}
+                options={{
+                  textDefaultColor: "#000000",
+                  selectedTextColor: "#FFFFFF",
+                  mainColor: "#707BFB",
+                }}
+                style={{ borderRadius: 10 }}
               />
             </View>
 

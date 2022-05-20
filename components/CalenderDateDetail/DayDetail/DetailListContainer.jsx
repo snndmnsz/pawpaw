@@ -23,7 +23,7 @@ const dummyData = [
   },
   {
     id: 4,
-    activity: "care",
+    activity: "vet",
     time: "20:00:00 - 08:00:00",
     note: "Maxi took care of some stuff",
   },

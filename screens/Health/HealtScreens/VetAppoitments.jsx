@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Icons from "react-native-vector-icons/Ionicons";
 import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
 import Input from "../../../components/ui/Input/Input";
@@ -61,6 +61,20 @@ const DUMMY_DATA = [
 const VetAppoitments = ({ route, navigation }) => {
   const isEdit = route.params?.edit;
   const addButton = route.params?.addButton;
+
+  const [date, setDate] = useState("");
+
+  const timeHandler = (date) => {
+    setDate(date);
+  };
+
+  const vetAddHandler = () => {
+    if (date === "") {
+      alert("Please select a date");
+    }
+    console.log(date);
+  };
+
   return (
     <View style={styles.vetContainer}>
       <Text style={styles.headerText}>Pet Vet Appoitments</Text>
@@ -69,11 +83,12 @@ const VetAppoitments = ({ route, navigation }) => {
         <View style={styles.editContainer}>
           <DatePickerInput
             showLabel={true}
-            customLabel="Vet Hours and Date"
+            title="Vet Appoitment Date"
             buttonText="Pick Date and Hour"
+            onChange={timeHandler}
           />
           <View style={styles.buttonContainer}>
-            <Button text="Add Vet Appointment" />
+            <Button text="Add Vet Appointment" onPress={vetAddHandler} />
           </View>
         </View>
       ) : (

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CustomBarChart from "../../../components/ui/charts/BarChart/CustomBarChart";
 import Icons from "react-native-vector-icons/Ionicons";
 import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
@@ -63,21 +63,48 @@ const WeightHistory = ({ route, navigation }) => {
   const addButton = route.params?.addButton;
   //console.log(isEdit);
 
+  const [weitgh, setWeight] = useState(0);
+  const [date, setDate] = useState("");
+
+  const weightHandler = (weight) => {
+    setWeight(+weight);
+  };
+  const dateHandler = (date) => {
+    setDate(date);
+  };
+
+  const addWeightHandler = () => {
+    if (weitgh === "" || date === "") {
+      alert("Please enter weight and date");
+    } else if (isNaN(weitgh)) {
+      alert("Please enter a valid weight");
+    } else if (weitgh > 100 || weitgh < 0) {
+      alert("Please enter a valid weight");
+    }
+    console.log(weitgh, date);
+  };
+
   return (
     <View style={styles.weightContainer}>
       <Text style={styles.headerText}>Pet Weight History</Text>
       <CustomBarChart title="Weight Stats" />
       {isEdit ? (
         <View style={styles.editContainer}>
-          <DatePickerInput showLabel={false} buttonText="Pick Date and Hour" />
+          <DatePickerInput
+            showLabel={false}
+            buttonText="Pick Date and Hour"
+            title="Weight Date"
+            onChange={dateHandler}
+          />
           <Input
             placeholder="Weight (kg)"
             type="numeric"
             label="Weight (kg)"
             showLabel={false}
+            onChange={weightHandler}
           />
           <View style={styles.buttonContainer}>
-            <Button text="Add Weight" />
+            <Button text="Add Weight" onPress={addWeightHandler} />
           </View>
         </View>
       ) : (

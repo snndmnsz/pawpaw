@@ -8,10 +8,14 @@ import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSelector } from "react-redux";
 
-const Food = () => {
+import { addAnActivity } from "../../../database/tables/activities";
+
+const Food = ({ navigation }) => {
   const selectedDate = useSelector(
     (state) => state.myPet.calender.selectedDate
   );
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
+
   const [note, setNote] = useState("");
   const [time, setTime] = useState("");
   const [calorie, setCalorie] = useState("");
@@ -30,7 +34,9 @@ const Food = () => {
 
   const foodSubmithandler = () => {
     const activityFormattedDate = selectedDate.split("T")[0];
-    const newActivityDate = new Date(`${activityFormattedDate}T${time}`);
+    const newActivityDate = new Date(
+      `${activityFormattedDate}T${time}`
+    ).toISOString();
     if (note.length === 0 || time.length === 0 || calorie.length === 0) {
       return alert("Please fill all the fields");
     } else if (calorie < 0) {
@@ -40,7 +46,23 @@ const Food = () => {
     } else if (note.length > 100) {
       return alert("Please enter a note less than 100 characters");
     }
-    console.log(note, "==", time, "==", calorie, "==", newActivityDate);
+    const foodActivity = {
+      petId: +currentPetId,
+      activityType: "food",
+      date: newActivityDate,
+      note: note,
+      startTime: time,
+      endTime: "",
+      calorie: calorie,
+      meter: "",
+    };
+    addAnActivity(currentPetId, foodActivity)
+      .then(() => {
+        navigation.navigate("ActivitiesMain");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

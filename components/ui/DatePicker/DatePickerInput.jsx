@@ -16,21 +16,21 @@ const DatePickerInput = ({
   buttonText,
   customLabel,
   onChange,
+  isStartingScreenBirthDate,
+  title,
 }) => {
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toLocaleDateString()
-  );
+  const [selectedDate, setSelectedDate] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        {showLabel && (
-          <Text style={styles.labelText}>
-            {customLabel ? customLabel : "Birth Date"}
-          </Text>
+        {isStartingScreenBirthDate && (
+          <Text style={styles.labelText}>Birth Date</Text>
         )}
         <Pressable style={styles.input} onPress={() => setModalVisible(true)}>
-          <Text style={styles.inputText}>{selectedDate}</Text>
+          <Text style={styles.inputText}>
+            {selectedDate ? selectedDate : title}
+          </Text>
           <Icons name="calendar-outline" size={24} color="#7D7D7D" />
         </Pressable>
       </View>
@@ -50,6 +50,19 @@ const DatePickerInput = ({
               style={styles.datepicker}
               onSelectedChange={(date) => {
                 setSelectedDate(date);
+              }}
+              onTimeChange={(selectedTime) => {
+                setTime(selectedTime);
+                setModalVisible(!modalVisible);
+                onChange(selectedTime);
+              }}
+              options={{
+                backgroundColor: "#FFFFFF",
+                textHeaderColor: "#000000",
+                textDefaultColor: "#000000",
+                selectedTextColor: "#FFFFFF",
+                mainColor: "#707BFB",
+                textSecondaryColor: "#8D94F4",
               }}
             />
             <Pressable
@@ -89,6 +102,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  datepicker: {
+    borderRadius: 10,
   },
   inputText: {
     color: "#7D7D7D",

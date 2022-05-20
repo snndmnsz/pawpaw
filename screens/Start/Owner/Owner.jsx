@@ -5,13 +5,12 @@ import image from "../../../assets/images/owner.png";
 import Input from "../../../components/ui/Input/Input";
 import Button from "../../../components/ui/Button/Button";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  setId,
-  setOwnerName,
-} from "../../../redux/slice/myPetSlice";
+import { setId, setOwnerName } from "../../../redux/slice/myPetSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-const Owner = () => {
+import { addAPet } from "../../../database/tables/myPet";
+
+const Owner = ({ navigation }) => {
   const [owner, setOwner] = useState("");
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
@@ -26,9 +25,23 @@ const Owner = () => {
     }
     dispatch(setOwnerName(owner));
 
-    console.log(currentPetInfo);
-
-    dispatch(setId("1"));
+    const pet = {
+      birthDate: currentPetInfo.birthDate,
+      breed: currentPetInfo.breed,
+      gender: currentPetInfo.gender,
+      name: currentPetInfo.name,
+      ownerName: owner,
+      photoURL: "",
+      spicie: currentPetInfo.spicie,
+      weight: currentPetInfo.weight,
+    };
+    addAPet(pet)
+      .then((res) => {
+        dispatch(setId(res));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const ownerHandler = (owner) => {

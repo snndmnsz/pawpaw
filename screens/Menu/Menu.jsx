@@ -11,9 +11,14 @@ import profile from "../../assets/images/profile.png";
 import petImage from "../../assets/images/dog-ex.png";
 import Icon from "react-native-vector-icons/Ionicons";
 import driveImage from "../../assets/images/drive.png";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { Alert } from "react-native";
+
+import { deleteAPet } from "../../database/tables/myPet";
+import { resetPetInfo } from "../../redux/slice/myPetSlice";
 
 const Menu = () => {
+  const dispatch = useDispatch();
   const currentPetInfo = useSelector((state) => state.myPet.currentPetInfo);
   let yearOld = 0;
 
@@ -40,6 +45,35 @@ const Menu = () => {
     }
   };
 
+  const petDeleteHandler = () => {
+    8;
+
+    Alert.alert(
+      "Ohoii Boiiii",
+      `You are about to delete ${currentPetInfo.name}. 
+        Are you sure?`,
+      [
+        {
+          text: "Cancel",
+          onPress: () => {},
+        },
+        {
+          text: "Delete",
+          onPress: () => {
+            deleteAPet(currentPetInfo.id)
+              .then(() => {
+                dispatch(resetPetInfo());
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <ScrollView style={styles.menuContainer}>
       <View style={styles.profileContainer}>
@@ -58,15 +92,15 @@ const Menu = () => {
             <Text style={styles.petAge}>{calculateYearOldwithMonth()}</Text>
             <Text style={styles.petBreed}>{currentPetInfo.breed}</Text>
           </View>
-          {/* <View style={styles.buttonContainer}>
+          <View style={styles.buttonContainer}>
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.deleteButton}
-              onPress={() => {}}
+              onPress={petDeleteHandler}
             >
               <Text style={styles.buttonText}>DELETE</Text>
             </TouchableOpacity>
-          </View> */}
+          </View>
         </View>
         <View style={styles.pet}>
           <View style={styles.petImageContainer}>
@@ -117,12 +151,12 @@ const Menu = () => {
           <Text style={styles.aboutText}>About Us</Text>
         </TouchableOpacity> */}
       </View>
-      <View style={styles.abotUsContainer}>
+      {/* <View style={styles.abotUsContainer}>
         <View style={styles.abotUsIconContainer}>
           <Icon name={"paw"} size={35} color={"#FFFFFF"} />
         </View>
         <Text style={styles.aboutUsText}>PawPaw 2022</Text>
-      </View>
+      </View> */}
     </ScrollView>
   );
 };

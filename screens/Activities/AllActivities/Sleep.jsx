@@ -8,10 +8,13 @@ import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSelector } from "react-redux";
 
-const Sleep = () => {
+import { addAnActivity } from "../../../database/tables/activities";
+
+const Sleep = ({ navigation }) => {
   const selectedDate = useSelector(
     (state) => state.myPet.calender.selectedDate
   );
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
   const [note, setNote] = useState("");
   const [bedTime, setBedTime] = useState("");
   const [wakeupTime, setWakeupTime] = useState("");
@@ -30,7 +33,9 @@ const Sleep = () => {
 
   const sleepSubmitHandler = () => {
     const activityFormattedDate = selectedDate.split("T")[0];
-    const newActivityDate = new Date(`${activityFormattedDate}T${bedTime}`);
+    const newActivityDate = new Date(
+      `${activityFormattedDate}T${bedTime}`
+    ).toISOString();
     console.log(newActivityDate);
 
     if (note.length === 0 || bedTime.length === 0 || wakeupTime.length === 0) {
@@ -38,7 +43,23 @@ const Sleep = () => {
     } else if (note.length > 100) {
       return alert("Please enter a note less than 100 characters");
     }
-    console.log(note, "==", bedTime, "==", wakeupTime, "==", newActivityDate);
+    const sleepActivity = {
+      petId: +currentPetId,
+      activityType: "sleep",
+      date: newActivityDate,
+      note: note,
+      startTime: bedTime,
+      endTime: wakeupTime,
+      calorie: "",
+      meter: "",
+    };
+    addAnActivity(currentPetId, sleepActivity)
+      .then(() => {
+        navigation.navigate("ActivitiesMain");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

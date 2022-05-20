@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Icons from "react-native-vector-icons/Ionicons";
 import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
 import Input from "../../../components/ui/Input/Input";
@@ -62,21 +62,46 @@ const VaccineHistory = ({ route, navigation }) => {
   const isEdit = route.params?.edit;
   const addButton = route.params?.addButton;
 
+  const [name, setName] = useState("");
+  const [date, setDate] = useState("");
+
+  const nameHandler = (name) => {
+    setName(name);
+  };
+  const timeHandler = (date) => {
+    setDate(date);
+  };
+
+  const addVaccineHandler = () => {
+    if (name.length === 0 || date.length === 0) {
+      return alert("Please fill all the fields");
+    } else if (name.length > 20) {
+      return alert("Please enter a valid name");
+    }
+    console.log(name, date);
+  };
+
   return (
     <View style={styles.vaccineContainer}>
       <Text style={styles.headerText}>Pet Vaccine History</Text>
       <CustomLineChart />
       {isEdit ? (
         <View style={styles.editContainer}>
-          <DatePickerInput showLabel={false} buttonText="Pick Date and Hour" />
+          <DatePickerInput
+            showLabel={false}
+            buttonText="Pick Date and Hour"
+            title="Vaccine Date"
+            onChange={timeHandler}
+          />
           <Input
             placeholder="Vaccine Name"
             type="default"
             label="Vaccine Name"
             showLabel={false}
+            onChange={nameHandler}
           />
           <View style={styles.buttonContainer}>
-            <Button text="Add Vaccine" />
+            <Button text="Add Vaccine" onPress={addVaccineHandler} />
           </View>
         </View>
       ) : (

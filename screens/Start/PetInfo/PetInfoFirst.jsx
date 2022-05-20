@@ -69,7 +69,11 @@ const PetInfoFirst = ({ navigation }) => {
         value={name}
       />
       {/* <Input placeholder="Birth Date" type="numeric" label="Birth Date" /> */}
-      <DatePickerInput onChange={birthDateHandler} />
+      <DatePickerInput
+        onChange={birthDateHandler}
+        title="Birth Date"
+        isStartingScreenBirthDate={true}
+      />
       <View style={styles.buttonContainer}>
         <Button text="Next" onPress={petInfoSecondHandler} />
       </View>

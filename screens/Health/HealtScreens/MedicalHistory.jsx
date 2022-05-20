@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Icons from "react-native-vector-icons/Ionicons";
 import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
 import Input from "../../../components/ui/Input/Input";
 import Button from "../../../components/ui/Button/Button";
 import { useIsFocused } from "@react-navigation/native";
 import CustomStackedBarChart from "../../../components/ui/charts/StackedBarChart/CustomStackedBarChart";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const DUMMY_DATA = [
   {
@@ -61,32 +62,66 @@ const DUMMY_DATA = [
 const MedicalHistory = ({ route, navigation }) => {
   const isEdit = route.params?.edit;
   const addButton = route.params?.addButton;
+
+  const [illness, setIllness] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, endStartTime] = useState("");
+
+  const ilnessHandler = (note) => {
+    setIllness(note);
+  };
+  const startTimeHandler = (date) => {
+    setStartTime(date);
+  };
+  const endTimeHandler = (date) => {
+    endStartTime(date);
+  };
+
+  const medicalDataHandler = () => {
+    if (illness === "" || startTime === "" || endTime === "") {
+      alert("Please fill all the fields");
+    } else if (startTime > endTime) {
+      alert("Start date should be less than end date");
+    } else if (startTime === endTime) {
+      alert("Start date and end date should not be same");
+    } else if (illness > 20) {
+      alert("Please enter illness name less than 20 characters");
+    }
+    console.log(illness, startTime, endTime);
+  };
+
   return (
     <View style={styles.medicalContainer}>
       <Text style={styles.headerText}>Pet Medical History</Text>
       <CustomStackedBarChart />
       {isEdit ? (
-        <View style={styles.editContainer}>
+        <KeyboardAwareScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.editContainer}
+        >
           <DatePickerInput
             showLabel={true}
-            customLabel="Start Date"
+            title="Start Date"
             buttonText="Pick Start Date"
+            onChange={startTimeHandler}
           />
           <DatePickerInput
             showLabel={true}
-            customLabel="End Date"
+            title="End Date"
             buttonText="Pick Start End Date"
+            onChange={endTimeHandler}
           />
           <Input
             placeholder="Illness Name"
             type="default"
             label="Illness Name"
             showLabel={false}
+            onChange={ilnessHandler}
           />
           <View style={styles.buttonContainer}>
-            <Button text="Add Medical History" />
+            <Button text="Add Medical History" onPress={medicalDataHandler} />
           </View>
-        </View>
+        </KeyboardAwareScrollView>
       ) : (
         <FlatList
           data={DUMMY_DATA}
@@ -190,5 +225,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 15,
+    marginBottom: 15,
   },
 });

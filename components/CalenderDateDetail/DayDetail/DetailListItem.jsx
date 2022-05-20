@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
-import care from "../../../assets/IconImages/care.png";
+// import care from "../../../assets/IconImages/care.png";
+import care from "../../../assets/healthImages/vet.png";
 import food from "../../../assets/IconImages/food.png";
 import play from "../../../assets/IconImages/play.png";
 import sleep from "../../../assets/IconImages/sleep.png";
@@ -11,7 +12,7 @@ const backgroundColorConverter = (activity) => {
   switch (activity) {
     case "food":
       return "#FD5B71";
-    case "care":
+    case "vet":
       return "#1DA8B1";
     case "toilet":
       return "#FFA500";
@@ -42,7 +43,7 @@ const DetailListItem = ({ item }) => {
             source={
               item.activity === "food"
                 ? food
-                : item.activity === "care"
+                : item.activity === "vet"
                 ? care
                 : item.activity === "toilet"
                 ? toilet
@@ -79,21 +80,21 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingVertical: 6,
+    paddingVertical: 3,
     paddingHorizontal: 15,
     borderRadius: 10,
     borderWidth: 2,
     borderColor: "#EAEFF5",
-    marginBottom: 10,
+    marginBottom: 6,
   },
   foodImageContainer: {
-    width: "20%",
+    width: "17%",
   },
   foodImageinner: {
     backgroundColor: "#FD5B71",
-    borderRadius: 60 / 2,
-    height: 45,
-    width: 45,
+    borderRadius: 35 / 2,
+    height: 35,
+    width: 35,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -102,9 +103,9 @@ const styles = StyleSheet.create({
     width: 20,
   },
   itemTextContainer: {
-    width: "80%",
+    width: "83%",
     flexDirection: "column",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
   },
   itemTextUpper: {
     width: "100%",
@@ -117,13 +118,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   activityTime: {
-    fontSize: 13,
+    fontSize: 12,
     color: "#4F4F4F",
   },
   itemTextLower: {
     width: "100%",
     flexDirection: "row",
-    marginTop: 5,
+    marginTop: 2,
   },
   activityNote: {
     fontSize: 13,
