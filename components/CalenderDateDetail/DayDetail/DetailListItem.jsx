@@ -7,6 +7,7 @@ import play from "../../../assets/IconImages/play.png";
 import sleep from "../../../assets/IconImages/sleep.png";
 import toilet from "../../../assets/IconImages/toilet.png";
 import walk from "../../../assets/IconImages/walk.png";
+import vaccine from "../../../assets/healthImages/vaccine.png";
 
 const backgroundColorConverter = (activity) => {
   switch (activity) {
@@ -22,11 +23,12 @@ const backgroundColorConverter = (activity) => {
       return "#FFA500";
     case "sleep":
       return "#2871C8";
+    case "vaccine":
+      return "#8D8DAA";
     default:
       return "#FFFFFF";
   }
 };
-
 
 const DetailListItem = ({ item }) => {
   return (
@@ -54,6 +56,8 @@ const DetailListItem = ({ item }) => {
                 ? walk
                 : item.activity === "sleep"
                 ? sleep
+                : item.activity === "vaccine"
+                ? vaccine
                 : null
             }
             style={styles.foodImage}

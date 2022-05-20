@@ -15,6 +15,8 @@ import { myPetInit, getMyPets } from "../database/tables/myPet";
 import { activitiesInit } from "../database/tables/activities";
 import { weightInit } from "../database/tables/weight";
 import { vetInit } from "../database/tables/vet";
+import { vaccineInit } from "../database/tables/vaccine";
+import { medicalInit } from "../database/tables/medical";
 
 const MainNavigations = () => {
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
@@ -43,6 +45,16 @@ const MainNavigations = () => {
                       console.log(err);
                     });
                   vetInit()
+                    .then(() => {})
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                  vaccineInit()
+                    .then(() => {})
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                  medicalInit()
                     .then(() => {})
                     .catch((err) => {
                       console.log(err);

@@ -9,11 +9,12 @@ const CalenderDateDetail = () => {
     (state) => state.myPet.calender.selectedDate
   );
 
+
   return (
     <View style={styles.detailsContainer}>
       <View style={styles.detailDateContainer}>
         <Text style={styles.dateText}>
-          {moment(selectedDate).format("MMM Do")}
+          {moment(new Date(selectedDate)).format("MMM Do")}
         </Text>
         <View style={styles.dateLine}></View>
       </View>

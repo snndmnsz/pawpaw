@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View, FlatList,Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import Icons from "react-native-vector-icons/Ionicons";
 import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
@@ -7,60 +7,21 @@ import Button from "../../../components/ui/Button/Button";
 import { useIsFocused } from "@react-navigation/native";
 import CustomLineChart from "../../../components/ui/charts/LineChart/CustomLineChart";
 
-const DUMMY_DATA = [
-  {
-    id: 1,
-    month: "January",
-    date: "13th Wednesday 12:00",
-    vaccineName: "Diphtheria",
-  },
-  {
-    id: 2,
-    month: "February",
-    date: "13th Wednesday 12:00",
-    vaccineName: "Diphtheria",
-  },
-  {
-    id: 3,
-    month: "February",
-    date: "13th Wednesday 12:00",
-    vaccineName: "Diphtheria",
-  },
-  {
-    id: 4,
-    month: "February",
-    date: "13th Wednesday 12:00",
-    vaccineName: "Diphtheria",
-  },
-  {
-    id: 5,
-    month: "February",
-    date: "13th Wednesday 12:00",
-    vaccineName: "Diphtheria",
-  },
-  {
-    id: 6,
-    month: "February",
-    date: "13th Wednesday 12:00",
-    vaccineName: "Diphtheria",
-  },
-  {
-    id: 7,
-    month: "February",
-    date: "13th Wednesday 12:00",
-    vaccineName: "Diphtheria",
-  },
-  {
-    id: 8,
-    month: "February",
-    date: "13th Wednesday 12:00",
-    vaccineName: "Diphtheria",
-  },
-];
+import {
+  getAllVaccinebyPetId,
+  addAVaccine,
+} from "../../../database/tables/vaccine";
+import { addAnActivity } from "../../../database/tables/activities";
+import { useSelector } from "react-redux";
+import moment from "moment";
 
 const VaccineHistory = ({ route, navigation }) => {
   const isEdit = route.params?.edit;
   const addButton = route.params?.addButton;
+
+  const [vaccineData, setVaccineData] = useState([]);
+  const isFocused = useIsFocused();
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
 
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
@@ -74,12 +35,66 @@ const VaccineHistory = ({ route, navigation }) => {
 
   const addVaccineHandler = () => {
     if (name.length === 0 || date.length === 0) {
-      return alert("Please fill all the fields");
+      return Alert.alert("oops...","Please fill all the fields");
     } else if (name.length > 20) {
-      return alert("Please enter a valid name");
+      return Alert.alert("oops...","Please enter a valid name");
     }
-    console.log(name, date);
+    const onlyDate = date.split(" ");
+    const time = onlyDate[1] + ":00";
+    if (time === "00:00:00") {
+      return Alert.alert("oops...","Please select a timeother than 00:00:00");
+    }
+    const dates = moment(onlyDate[0]).format("YYYY-MM-DD");
+    const formattedDateString = new Date(dates + "T" + time).toISOString();
+
+    const vetActivityData = {
+      petId: currentPetId,
+      activityType: "vaccine",
+      date: formattedDateString,
+      note: `Vaccine: ${name}`,
+      startTime: time,
+      endTime: "",
+      calorie: "",
+      meter: "",
+    };
+    addAVaccine(currentPetId, name, formattedDateString)
+      .then(() => {
+        addAnActivity(currentPetId, vetActivityData)
+          .then((res) => {
+            navigation.navigate("VaccineHistory");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
+  useEffect(() => {
+    if (isFocused) {
+      getAllVaccinebyPetId(currentPetId)
+        .then((vaccine) => {
+          // sort weight by date
+          const sortedVaccine = vaccine.sort((a, b) => {
+            return new Date(a.date) - new Date(b.date);
+          });
+          const data = sortedVaccine.map((item) => {
+            return {
+              id: item.id,
+              month: moment(item.date).format("MMM"),
+              date: moment(item.date).format("Do dddd"),
+              vaccineName: item.vaccineName,
+            };
+          });
+          setVaccineData(data.reverse());
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isFocused, isEdit]);
 
   return (
     <View style={styles.vaccineContainer}>
@@ -106,7 +121,7 @@ const VaccineHistory = ({ route, navigation }) => {
         </View>
       ) : (
         <FlatList
-          data={DUMMY_DATA}
+          data={vaccineData}
           contentContainerStyle={{
             width: "100%",
             justifyContent: "center",

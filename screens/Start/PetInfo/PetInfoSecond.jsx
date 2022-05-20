@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Pressable,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useIsFocused } from "@react-navigation/native";
@@ -28,14 +29,23 @@ const PetInfoSecond = ({ navigation }) => {
 
   const ownerPageHandler = () => {
     if (gender === "") {
-      return alert("Please pick your pet's gender");
+      return Alert.alert("oops...", "Please pick your pet's gender");
     } else if (breed.length > 20 || breed.length < 1) {
-      return alert("Please pick enter pet's breed(max 20 chracter and min 1)");
+      return Alert.alert(
+        "oops...",
+        "Please pick enter pet's breed(max 20 chracter and min 1)"
+      );
     } else if (parseInt(weight) < 0 || parseInt(weight) > 30 || weight === "") {
-      return alert("Please enter your pet's weight(max 30kg and min 0kg)");
+      return Alert.alert(
+        "oops...",
+        "Please enter your pet's weight(max 30kg and min 0kg)"
+      );
     }
     if (isNaN(weight)) {
-      return alert("Please enter your pet's weight(max 30kg and min 0kg)");
+      return Alert.alert(
+        "oops...",
+        "Please enter your pet's weight(max 30kg and min 0kg)"
+      );
     }
     dispatch(setGenderBreedWeight({ gender, breed, weight }));
     navigation.navigate("Owner");

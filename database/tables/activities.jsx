@@ -141,3 +141,26 @@ export const deleteAActivity = (id) => {
   });
   return promise;
 };
+
+export const getVetVaccinationByPetiD = (petId, date) => {
+  const dateObj = date.split("T")[0];
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `select * from activities 
+        where petId = ? 
+        and activityType in ('vet', 'vaccine') 
+        and SUBSTR(date,1, 10) = ?`,
+        [+petId, dateObj],
+        (_, { rows }) => {
+          resolve(rows._array);
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+    });
+  });
+  return promise;
+};

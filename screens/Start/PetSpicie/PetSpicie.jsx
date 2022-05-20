@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable, Alert } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import Level from "../../../components/level/Level";
@@ -20,7 +20,7 @@ const PetSpicie = ({ navigation }) => {
 
   const petInfoFirstHandler = () => {
     if (spicie === "") {
-      return alert("Please select a spicie");
+      return Alert.alert("oops...", "Please select a spicie");
     }
     dispatch(setPetSpicie(spicie));
     navigation.navigate("PetInfoFirst");

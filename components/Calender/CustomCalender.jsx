@@ -60,12 +60,15 @@ LocaleConfig.locales["en"] = {
 };
 LocaleConfig.defaultLocale = "en";
 
-const food = { key: "food", color: "#FC3090" };
-const play = { key: "play", color: "#1DA8B1" };
-const sleep = { key: "sleep", color: "#2871C8" };
-const toilet = { key: "toilet", color: "#9B51E0" };
-const walk = { key: "walk", color: "#FFA500" };
-const vet = { key: "vet", color: "#00BFFF" };
+const food = { color: "#FC3090" };
+const play = { color: "#1DA8B1" };
+const sleep = { color: "#2871C8" };
+const toilet = { color: "#9B51E0" };
+const walk = { color: "#FFA500" };
+const vet = { color: "#00BFFF" };
+const vaccine = { color: "#8D8DAA" };
+
+//KEY ekeleme olayi var burda lol
 
 const CustomCalender = () => {
   const dotsData = {
@@ -75,6 +78,7 @@ const CustomCalender = () => {
     toilet: toilet,
     walk: walk,
     vet: vet,
+    vaccine: vaccine,
   };
 
   const selectedDate = useSelector(

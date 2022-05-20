@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View, FlatList ,Alert} from "react-native";
 import React, { useEffect, useState } from "react";
 import Icons from "react-native-vector-icons/Ionicons";
 import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
@@ -27,13 +27,16 @@ const VetAppoitments = ({ route, navigation }) => {
   };
 
   const vetAddHandler = () => {
+    if (date === "") {
+      return Alert.alert("oops...","Please select a date");
+    }
     const onlyDate = date.split(" ");
-    const time = onlyDate[1]+":00"
+    const time = onlyDate[1] + ":00";
+    if (time === "00:00:00") {
+      return Alert.alert("oops...","Please select a timeother than 00:00:00");
+    }
     const dates = moment(onlyDate[0]).format("YYYY-MM-DD");
     const formattedDateString = new Date(dates + "T" + time).toISOString();
-    if (date === "") {
-      alert("Please select a date");
-    }
     const vetActivityData = {
       petId: currentPetId,
       activityType: "vet",

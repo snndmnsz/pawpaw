@@ -91,9 +91,9 @@ export const deleteAPet = (id) => {
     db.transaction((tx) => {
       tx.executeSql(
         `delete from myPets where id = ?`,
-        [id],
+        [+id],
         () => {
-          resolve();
+          // resolve();
         },
         (_, err) => {
           console.log(err);
@@ -101,6 +101,72 @@ export const deleteAPet = (id) => {
         }
       );
     });
+    db.transaction((tx) => {
+      tx.executeSql(
+        `delete from vet where petId = ?`,
+        [+id],
+        () => {
+          // resolve();
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+    });
+    db.transaction((tx) => {
+      tx.executeSql(
+        `delete from weight where petId = ?`,
+        [+id],
+        () => {
+          // resolve();
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+    });
+    db.transaction((tx) => {
+      tx.executeSql(
+        `delete from vaccine where petId = ?`,
+        [+id],
+        () => {
+          // resolve();
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+    });
+    db.transaction((tx) => {
+      tx.executeSql(
+        `delete from medical where petId = ?`,
+        [+id],
+        () => {
+          // resolve();
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+    });
+    db.transaction((tx) => {
+      tx.executeSql(
+        `delete from activities where petId = ?`,
+        [+id],
+        () => {
+          // resolve();
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+    });
+    resolve();
   });
   return promise;
 };

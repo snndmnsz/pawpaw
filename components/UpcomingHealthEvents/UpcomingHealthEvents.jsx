@@ -1,9 +1,21 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useSelector } from "react-redux";
+import { getVetVaccinationByPetiD } from "../../database/tables/activities";
+import { useIsFocused } from "@react-navigation/native";
+import moment from "moment";
 
 const UpcomingHealthEvents = () => {
+  const isfocused = useIsFocused();
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const selectedDate = useSelector(
+    (state) => state.myPet.calender.selectedDate
+  );
+
+  const [events, setEvents] = useState([]);
+
   const date = new Date();
   const day = date.getDate();
   const dayShort = date
@@ -11,6 +23,30 @@ const UpcomingHealthEvents = () => {
       weekday: "short",
     })
     .split(" ")[0];
+
+    //vaccination
+    //veterinarian
+
+  useEffect(() => {
+    if (isfocused) {
+      const todaysDate = moment(new Date()).format("YYYY-MM-DD");
+      getVetVaccinationByPetiD(currentPetId, todaysDate).then((data) => {
+        data.sort((a, b) => {
+          return a.startTime > b.startTime ? 1 : -1;
+        });
+        const events = data.map((event) => {
+          return {
+            key: event.id,
+            startTime: event.startTime.toString().slice(0, 5),
+            type: event.activityType.toString().slice(0, 3),
+          };
+        });
+        //get max 4 events
+        const upcomingEvents = events.slice(0, 4);
+        setEvents(upcomingEvents);
+      });
+    }
+  }, [isfocused]);
 
   return (
     <View style={styles.upcomingContainer}>
@@ -28,22 +64,14 @@ const UpcomingHealthEvents = () => {
             <Text style={styles.upcomingDayName}>{dayShort}</Text>
           </View>
           <View style={styles.timeContainer}>
-            <View style={styles.timeSingleContainer}>
-              <Text style={styles.time}>13.30</Text>
-              <Text style={styles.activity}>Vacci</Text>
-            </View>
-            <View style={styles.timeSingleContainer}>
-              <Text style={styles.time}>15.30</Text>
-              <Text style={styles.activity}>Vet A.</Text>
-            </View>
-            <View style={styles.timeSingleContainer}>
-              <Text style={styles.time}>15.30</Text>
-              <Text style={styles.activity}>Vacci</Text>
-            </View>
-            <View style={styles.timeSingleContainer}>
-              <Text style={styles.time}>15.30</Text>
-              <Text style={styles.activity}>Vacci</Text>
-            </View>
+            {events.map((event, index) => {
+              return (
+                <View key={event.key} style={styles.timeSingleContainer}>
+                  <Text style={styles.time}>{event.startTime}</Text>
+                  <Text style={styles.activity}>{event.type}</Text>
+                </View>
+              );
+            })}
           </View>
         </View>
         {/* <View style={styles.upcomingButtonContainer}>

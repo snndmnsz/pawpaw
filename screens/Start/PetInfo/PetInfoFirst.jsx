@@ -6,6 +6,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
@@ -35,11 +36,14 @@ const PetInfoFirst = ({ navigation }) => {
 
   const petInfoSecondHandler = () => {
     if (name === "") {
-      return alert("Please enter your pet's name");
+      return Alert.alert("oops...", "Please enter your pet's name");
     } else if (name.length > 12 || name.length < 1) {
-      return alert("Please enter your pet's name(max 12 chracter and min 1)");
+      return Alert.alert(
+        "oops...",
+        "Please enter your pet's name(max 12 chracter and min 1)"
+      );
     } else if (birthDate === "") {
-      return alert("Please enter your pet's birth date");
+      return Alert.alert("oops...", "Please enter your pet's birth date");
     }
     dispatch(setpetNameAndBirthDate({ name, birthDate }));
     navigation.navigate("PetInfoSecond");

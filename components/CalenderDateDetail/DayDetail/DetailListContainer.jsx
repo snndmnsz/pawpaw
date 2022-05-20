@@ -6,39 +6,6 @@ import { useIsFocused } from "@react-navigation/native";
 import { getActivitiesForADate } from "../../../database/tables/activities";
 import Icons from "react-native-vector-icons/Ionicons";
 
-const dummyData = [
-  {
-    id: 1,
-    activity: "sleep",
-    time: "20:00:00 - 08:00:00",
-    note: "Maxi went to sleep finally",
-  },
-  {
-    id: 2,
-    activity: "walk",
-    time: "20:00:00 - 08:00:00",
-    note: "We take a walk with maxi today :)",
-  },
-  {
-    id: 3,
-    activity: "food",
-    time: "20:00:00 - 08:00:00",
-    note: "Maxi ate some food",
-  },
-  {
-    id: 4,
-    activity: "vet",
-    time: "20:00:00 - 08:00:00",
-    note: "Maxi took care of some stuff",
-  },
-  {
-    id: 5,
-    activity: "toilet",
-    time: "20:00:00 - 08:00:00",
-    note: "Maxi took a shit",
-  },
-];
-
 const DetailListContainer = () => {
   const [data, setData] = useState([]);
   const isFocused = useIsFocused();
@@ -49,6 +16,9 @@ const DetailListContainer = () => {
 
   useEffect(() => {
     if (isFocused) {
+      // const date = new Date(selectedDate);
+      // date.setHours(date.getHours() + 3);
+      // const isoString = date.toISOString();
       getActivitiesForADate(currentPetId, selectedDate).then((activities) => {
         const sortedData = activities.sort((a, b) => {
           return a.startTime?.localeCompare(b?.startTime);

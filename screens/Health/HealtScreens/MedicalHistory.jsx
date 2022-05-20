@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View, FlatList, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import Icons from "react-native-vector-icons/Ionicons";
 import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
@@ -8,60 +8,20 @@ import { useIsFocused } from "@react-navigation/native";
 import CustomStackedBarChart from "../../../components/ui/charts/StackedBarChart/CustomStackedBarChart";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const DUMMY_DATA = [
-  {
-    id: 1,
-    startDate: "01/01/2020",
-    endDate: "01/01/2020",
-    illness: "Fever",
-  },
-  {
-    id: 2,
-    startDate: "01/01/2020",
-    endDate: "01/01/2020",
-    illness: "Fever",
-  },
-  {
-    id: 3,
-    startDate: "01/01/2020",
-    endDate: "01/01/2020",
-    illness: "Fever",
-  },
-  {
-    id: 4,
-    startDate: "01/01/2020",
-    endDate: "01/01/2020",
-    illness: "Fever",
-  },
-  {
-    id: 5,
-    startDate: "01/01/2020",
-    endDate: "01/01/2020",
-    illness: "Fever",
-  },
-  {
-    id: 6,
-    startDate: "01/01/2020",
-    endDate: "01/01/2020",
-    illness: "Fever",
-  },
-  {
-    id: 7,
-    startDate: "01/01/2020",
-    endDate: "01/01/2020",
-    illness: "Fever",
-  },
-  {
-    id: 8,
-    startDate: "01/01/2020",
-    endDate: "01/01/2020",
-    illness: "Fever",
-  },
-];
+import {
+  getAllMedicalbyPetId,
+  addAMedical,
+} from "../../../database/tables/medical";
+import { useSelector } from "react-redux";
+import moment from "moment";
 
 const MedicalHistory = ({ route, navigation }) => {
   const isEdit = route.params?.edit;
   const addButton = route.params?.addButton;
+
+  const [medicalData, setMedicalData] = useState([]);
+  const isFocused = useIsFocused();
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
 
   const [illness, setIllness] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -79,16 +39,69 @@ const MedicalHistory = ({ route, navigation }) => {
 
   const medicalDataHandler = () => {
     if (illness === "" || startTime === "" || endTime === "") {
-      alert("Please fill all the fields");
+      return Alert.alert("oops...","Please fill all the fields");
     } else if (startTime > endTime) {
-      alert("Start date should be less than end date");
+      return Alert.alert("oops...","Start date should be less than end date");
     } else if (startTime === endTime) {
-      alert("Start date and end date should not be same");
+      return Alert.alert("oops...","Start date and end date should not be same");
     } else if (illness > 20) {
-      alert("Please enter illness name less than 20 characters");
+      return Alert.alert("oops...","Please enter illness name less than 20 characters");
     }
     console.log(illness, startTime, endTime);
+
+    const onlyDateStart = startTime.split(" ");
+    const onlyDateEnd = endTime.split(" ");
+    const timeStart = onlyDateStart[1] + ":00";
+    const timeEnd = onlyDateEnd[1] + ":00";
+    if (timeStart === "00:00:00" || timeEnd === "00:00:00") {
+      return alert("Please select a timeother than 00:00:00");
+    }
+    const datesStart = moment(onlyDateStart[0]).format("YYYY-MM-DD");
+    const datesEnd = moment(onlyDateEnd[0]).format("YYYY-MM-DD");
+    const formattedDateStringStart = new Date(
+      datesStart + "T" + timeStart
+    ).toISOString();
+    const formattedDateStringEnd = new Date(
+      datesEnd + "T" + timeEnd
+    ).toISOString();
+    const todayDateString = new Date().toISOString();
+    addAMedical(
+      currentPetId,
+      illness,
+      todayDateString,
+      formattedDateStringStart,
+      formattedDateStringEnd
+    )
+      .then(() => {
+        navigation.navigate("MedicalHistory");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
+  useEffect(() => {
+    if (isFocused) {
+      getAllMedicalbyPetId(currentPetId)
+        .then((medical) => {
+          const sortedMedical = medical.sort((a, b) => {
+            return new Date(a.startDate) - new Date(b.startDate);
+          });
+          const data = sortedMedical.map((item) => {
+            return {
+              id: item.id,
+              startDate: moment(item.startDate).format("DD/MM/YYYY"),
+              endDate: moment(item.endDate).format("DD/MM/YYYY"),
+              illness: item.medicalName,
+            };
+          });
+          setMedicalData(data.reverse());
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isFocused, isEdit]);
 
   return (
     <View style={styles.medicalContainer}>
@@ -124,7 +137,7 @@ const MedicalHistory = ({ route, navigation }) => {
         </KeyboardAwareScrollView>
       ) : (
         <FlatList
-          data={DUMMY_DATA}
+          data={medicalData}
           contentContainerStyle={{
             width: "100%",
             justifyContent: "center",

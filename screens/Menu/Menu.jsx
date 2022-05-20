@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Alert
 } from "react-native";
 import React from "react";
 import profile from "../../assets/images/profile.png";
@@ -12,7 +13,6 @@ import petImage from "../../assets/images/dog-ex.png";
 import Icon from "react-native-vector-icons/Ionicons";
 import driveImage from "../../assets/images/drive.png";
 import { useSelector, useDispatch } from "react-redux";
-import { Alert } from "react-native";
 
 import { deleteAPet } from "../../database/tables/myPet";
 import { resetPetInfo } from "../../redux/slice/myPetSlice";

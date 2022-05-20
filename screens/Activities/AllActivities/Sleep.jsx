@@ -32,17 +32,19 @@ const Sleep = ({ navigation }) => {
   };
 
   const sleepSubmitHandler = () => {
+    if (note.length === 0 || bedTime.length === 0 || wakeupTime.length === 0) {
+      return Alert.alert("oops...", "Please fill all the fields");
+    } else if (note.length > 100) {
+      return Alert.alert(
+        "oops...",
+        "Please enter a note less than 100 characters"
+      );
+    }
     const activityFormattedDate = selectedDate.split("T")[0];
     const newActivityDate = new Date(
       `${activityFormattedDate}T${bedTime}`
     ).toISOString();
     console.log(newActivityDate);
-
-    if (note.length === 0 || bedTime.length === 0 || wakeupTime.length === 0) {
-      return alert("Please fill all the fields");
-    } else if (note.length > 100) {
-      return alert("Please enter a note less than 100 characters");
-    }
     const sleepActivity = {
       petId: +currentPetId,
       activityType: "sleep",

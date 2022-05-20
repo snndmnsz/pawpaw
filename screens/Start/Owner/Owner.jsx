@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Alert } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import image from "../../../assets/images/owner.png";
@@ -18,10 +18,13 @@ const Owner = ({ navigation }) => {
 
   const pressHandler = () => {
     if (owner === "") {
-      return alert("Please enter your name");
+      return Alert.alert("oops...", "Please enter your name");
     }
     if (owner.length > 20 || owner.length < 1) {
-      return alert("Please enter your name(max 20 chracter and min 1)");
+      return Alert.alert(
+        "oops...",
+        "Please enter your name(max 20 chracter and min 1)"
+      );
     }
     dispatch(setOwnerName(owner));
 

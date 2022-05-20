@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View, FlatList, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomBarChart from "../../../components/ui/charts/BarChart/CustomBarChart";
 import Icons from "react-native-vector-icons/Ionicons";
@@ -33,17 +33,20 @@ const WeightHistory = ({ route, navigation }) => {
   };
 
   const addWeightHandler = () => {
+    if (weitgh === "" || date === "") {
+      return Alert.alert("oops...", "Please enter weight and date");
+    } else if (isNaN(weitgh)) {
+      return Alert.alert("oops...", "Please enter a valid weight");
+    } else if (weitgh > 100 || weitgh < 0) {
+      return Alert.alert("oops...", "Please enter a valid weight");
+    }
     const onlyDate = date.split(" ");
-    const time = onlyDate[1]+":00"
+    const time = onlyDate[1] + ":00";
+    if (time === "00:00:00") {
+      return Alert.alert("oops...", "Please select a timeother than 00:00:00");
+    }
     const dates = moment(onlyDate[0]).format("YYYY-MM-DD");
     const formattedDateString = new Date(dates + "T" + time).toISOString();
-    if (weitgh === "" || date === "") {
-      alert("Please enter weight and date");
-    } else if (isNaN(weitgh)) {
-      alert("Please enter a valid weight");
-    } else if (weitgh > 100 || weitgh < 0) {
-      alert("Please enter a valid weight");
-    }
     console.log(weitgh, date);
 
     addWeight(currentPetId, weitgh, formattedDateString)
@@ -59,10 +62,10 @@ const WeightHistory = ({ route, navigation }) => {
     if (isFocused) {
       getAllWeightbyPetId(currentPetId)
         .then((weight) => {
-          // sort weight by date 
+          // sort weight by date
           const sortedWeight = weight.sort((a, b) => {
             return new Date(a.date) - new Date(b.date);
-          })
+          });
           const data = sortedWeight.map((item) => {
             return {
               id: item.id,

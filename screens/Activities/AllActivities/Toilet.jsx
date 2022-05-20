@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Image, Dimensions ,Alert} from "react-native";
 import React, { useState } from "react";
 import toilet from "../../../assets/activityImages/toilet.png";
 import Input from "../../../components/ui/Input/Input";
@@ -27,16 +27,17 @@ const Toilet = ({ navigation }) => {
   };
 
   const toiletSubmitHandler = () => {
+
+    if (note.length === 0 || time.length === 0) {
+      return Alert.alert("oops...", "Please fill all the fields");
+    } else if (note.length > 100) {
+      return Alert.alert("oops...", "Please enter a note less than 100 characters");
+    }
     const activityFormattedDate = selectedDate.split("T")[0];
     const newActivityDate = new Date(
       `${activityFormattedDate}T${time}`
     ).toISOString();
 
-    if (note.length === 0 || time.length === 0) {
-      return alert("Please fill all the fields");
-    } else if (note.length > 100) {
-      return alert("Please enter a note less than 100 characters");
-    }
     const toiletActivity = {
       petId: +currentPetId,
       activityType: "toilet",
