@@ -1,33 +1,5 @@
 import { db } from "../database";
 
-export const activitiesInit = () => {
-  const promise = new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `create table if not exists activities (
-            id integer primary key not null,
-            petId integer,
-            activityType text,
-            date text,
-            note text,
-            startTime text,
-            endTime text,
-            calorie text,
-            meter text
-            )`,
-        [],
-        () => {
-          resolve();
-        },
-        (_, err) => {
-          console.log(err);
-          reject(err);
-        }
-      );
-    });
-  });
-  return promise;
-};
 
 export const getAllActivities = (petId) => {
   const promise = new Promise((resolve, reject) => {

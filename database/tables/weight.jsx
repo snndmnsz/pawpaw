@@ -1,28 +1,5 @@
 import { db } from "../database";
 
-export const weightInit = () => {
-  const promise = new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `create table if not exists weight (
-            id integer primary key not null, 
-            petId integer,
-            date text,
-            weight text
-            )`,
-        [],
-        () => {
-          resolve();
-        },
-        (_, err) => {
-          console.log(err);
-          reject(err);
-        }
-      );
-    });
-  });
-  return promise;
-};
 
 export const getAllWeightbyPetId = (petId) => {
   const promise = new Promise((resolve, reject) => {

@@ -1,30 +1,5 @@
 import { db } from "../database";
 
-export const medicalInit = () => {
-  const promise = new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `create table if not exists medical (
-                id integer primary key not null, 
-                petId integer,
-                date text,
-                startDate text,
-                endDate text,
-                medicalName text
-            )`,
-        [],
-        () => {
-          resolve();
-        },
-        (_, err) => {
-          console.log(err);
-          reject(err);
-        }
-      );
-    });
-  });
-  return promise;
-};
 
 export const getAllMedicalbyPetId = (petId) => {
   const promise = new Promise((resolve, reject) => {

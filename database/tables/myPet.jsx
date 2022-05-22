@@ -1,33 +1,5 @@
 import { db } from "../database";
 
-export const myPetInit = () => {
-  const promise = new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `create table if not exists myPets (
-          id integer primary key not null, 
-          name text, 
-          spicie text,
-          photoURL text,
-          birthDate text,
-          breed text,
-          gender text,
-          weight text,
-          ownerName text
-          )`,
-        [],
-        () => {
-          resolve();
-        },
-        (_, err) => {
-          console.log(err);
-          reject(err);
-        }
-      );
-    });
-  });
-  return promise;
-};
 
 export const getMyPets = () => {
   const promise = new Promise((resolve, reject) => {

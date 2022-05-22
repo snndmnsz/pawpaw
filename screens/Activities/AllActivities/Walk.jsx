@@ -6,7 +6,10 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  LogBox,
+  Alert,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import * as Location from "expo-location";
 import Icons from "react-native-vector-icons/Ionicons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -15,13 +18,21 @@ import * as TaskManager from "expo-task-manager";
 import { getDistance, getPreciseDistance } from "geolib";
 import { Stopwatch, Timer } from "react-native-stopwatch-timer";
 import Button from "../../../components/ui/Button/Button";
-import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
+import ClockPicker from "../../../components/ui/ClockPicker/ClockPicker";
 import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput";
+import moment from "moment";
+import { useSelector } from "react-redux";
+import { addAnActivity } from "../../../database/tables/activities";
 
 const LOCATION_TASK_NAME = "LOCATION_TASK_NAME";
 let foregroundSubscription = null;
 
 const Walk = () => {
+  const selectedDate = useSelector(
+    (state) => state.myPet.calender.selectedDate
+  );
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const isFocused = useIsFocused();
   const [isScheduled, setIsScheduled] = useState(false);
   const [isStopwatchStart, setIsStopwatchStart] = useState(false);
   const [resetStopwatch, setResetStopwatch] = useState(false);
@@ -34,6 +45,16 @@ const Walk = () => {
   const [liveMeters, setLiveMeters] = useState({
     distance: 0,
   });
+
+  const [time, setTime] = useState("");
+  const [note, setNote] = useState("");
+
+  const clockHandler = (time) => {
+    setTime(`${time}:00`);
+  };
+  const noteHandler = (note) => {
+    setNote(note);
+  };
 
   const calculatePreciseDistance = () => {
     var pdis = getPreciseDistance(
@@ -89,6 +110,77 @@ const Walk = () => {
     setPosition(null);
   };
 
+  useEffect(() => {
+    // get todays date
+    LogBox.ignoreLogs([
+      "Animated: `useNativeDriver`",
+      "componentWillReceiveProps",
+    ]);
+    const todayDate = moment(new Date()).format("YYYY-MM-DD");
+    const selectedDateString = moment(selectedDate).format("YYYY-MM-DD");
+    if (isFocused) {
+      if (selectedDateString === todayDate) {
+        setIsScheduled(false);
+      } else {
+        setIsScheduled(true);
+      }
+    }
+  }, [isFocused]);
+
+  const walkSubmitHandler = () => {
+    if (liveMeters.distance === 0) {
+      if (note.length === 0 || time.length === 0) {
+        return Alert.alert("oops...", "Please fill all the fields");
+      } else if (note.length > 100) {
+        return Alert.alert(
+          "oops...",
+          "Please enter a note less than 100 characters"
+        );
+      }
+      if (time === "00:00:00") {
+        return Alert.alert(
+          "oops...",
+          "Please select a time is greater than 00:00:00"
+        );
+      }
+    }
+    const activityFormattedDate = selectedDate.split("T")[0];
+    const timeFormattedForWalkIso = selectedDate.split("T")[1];
+    const timeFormattedForWalk = new Date(selectedDate).toLocaleTimeString();
+    console.log(timeFormattedForWalk);
+    const newActivityDate = new Date(
+      `${activityFormattedDate}T${time ? time : timeFormattedForWalkIso}`
+    ).toISOString();
+
+    const walkActivity = {
+      petId: +currentPetId,
+      activityType: "walk",
+      date: newActivityDate,
+      note:
+        liveMeters.distance === 0
+          ? note
+          : `${liveMeters.distance} meters walked`,
+      startTime: time ? time : timeFormattedForWalk,
+      endTime: "",
+      calorie: "",
+      meter: liveMeters.distance,
+    };
+
+    addAnActivity(currentPetId, walkActivity)
+      .then(() => {
+        navigation.navigate("ActivitiesMain");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    setIsStopwatchStart(false);
+    setResetStopwatch(true);
+    setLiveMeters({
+      distance: 0,
+    });
+  };
+
   return (
     <KeyboardAwareScrollView
       showsVerticalScrollIndicator={false}
@@ -102,15 +194,16 @@ const Walk = () => {
         {isScheduled ? (
           <View style={styles.meterCountContainer}>
             <MultiLineInput
-              placeholder="What do you want to do in walk?"
+              placeholder="What do you want to do in walk Activity?"
               type="default"
               label="Note"
               showLabel={false}
+              onChange={noteHandler}
             />
-            <DatePickerInput
-              showLabel={false}
-              buttonText="asd"
-              customLabel="aslkdj"
+            <ClockPicker
+              onChange={clockHandler}
+              placeHolder="Start Time"
+              buttonPlaceHolder="Set Time"
             />
             <View
               style={[
@@ -120,8 +213,8 @@ const Walk = () => {
                 },
               ]}
             >
-              <Button onPress={() => {}} text="Add Walk Schedule" />
-              <TouchableOpacity
+              <Button onPress={walkSubmitHandler} text="Add Walk Schedule" />
+              {/* <TouchableOpacity
                 style={styles.scheduleButton}
                 activeOpacity={0.8}
                 onPress={() => {
@@ -131,7 +224,7 @@ const Walk = () => {
               >
                 <Icons name="stopwatch-outline" size={28} color="#FFFFFF" />
                 <Text style={styles.scheduleButtonText}>Go Walk Now</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         ) : (
@@ -145,24 +238,7 @@ const Walk = () => {
                 laps
                 start={isStopwatchStart}
                 reset={resetStopwatch}
-                options={{
-                  container: {
-                    backgroundColor: "#FFF4EA",
-                    paddingVertical: 18,
-                    borderRadius: 8,
-                    marginTop: 15,
-                    width: "70%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    alignSelf: "center",
-                  },
-                  text: {
-                    fontSize: 35,
-                    color: "#27323A",
-                    marginLeft: 7,
-                    fontWeight: "bold",
-                  },
-                }}
+                options={options}
                 getTime={(time) => {
                   // console.log(time);
                 }}
@@ -170,9 +246,19 @@ const Walk = () => {
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   activeOpacity={0.8}
-                  style={styles.startButton}
+                  style={[
+                    styles.startButton,
+                    {
+                      backgroundColor: isStopwatchStart ? "#C84B31" : "#4E9F3D",
+                    },
+                  ]}
                   onPress={() => {
-                    startForegroundUpdate();
+                    // startForegroundUpdate();
+                    if (isStopwatchStart === false) {
+                      startForegroundUpdate();
+                    } else if (isStopwatchStart === true) {
+                      stopForegroundUpdate();
+                    }
                     setIsStopwatchStart(!isStopwatchStart);
                     setResetStopwatch(false);
                   }}
@@ -181,22 +267,34 @@ const Walk = () => {
                     {!isStopwatchStart ? "START" : "STOP"}
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.resetButton}
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    stopForegroundUpdate();
-                    setIsStopwatchStart(false);
-                    setResetStopwatch(true);
-                  }}
-                >
-                  <Text style={styles.resetButtonText}>RESET</Text>
-                </TouchableOpacity>
+
+                {liveMeters.distance > 0 && !isStopwatchStart && (
+                  <TouchableOpacity
+                    style={styles.resetButton}
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      // stopForegroundUpdate();
+                      setIsStopwatchStart(false);
+                      setResetStopwatch(true);
+                      setLiveMeters({
+                        distance: 0,
+                      });
+                    }}
+                  >
+                    <Text style={styles.resetButtonText}>RESET</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
             <View style={styles.submitButtonContainer}>
-              <Button onPress={() => {}} text="Submit Walk Distance" />
-              <TouchableOpacity
+              {!isStopwatchStart && liveMeters.distance > 0 && (
+                <Button
+                  onPress={walkSubmitHandler}
+                  text="Submit Walk Distance"
+                />
+              )}
+
+              {/* <TouchableOpacity
                 style={styles.scheduleButton}
                 activeOpacity={0.8}
                 onPress={() => {
@@ -208,7 +306,7 @@ const Walk = () => {
                 <Text style={styles.scheduleButtonText}>
                   Schedule to Later Time
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         )}
@@ -365,3 +463,22 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
 });
+
+const options = {
+  container: {
+    backgroundColor: "#FFF4EA",
+    paddingVertical: 18,
+    borderRadius: 8,
+    marginTop: 15,
+    width: "70%",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+  },
+  text: {
+    fontSize: 35,
+    color: "#27323A",
+    marginLeft: 7,
+    fontWeight: "bold",
+  },
+};
