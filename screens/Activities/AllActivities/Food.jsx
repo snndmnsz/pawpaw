@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Dimensions ,Alert } from "react-native";
+import { StyleSheet, Text, View, Image, Dimensions, Alert } from "react-native";
 import React, { useState } from "react";
 import food from "../../../assets/activityImages/food.png";
 import Input from "../../../components/ui/Input/Input";
@@ -34,18 +34,20 @@ const Food = ({ navigation }) => {
 
   const foodSubmithandler = () => {
     if (note.length === 0 || time.length === 0 || calorie.length === 0) {
-      return Alert.alert("oops...","Please fill all the fields");
+      return Alert.alert("oops...", "Please fill all the fields");
     } else if (calorie < 0) {
-      return Alert.alert("oops...","Please enter a valid calorie more than 0");
+      return Alert.alert("oops...", "Please enter a valid calorie more than 0");
     } else if (calorie > 5000) {
-      return Alert.alert("oops...","Please enter a calorie less than 5000");
+      return Alert.alert("oops...", "Please enter a calorie less than 5000");
     } else if (note.length > 100) {
-      return Alert.alert("oops...","Please enter a note less than 100 characters");
+      return Alert.alert(
+        "oops...",
+        "Please enter a note less than 100 characters"
+      );
     }
     const activityFormattedDate = selectedDate.split("T")[0];
-    const newActivityDate = new Date(
-      `${activityFormattedDate}T${time}`
-    ).toISOString();
+    const newActivityDate = `${activityFormattedDate}T${time}`;
+
     const foodActivity = {
       petId: +currentPetId,
       activityType: "food",

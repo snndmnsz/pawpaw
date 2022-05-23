@@ -12,14 +12,6 @@ const CustomLineChart = ({title}) => {
         data: [20, 45, 28, 80, 99, 43],
         color: (opacity = 1) => `#FD5B71`, // optional
         strokeWidth: 2, // optional
-        // colors: [
-        //   (opacity = 1) => `#1DA8B1`,
-        //   (opacity = 1) => `#FC3090`,
-        //   (opacity = 1) => `#F66816`,
-        //   (opacity = 1) => `#2871C8`,
-        //   (opacity = 1) => `#67C5A3`,
-        //   (opacity = 1) => `#707BFB`,
-        // ],
       },
     ],
   };

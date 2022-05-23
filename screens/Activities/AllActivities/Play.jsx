@@ -36,9 +36,10 @@ const Play = ({ navigation }) => {
       );
     }
     const activityFormattedDate = selectedDate.split("T")[0];
-    const newActivityDate = new Date(
-      `${activityFormattedDate}T${time}`
-    ).toISOString();
+    const newActivityDate = `${activityFormattedDate}T${time}`
+    ;
+    // return console.log(new Date(newActivityDate).getTime());
+
     const playActivity = {
       petId: +currentPetId,
       activityType: "play",

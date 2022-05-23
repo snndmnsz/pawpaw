@@ -1,73 +1,21 @@
-import { StyleSheet, Text, View, FlatList ,Alert} from "react-native";
+import { StyleSheet, Text, View, FlatList, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import Icons from "react-native-vector-icons/Ionicons";
-import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
-import Input from "../../../components/ui/Input/Input";
-import Button from "../../../components/ui/Button/Button";
 import { useIsFocused } from "@react-navigation/native";
 import CustomBarChart from "../../../components/ui/charts/BarChart/CustomBarChart";
-
-import { getAllVetbyPetId, addVet } from "../../../database/tables/vet";
-import { addAnActivity } from "../../../database/tables/activities";
+import { getAllVetbyPetId } from "../../../database/tables/vet";
 import { useSelector } from "react-redux";
 import moment from "moment";
 
-const VetAppoitments = ({ route, navigation }) => {
-  const isEdit = route.params?.edit;
-  const addButton = route.params?.addButton;
-
+const VetAppoitments = () => {
   const [vetData, setVetData] = useState([]);
   const isFocused = useIsFocused();
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
-
-  const [date, setDate] = useState("");
-
-  const timeHandler = (date) => {
-    setDate(date);
-  };
-
-  const vetAddHandler = () => {
-    if (date === "") {
-      return Alert.alert("oops...","Please select a date");
-    }
-    const onlyDate = date.split(" ");
-    const time = onlyDate[1] + ":00";
-    if (time === "00:00:00") {
-      return Alert.alert("oops...","Please select a timeother than 00:00:00");
-    }
-    const dates = moment(onlyDate[0]).format("YYYY-MM-DD");
-    const formattedDateString = new Date(dates + "T" + time).toISOString();
-    const vetActivityData = {
-      petId: currentPetId,
-      activityType: "vet",
-      date: formattedDateString,
-      note: "Veterinary Appointment",
-      startTime: time,
-      endTime: "",
-      calorie: "",
-      meter: "",
-    };
-
-    addVet(currentPetId, formattedDateString)
-      .then(() => {
-        addAnActivity(currentPetId, vetActivityData)
-          .then((res) => {
-            navigation.navigate("VetAppoitments");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   useEffect(() => {
     if (isFocused) {
       getAllVetbyPetId(currentPetId)
         .then((vet) => {
-          // sort weight by date
           const sortedVet = vet.sort((a, b) => {
             return new Date(a.date) - new Date(b.date);
           });
@@ -85,52 +33,38 @@ const VetAppoitments = ({ route, navigation }) => {
           console.log(err);
         });
     }
-  }, [isFocused, isEdit]);
+  }, [isFocused]);
 
   return (
     <View style={styles.vetContainer}>
       <Text style={styles.headerText}>Pet Vet Appoitments</Text>
       <CustomBarChart title="Vet Appoitments" />
-      {isEdit ? (
-        <View style={styles.editContainer}>
-          <DatePickerInput
-            showLabel={true}
-            title="Vet Appoitment Date"
-            buttonText="Pick Date and Hour"
-            onChange={timeHandler}
-          />
-          <View style={styles.buttonContainer}>
-            <Button text="Add Vet Appointment" onPress={vetAddHandler} />
-          </View>
-        </View>
-      ) : (
-        <FlatList
-          data={vetData}
-          contentContainerStyle={{
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          style={styles.flatList}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.listItemContainer}>
-              <View style={styles.iconContainer}>
-                <Icons name="paw" size={20} color="#ffffff" />
-              </View>
-              <View style={styles.infoContainer}>
-                <View style={styles.monthContainer}>
-                  <Text style={styles.monthText}>{item.month}</Text>
-                  <Text style={styles.dateText}>{item.date}</Text>
-                </View>
-                <Text style={styles.weightText}>{item.time}</Text>
-              </View>
+      <FlatList
+        data={vetData}
+        contentContainerStyle={{
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        style={styles.flatList}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.listItemContainer}>
+            <View style={styles.iconContainer}>
+              <Icons name="paw" size={20} color="#ffffff" />
             </View>
-          )}
-        />
-      )}
+            <View style={styles.infoContainer}>
+              <View style={styles.monthContainer}>
+                <Text style={styles.monthText}>{item.month}</Text>
+                <Text style={styles.dateText}>{item.date}</Text>
+              </View>
+              <Text style={styles.weightText}>{item.time}</Text>
+            </View>
+          </View>
+        )}
+      />
     </View>
   );
 };

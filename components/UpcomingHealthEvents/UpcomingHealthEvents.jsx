@@ -35,7 +35,6 @@ const UpcomingHealthEvents = () => {
           return a.startTime?.localeCompare(b?.startTime);
         });
         const events = data.map((event) => {
-          console.log(event.activityType);
           return {
             key: event.id,
             startTime: event.startTime.toString().slice(0, 5),

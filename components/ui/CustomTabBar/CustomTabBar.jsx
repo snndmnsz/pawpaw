@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    paddingBottom: Platform.OS === "android" ? 6 : 22,
+    paddingBottom: Platform.OS === "android" ? 1 : 21,
   },
   button: {
     flex: 1,

@@ -27,7 +27,7 @@ import { addAnActivity } from "../../../database/tables/activities";
 const LOCATION_TASK_NAME = "LOCATION_TASK_NAME";
 let foregroundSubscription = null;
 
-const Walk = ({navigation}) => {
+const Walk = ({ navigation }) => {
   const selectedDate = useSelector(
     (state) => state.myPet.calender.selectedDate
   );
@@ -147,10 +147,10 @@ const Walk = ({navigation}) => {
     const activityFormattedDate = selectedDate.split("T")[0];
     const timeFormattedForWalkIso = selectedDate.split("T")[1];
     const timeFormattedForWalk = new Date(selectedDate).toLocaleTimeString();
-    console.log(timeFormattedForWalk);
-    const newActivityDate = new Date(
-      `${activityFormattedDate}T${time ? time : timeFormattedForWalkIso}`
-    ).toISOString();
+    // console.log(timeFormattedForWalk);
+    const newActivityDate = `${activityFormattedDate}T${
+      time ? time : timeFormattedForWalkIso
+    }`;
 
     const walkActivity = {
       petId: +currentPetId,

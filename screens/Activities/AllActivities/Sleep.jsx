@@ -41,10 +41,9 @@ const Sleep = ({ navigation }) => {
       );
     }
     const activityFormattedDate = selectedDate.split("T")[0];
-    const newActivityDate = new Date(
-      `${activityFormattedDate}T${bedTime}`
-    ).toISOString();
-    console.log(newActivityDate);
+    const newActivityDate = `${activityFormattedDate}T${bedTime}`;
+
+    // console.log(newActivityDate);
     const sleepActivity = {
       petId: +currentPetId,
       activityType: "sleep",
@@ -55,6 +54,7 @@ const Sleep = ({ navigation }) => {
       calorie: "",
       meter: "",
     };
+
     addAnActivity(currentPetId, sleepActivity)
       .then(() => {
         navigation.navigate("ActivitiesMain");

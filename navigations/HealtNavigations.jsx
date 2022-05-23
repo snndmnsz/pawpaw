@@ -16,6 +16,11 @@ import MedicalHistory from "../screens/Health/HealtScreens/MedicalHistory";
 import VaccineHistory from "../screens/Health/HealtScreens/VaccineHistory";
 import VetAppoitments from "../screens/Health/HealtScreens/VetAppoitments";
 
+import WeightAddScreen from "../screens/Health/HealtScreens/internalsAddScreens/WeightAddScreen";
+import MedicalAddScreen from "../screens/Health/HealtScreens/internalsAddScreens/MedicalAddScreen";
+import VaccineAddScreen from "../screens/Health/HealtScreens/internalsAddScreens/VaccineAddScreen";
+import VetAddScreen from "../screens/Health/HealtScreens/internalsAddScreens/VetAddScreen";
+
 import weight from "../assets/healthImages/weight.png";
 import medical from "../assets/healthImages/medical.png";
 import vaccine from "../assets/healthImages/vaccine.png";
@@ -48,7 +53,7 @@ const HealtNavigations = () => {
       <StartingStack.Screen
         name="HealthMain"
         component={Health}
-        options={({ navigation}) => ({
+        options={({ navigation }) => ({
           headerStyle: {
             shadowColor: "transparent", // this covers iOS
             elevation: 0, // this covers Android
@@ -78,20 +83,12 @@ const HealtNavigations = () => {
           // headerLeft: () => <CustomMainHeaderLeft isNameVisible={false} />,
           headerRight: () => {
             const pressHandler = () => {
-              const editChanger = isEdit ? false : true;
-              // console.log("editChanger ===", editChanger);
-              setIsAddButton(!editChanger);
-              setIsEdit(editChanger);
-              navigation.setParams({
-                edit: editChanger,
-                addButton: isAddButton,
-              });
+              navigation.navigate("WeightAdd");
             };
             return (
               <IconButton
-                text={isAddButton ? "Add Weight" : "Cancel"}
-                imagePath={isAddButton && weight}
-                iconName={!isAddButton && "close-outline"}
+                text={"Add Weight"}
+                imagePath={weight}
                 onPress={pressHandler}
               />
             );
@@ -115,20 +112,12 @@ const HealtNavigations = () => {
           // headerLeft: () => <CustomMainHeaderLeft isNameVisible={false} />,
           headerRight: () => {
             const pressHandler = () => {
-              const editChanger = isMedicalEdit ? false : true;
-              // console.log("editChanger ===", editChanger);
-              setIsMedicalAddButton(!editChanger);
-              setIsMedicalEdit(editChanger);
-              navigation.setParams({
-                edit: editChanger,
-                addButton: isMedicalAddButton,
-              });
+              navigation.navigate("MedicalAdd");
             };
             return (
               <IconButton
-                text={isMedicalAddButton ? "Add Medical R." : "Cancel"}
-                imagePath={isMedicalAddButton && medical}
-                iconName={!isMedicalAddButton && "close-outline"}
+                text={"Add Medical R."}
+                imagePath={medical}
                 onPress={pressHandler}
               />
             );
@@ -152,20 +141,12 @@ const HealtNavigations = () => {
           // headerLeft: () => <CustomMainHeaderLeft isNameVisible={false} />,
           headerRight: () => {
             const pressHandler = () => {
-              const editChanger = isVaccineEdit ? false : true;
-              // console.log("editChanger ===", editChanger);
-              setIsVaccineAddButton(!editChanger);
-              setIsVaccineEdit(editChanger);
-              navigation.setParams({
-                edit: editChanger,
-                addButton: isVaccineAddButton,
-              });
+              navigation.navigate("VaccineAdd");
             };
             return (
               <IconButton
-                text={isVaccineAddButton ? "Add Vaccine" : "Cancel"}
-                imagePath={isVaccineAddButton && vaccine}
-                iconName={!isVaccineAddButton && "close-outline"}
+                text={"Add Vaccine"}
+                imagePath={vaccine}
                 onPress={pressHandler}
               />
             );
@@ -189,25 +170,84 @@ const HealtNavigations = () => {
           // headerLeft: () => <CustomMainHeaderLeft isNameVisible={false} />,
           headerRight: () => {
             const pressHandler = () => {
-              const editChanger = isVetEdit ? false : true;
-              // console.log("editChanger ===", editChanger);
-              setIsVetAddButton(!editChanger);
-              setIsVetEdit(editChanger);
-              navigation.setParams({
-                edit: editChanger,
-                addButton: isVetAddButton,
-              });
+              navigation.navigate("VetAddScreen");
             };
             return (
               <IconButton
-                text={isVetAddButton ? "Add Vet Ap." : "Cancel"}
-                imagePath={isVetAddButton && vet}
-                iconName={!isVetAddButton && "close-outline"}
+                text={"Add Vet Ap."}
+                imagePath={vet}
                 onPress={pressHandler}
               />
             );
           },
         })}
+      />
+      <StartingStack.Screen
+        name="WeightAdd"
+        component={WeightAddScreen}
+        options={{
+          headerStyle: {
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+            backgroundColor: "#FFFFFF",
+            borderBottomWidth: 0,
+          },
+          headerTitleAlign: "center",
+          headerBackTitleVisible: false,
+          title: "Add Weight",
+          headerTintColor: "black",
+        }}
+      />
+
+      <StartingStack.Screen
+        name="MedicalAdd"
+        component={MedicalAddScreen}
+        options={{
+          headerStyle: {
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+            backgroundColor: "#FFFFFF",
+            borderBottomWidth: 0,
+          },
+          headerTitleAlign: "center",
+          headerBackTitleVisible: false,
+          title: "Add Medical Record",
+          headerTintColor: "black",
+        }}
+      />
+
+      <StartingStack.Screen
+        name="VaccineAdd"
+        component={VaccineAddScreen}
+        options={{
+          headerStyle: {
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+            backgroundColor: "#FFFFFF",
+            borderBottomWidth: 0,
+          },
+          headerTitleAlign: "center",
+          headerBackTitleVisible: false,
+          title: "Add Vaccine Date",
+          headerTintColor: "black",
+        }}
+      />
+
+      <StartingStack.Screen
+        name="VetAddScreen"
+        component={VetAddScreen}
+        options={{
+          headerStyle: {
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+            backgroundColor: "#FFFFFF",
+            borderBottomWidth: 0,
+          },
+          headerTitleAlign: "center",
+          headerBackTitleVisible: false,
+          title: "Add Vet Appoitment",
+          headerTintColor: "black",
+        }}
       />
     </StartingStack.Navigator>
   );

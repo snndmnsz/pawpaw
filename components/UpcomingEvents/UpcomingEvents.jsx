@@ -61,14 +61,10 @@ const UpcomingEvents = ({ navigation }) => {
             return a.time?.localeCompare(b?.time);
           });
           const currentTime = moment().format("HH:mm");
-          datas.forEach((data) => {
-            const activityTime = data.time;
-            if (activityTime < currentTime) {
-              const index = datas.indexOf(data);
-              datas.splice(index, 1);
-            }
-          });
-          setData(datas.slice(0, 3));
+          const filteredData = datas.filter((element) => {
+            return element.time >= currentTime;
+          })
+          setData(filteredData.slice(0, 3));
         })
         .catch((err) => {
           console.log(err);

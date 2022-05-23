@@ -11,6 +11,25 @@ const CustomStackedBarChart = () => {
     barColors: ["#FFA556", "#FD5B71", "#67C5A3"],
   };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
   return (
     <View style={styles.barContainer}>
       <View style={styles.textContainer}>

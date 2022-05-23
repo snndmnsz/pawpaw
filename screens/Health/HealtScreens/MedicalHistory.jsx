@@ -1,12 +1,8 @@
 import { StyleSheet, Text, View, FlatList, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import Icons from "react-native-vector-icons/Ionicons";
-import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
-import Input from "../../../components/ui/Input/Input";
-import Button from "../../../components/ui/Button/Button";
 import { useIsFocused } from "@react-navigation/native";
 import CustomStackedBarChart from "../../../components/ui/charts/StackedBarChart/CustomStackedBarChart";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import {
   getAllMedicalbyPetId,
@@ -15,70 +11,10 @@ import {
 import { useSelector } from "react-redux";
 import moment from "moment";
 
-const MedicalHistory = ({ route, navigation }) => {
-  const isEdit = route.params?.edit;
-  const addButton = route.params?.addButton;
-
+const MedicalHistory = () => {
   const [medicalData, setMedicalData] = useState([]);
   const isFocused = useIsFocused();
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
-
-  const [illness, setIllness] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, endStartTime] = useState("");
-
-  const ilnessHandler = (note) => {
-    setIllness(note);
-  };
-  const startTimeHandler = (date) => {
-    setStartTime(date);
-  };
-  const endTimeHandler = (date) => {
-    endStartTime(date);
-  };
-
-  const medicalDataHandler = () => {
-    if (illness === "" || startTime === "" || endTime === "") {
-      return Alert.alert("oops...","Please fill all the fields");
-    } else if (startTime > endTime) {
-      return Alert.alert("oops...","Start date should be less than end date");
-    } else if (startTime === endTime) {
-      return Alert.alert("oops...","Start date and end date should not be same");
-    } else if (illness > 20) {
-      return Alert.alert("oops...","Please enter illness name less than 20 characters");
-    }
-    console.log(illness, startTime, endTime);
-
-    const onlyDateStart = startTime.split(" ");
-    const onlyDateEnd = endTime.split(" ");
-    const timeStart = onlyDateStart[1] + ":00";
-    const timeEnd = onlyDateEnd[1] + ":00";
-    if (timeStart === "00:00:00" || timeEnd === "00:00:00") {
-      return alert("Please select a timeother than 00:00:00");
-    }
-    const datesStart = moment(onlyDateStart[0]).format("YYYY-MM-DD");
-    const datesEnd = moment(onlyDateEnd[0]).format("YYYY-MM-DD");
-    const formattedDateStringStart = new Date(
-      datesStart + "T" + timeStart
-    ).toISOString();
-    const formattedDateStringEnd = new Date(
-      datesEnd + "T" + timeEnd
-    ).toISOString();
-    const todayDateString = new Date().toISOString();
-    addAMedical(
-      currentPetId,
-      illness,
-      todayDateString,
-      formattedDateStringStart,
-      formattedDateStringEnd
-    )
-      .then(() => {
-        navigation.navigate("MedicalHistory");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   useEffect(() => {
     if (isFocused) {
@@ -101,69 +37,39 @@ const MedicalHistory = ({ route, navigation }) => {
           console.log(err);
         });
     }
-  }, [isFocused, isEdit]);
+  }, [isFocused]);
 
   return (
     <View style={styles.medicalContainer}>
       <Text style={styles.headerText}>Pet Medical History</Text>
       <CustomStackedBarChart />
-      {isEdit ? (
-        <KeyboardAwareScrollView
-          showsVerticalScrollIndicator={false}
-          style={styles.editContainer}
-        >
-          <DatePickerInput
-            showLabel={true}
-            title="Start Date"
-            buttonText="Pick Start Date"
-            onChange={startTimeHandler}
-          />
-          <DatePickerInput
-            showLabel={true}
-            title="End Date"
-            buttonText="Pick Start End Date"
-            onChange={endTimeHandler}
-          />
-          <Input
-            placeholder="Illness Name"
-            type="default"
-            label="Illness Name"
-            showLabel={false}
-            onChange={ilnessHandler}
-          />
-          <View style={styles.buttonContainer}>
-            <Button text="Add Medical History" onPress={medicalDataHandler} />
-          </View>
-        </KeyboardAwareScrollView>
-      ) : (
-        <FlatList
-          data={medicalData}
-          contentContainerStyle={{
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          style={styles.flatList}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.listItemContainer}>
-              <View style={styles.iconContainer}>
-                <Icons name="stats-chart-outline" size={21} color="#ffffff" />
-              </View>
-              <View style={styles.infoContainer}>
-                <View style={styles.monthContainer}>
-                  <Text style={styles.monthText}>{item.startDate}</Text>
-                  <Text> to </Text>
-                  <Text style={styles.monthText}>{item.endDate}</Text>
-                </View>
-                <Text style={styles.weightText}>{item.illness}</Text>
-              </View>
+      <FlatList
+        data={medicalData}
+        contentContainerStyle={{
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        style={styles.flatList}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.listItemContainer}>
+            <View style={styles.iconContainer}>
+              <Icons name="stats-chart-outline" size={21} color="#ffffff" />
             </View>
-          )}
-        />
-      )}
+            <View style={styles.infoContainer}>
+              <View style={styles.monthContainer}>
+                <Text style={styles.monthText}>{item.startDate}</Text>
+                <Text> to </Text>
+                <Text style={styles.monthText}>{item.endDate}</Text>
+              </View>
+              <Text style={styles.weightText}>{item.illness}</Text>
+            </View>
+          </View>
+        )}
+      />
     </View>
   );
 };

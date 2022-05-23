@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList,Alert } from "react-native";
+import { StyleSheet, Text, View, FlatList, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import Icons from "react-native-vector-icons/Ionicons";
 import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
@@ -7,70 +7,15 @@ import Button from "../../../components/ui/Button/Button";
 import { useIsFocused } from "@react-navigation/native";
 import CustomLineChart from "../../../components/ui/charts/LineChart/CustomLineChart";
 
-import {
-  getAllVaccinebyPetId,
-  addAVaccine,
-} from "../../../database/tables/vaccine";
-import { addAnActivity } from "../../../database/tables/activities";
+import { getAllVaccinebyPetId } from "../../../database/tables/vaccine";
+
 import { useSelector } from "react-redux";
 import moment from "moment";
 
-const VaccineHistory = ({ route, navigation }) => {
-  const isEdit = route.params?.edit;
-  const addButton = route.params?.addButton;
-
+const VaccineHistory = () => {
   const [vaccineData, setVaccineData] = useState([]);
   const isFocused = useIsFocused();
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
-
-  const [name, setName] = useState("");
-  const [date, setDate] = useState("");
-
-  const nameHandler = (name) => {
-    setName(name);
-  };
-  const timeHandler = (date) => {
-    setDate(date);
-  };
-
-  const addVaccineHandler = () => {
-    if (name.length === 0 || date.length === 0) {
-      return Alert.alert("oops...","Please fill all the fields");
-    } else if (name.length > 20) {
-      return Alert.alert("oops...","Please enter a valid name");
-    }
-    const onlyDate = date.split(" ");
-    const time = onlyDate[1] + ":00";
-    if (time === "00:00:00") {
-      return Alert.alert("oops...","Please select a timeother than 00:00:00");
-    }
-    const dates = moment(onlyDate[0]).format("YYYY-MM-DD");
-    const formattedDateString = new Date(dates + "T" + time).toISOString();
-
-    const vetActivityData = {
-      petId: currentPetId,
-      activityType: "vaccine",
-      date: formattedDateString,
-      note: `Vaccine: ${name}`,
-      startTime: time,
-      endTime: "",
-      calorie: "",
-      meter: "",
-    };
-    addAVaccine(currentPetId, name, formattedDateString)
-      .then(() => {
-        addAnActivity(currentPetId, vetActivityData)
-          .then((res) => {
-            navigation.navigate("VaccineHistory");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   useEffect(() => {
     if (isFocused) {
@@ -94,59 +39,39 @@ const VaccineHistory = ({ route, navigation }) => {
           console.log(err);
         });
     }
-  }, [isFocused, isEdit]);
+  }, [isFocused]);
 
   return (
     <View style={styles.vaccineContainer}>
       <Text style={styles.headerText}>Pet Vaccine History</Text>
       <CustomLineChart />
-      {isEdit ? (
-        <View style={styles.editContainer}>
-          <DatePickerInput
-            showLabel={false}
-            buttonText="Pick Date and Hour"
-            title="Vaccine Date"
-            onChange={timeHandler}
-          />
-          <Input
-            placeholder="Vaccine Name"
-            type="default"
-            label="Vaccine Name"
-            showLabel={false}
-            onChange={nameHandler}
-          />
-          <View style={styles.buttonContainer}>
-            <Button text="Add Vaccine" onPress={addVaccineHandler} />
-          </View>
-        </View>
-      ) : (
-        <FlatList
-          data={vaccineData}
-          contentContainerStyle={{
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          style={styles.flatList}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.listItemContainer}>
-              <View style={styles.iconContainer}>
-                <Icons name="analytics-outline" size={20} color="#ffffff" />
-              </View>
-              <View style={styles.infoContainer}>
-                <View style={styles.monthContainer}>
-                  <Text style={styles.monthText}>{item.month}</Text>
-                  <Text style={styles.dateText}>{item.date}</Text>
-                </View>
-                <Text style={styles.weightText}>{item.vaccineName}</Text>
-              </View>
+
+      <FlatList
+        data={vaccineData}
+        contentContainerStyle={{
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        style={styles.flatList}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.listItemContainer}>
+            <View style={styles.iconContainer}>
+              <Icons name="analytics-outline" size={20} color="#ffffff" />
             </View>
-          )}
-        />
-      )}
+            <View style={styles.infoContainer}>
+              <View style={styles.monthContainer}>
+                <Text style={styles.monthText}>{item.month}</Text>
+                <Text style={styles.dateText}>{item.date}</Text>
+              </View>
+              <Text style={styles.weightText}>{item.vaccineName}</Text>
+            </View>
+          </View>
+        )}
+      />
     </View>
   );
 };

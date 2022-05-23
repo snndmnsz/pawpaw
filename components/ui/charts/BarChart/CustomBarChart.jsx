@@ -4,39 +4,71 @@ import { BarChart } from "react-native-chart-kit";
 import moment from "moment";
 import { useIsFocused } from "@react-navigation/native";
 import { getAllWeightbyPetId } from "../../../../database/tables/weight";
+import { getAllVetbyPetId } from "../../../../database/tables/vet";
 import { useSelector, useDispatch } from "react-redux";
 
 const CustomBarChart = ({ title }) => {
   const screenWidth = Dimensions.get("window").width * 0.8;
   const isFocused = useIsFocused();
-  const [weightData, setWeightData] = useState([0, 0, 0, 0, 0, 0]);
+  const [weightData, setWeightData] = useState([]);
+  const [vetData, setVetData] = useState([]);
   const [dataLabels, setDataLabels] = useState();
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
 
   useEffect(() => {
+    setDataLabels([]);
+    setWeightData([0, 0, 0, 0, 0, 0]);
+    setVetData([0, 0, 0, 0, 0, 0]);
     const lastSixMont = [];
     for (let i = 0; i < 6; i++) {
       lastSixMont.push(moment().subtract(i, "month").format("MMM"));
     }
     setDataLabels(lastSixMont.reverse());
-    console.log(title);
 
-    if ((title === "Weight Stats" || title === "Weight History")) {
+    if (title === "Weight Stats" || title === "Weight History") {
       getAllWeightbyPetId(currentPetId)
         .then((res) => {
+          const allMontData = [0, 0, 0, 0, 0, 0];
+          const monthDataCounter = [0, 0, 0, 0, 0, 0];
           res.forEach((element) => {
             const date = moment(element.date).format("MMM");
             const index = lastSixMont.indexOf(date);
             if (index !== -1) {
-              weightData[index] += parseFloat(element.weight);
+              monthDataCounter[index]++;
+              allMontData[index] += parseFloat(element.weight);
+              // weightData[index] += parseFloat(element.weight);
             }
           });
+          monthDataCounter.forEach((element, index) => {
+            if (element !== 0) {
+              allMontData[index] = parseFloat(
+                (allMontData[index] / element).toFixed(1)
+              );
+            }
+          });
+          setWeightData(allMontData);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else if (title === "Vet Appoitments") {
+      getAllVetbyPetId(currentPetId)
+        .then((res) => {
+          const allMontData = [0, 0, 0, 0, 0, 0];
+          res.forEach((element) => {
+            const date = moment(element.date).format("MMM");
+            const index = lastSixMont.indexOf(date);
+            if (index !== -1) {
+              allMontData[index] += 1;
+            }
+          });
+          setVetData(allMontData);
         })
         .catch((err) => {
           console.log(err);
         });
     }
-  }, []);
+  }, [isFocused]);
 
   return (
     <View style={styles.barContainer}>
@@ -50,7 +82,10 @@ const CustomBarChart = ({ title }) => {
           labels: dataLabels,
           datasets: [
             {
-              data: weightData,
+              data:
+                title === "Weight Stats" || title === "Weight History"
+                  ? weightData
+                  : vetData,
               colors: [
                 (opacity = 1) => `#1DA8B1`,
                 (opacity = 1) => `#FC3090`,

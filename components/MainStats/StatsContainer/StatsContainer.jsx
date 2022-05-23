@@ -26,20 +26,26 @@ const StatsContainer = () => {
     if (isFocused) {
       getActivitiesForADate(currentPetId, selectedDate)
         .then((activities) => {
+          let calorieData = 0;
+          let walkMeters = 0;
+          let sleepHours = 0;
           activities.forEach((activity) => {
             if (activity.activityType === "walk") {
-              setWalk(walk + parseFloat(activity.meter));
+              walkMeters += parseFloat(activity.meter);
             } else if (activity.activityType === "sleep") {
               const endTimeClock = activity.endTime.split(":");
               const startTimeClock = activity.startTime.split(":");
               const endTime = +endTimeClock[0];
               const startTime = +startTimeClock[0];
               const diff = endTime - startTime;
-              setSleep(sleep + diff);
+              sleepHours += diff;
             } else if (activity.activityType === "food") {
-              setCalorie(calorie + parseFloat(activity.calorie));
+              calorieData += parseFloat(activity.calorie);
             }
           });
+          setCalorie(calorieData);
+          setWalk(walkMeters);
+          setSleep(sleepHours);
         })
         .catch((err) => {
           console.log(err);
