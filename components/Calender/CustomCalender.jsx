@@ -89,6 +89,7 @@ const CustomCalender = () => {
   const isFocused = useIsFocused();
 
   const [markedDates, setMarkedDates] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const setSelectedDateHandler = (day) => {
     const newMarkedDates = { ...markedDates };
@@ -116,6 +117,7 @@ const CustomCalender = () => {
       dispatch(setSelectedDate(today.toISOString()));
       // setSelectedDateHandler(todayDate);
 
+      setIsLoading(true);
       getAllActivities(currentPetId)
         .then((activities) => {
           const openingMarkedDates = {};
@@ -142,6 +144,7 @@ const CustomCalender = () => {
             }
           });
           setMarkedDates(openingMarkedDates);
+          setIsLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -221,7 +224,13 @@ const CustomCalender = () => {
               >
                 {new Date(selectedDate)?.getFullYear()}
               </Text>
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  marginRight: isLoading ? 8 : 0,
+                }}
+              >
                 {moment(selectedDate)
                   ?.locale("en")
                   .format("MMMM  DD")
@@ -234,7 +243,7 @@ const CustomCalender = () => {
         enableSwipeMonths={true}
         markingType={"multi-dot"}
         markedDates={markedDates}
-        // displayLoadingIndicator={true}
+        displayLoadingIndicator={isLoading}
         theme={{
           backgroundColor: "#ffffff",
           calendarBackground: "#ffffff",

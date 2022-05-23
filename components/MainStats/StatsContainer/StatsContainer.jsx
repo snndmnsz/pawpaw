@@ -1,36 +1,96 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import StatsBox from "../StatsBox/StatsBox";
+import { useSelector } from "react-redux";
+import { getActivitiesForADate } from "../../../database/tables/activities";
+import { getAllWeightForADate } from "../../../database/tables/weight";
 
 const StatsContainer = () => {
+  const selectedDate = useSelector(
+    (state) => state.myPet.calender.selectedDate
+  );
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const isFocused = useIsFocused();
+
+  const [walk = 0, setWalk] = useState(0);
+  const [weight = 0, setWeight] = useState(0);
+  const [sleep = 0, setSleep] = useState(0);
+  const [calorie = 0, setCalorie] = useState(0);
+
+  useEffect(() => {
+    setWalk(0);
+    setWeight(0);
+    setSleep(0);
+    setCalorie(0);
+    if (isFocused) {
+      getActivitiesForADate(currentPetId, selectedDate)
+        .then((activities) => {
+          activities.forEach((activity) => {
+            if (activity.activityType === "walk") {
+              setWalk(walk + parseFloat(activity.meter));
+            } else if (activity.activityType === "sleep") {
+              const endTimeClock = activity.endTime.split(":");
+              const startTimeClock = activity.startTime.split(":");
+              const endTime = +endTimeClock[0];
+              const startTime = +startTimeClock[0];
+              const diff = endTime - startTime;
+              setSleep(sleep + diff);
+            } else if (activity.activityType === "food") {
+              setCalorie(calorie + parseFloat(activity.calorie));
+            }
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      getAllWeightForADate(currentPetId)
+        .then((weightData) => {
+          if (weightData.length > 0) {
+            weightData.sort((a, b) => {
+              return new Date(a.date) - new Date(b.date);
+            });
+            const lastWeight = weightData[weightData.length - 1];
+            setWeight(lastWeight.weight);
+          } else if (weightData.length === 0) {
+            setWeight(0);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isFocused]);
+
   return (
     <View style={styles.statsContainer}>
       <StatsBox
         backgroundC="#FEE8DC"
         textC="#EE7942"
         activity="Walk"
-        data="680"
+        data={walk}
         small="m"
       />
       <StatsBox
         backgroundC="#FFEFF1"
         textC="#FD5B71"
         activity="Calories"
-        data="350"
+        data={calorie}
         small="cal"
       />
       <StatsBox
         backgroundC="#E6EDFA"
         textC="#2871C8"
         activity="Sleep"
-        data="12.2"
+        data={sleep}
         small="h"
       />
       <StatsBox
         backgroundC="#F5EEFC"
         textC="#9B51E0"
         activity="Weight"
-        data="7.6"
+        data={weight}
         small="kg"
       />
     </View>

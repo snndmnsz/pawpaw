@@ -27,7 +27,7 @@ import { addAnActivity } from "../../../database/tables/activities";
 const LOCATION_TASK_NAME = "LOCATION_TASK_NAME";
 let foregroundSubscription = null;
 
-const Walk = () => {
+const Walk = ({navigation}) => {
   const selectedDate = useSelector(
     (state) => state.myPet.calender.selectedDate
   );

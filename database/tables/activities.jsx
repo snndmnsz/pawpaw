@@ -1,6 +1,5 @@
 import { db } from "../database";
 
-
 export const getAllActivities = (petId) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {

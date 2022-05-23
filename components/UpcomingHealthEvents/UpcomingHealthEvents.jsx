@@ -24,24 +24,24 @@ const UpcomingHealthEvents = () => {
     })
     .split(" ")[0];
 
-    //vaccination
-    //veterinarian
+  //vaccination
+  //veterinarian
 
   useEffect(() => {
     if (isfocused) {
       const todaysDate = moment(new Date()).format("YYYY-MM-DD");
       getVetVaccinationByPetiD(currentPetId, todaysDate).then((data) => {
         data.sort((a, b) => {
-          return a.startTime > b.startTime ? 1 : -1;
+          return a.startTime?.localeCompare(b?.startTime);
         });
         const events = data.map((event) => {
+          console.log(event.activityType);
           return {
             key: event.id,
             startTime: event.startTime.toString().slice(0, 5),
-            type: event.activityType.toString().slice(0, 3),
+            type: event.activityType === "vet" ? "Vet Ap." : "Vaccine",
           };
         });
-        //get max 4 events
         const upcomingEvents = events.slice(0, 4);
         setEvents(upcomingEvents);
       });
@@ -64,6 +64,11 @@ const UpcomingHealthEvents = () => {
             <Text style={styles.upcomingDayName}>{dayShort}</Text>
           </View>
           <View style={styles.timeContainer}>
+            {events.length === 0 && (
+              <View style={styles.timeSingleContainer}>
+                <Text style={styles.activity}>No Events Found</Text>
+              </View>
+            )}
             {events.map((event, index) => {
               return (
                 <View key={event.key} style={styles.timeSingleContainer}>
@@ -159,8 +164,9 @@ const styles = StyleSheet.create({
   },
   timeContainer: {
     flexDirection: "column",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "space-evenly",
+    marginLeft: 15,
   },
   timeSingleContainer: {
     marginTop: "5%",

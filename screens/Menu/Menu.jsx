@@ -5,7 +5,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  Alert
+  Alert,
 } from "react-native";
 import React from "react";
 import profile from "../../assets/images/profile.png";
@@ -114,7 +114,7 @@ const Menu = () => {
         </View>
       </View>
       <View style={styles.bottomButtonContainers}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           activeOpacity={0.8}
           style={styles.sync}
           onPress={() => {}}
@@ -123,7 +123,7 @@ const Menu = () => {
             <Image source={driveImage} style={styles.driveImage} />
           </View>
           <Text style={styles.syncText}>Google Drive</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           activeOpacity={0.8}
           style={styles.deleteData}

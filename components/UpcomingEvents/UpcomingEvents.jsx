@@ -1,9 +1,13 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useIsFocused } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import moment from "moment";
+import { getActivitiesForADate } from "../../database/tables/activities";
 
-const UpcomingEvents = () => {
+const UpcomingEvents = ({ navigation }) => {
   const date = new Date();
   const day = date.getDate();
   const dayShort = date
@@ -12,12 +16,78 @@ const UpcomingEvents = () => {
     })
     .split(" ")[0];
 
+  const selectedDate = useSelector(
+    (state) => state.myPet.calender.selectedDate
+  );
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const isFocused = useIsFocused();
+
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    setData([]);
+    if (isFocused) {
+      getActivitiesForADate(currentPetId, selectedDate)
+        .then((activities) => {
+          const datas = [];
+          activities.forEach((activity) => {
+            const activityName =
+              activity.activityType === "walk"
+                ? "Walk"
+                : activity.activityType === "food"
+                ? "Food"
+                : activity.activityType === "sleep"
+                ? "Sleep"
+                : activity.activityType === "vet"
+                ? "Vet Ap."
+                : activity.activityType === "play"
+                ? "Play"
+                : activity.activityType === "toilet"
+                ? "Toilet"
+                : activity.activityType === "vaccine"
+                ? "Vacc"
+                : activity.activityType === "walk"
+                ? "Walk"
+                : "";
+            const time = activity.startTime.split(":");
+            const activityObject = {
+              id: activity.id,
+              name: activityName,
+              time: time[0] + ":" + time[1],
+            };
+            datas.push(activityObject);
+          });
+          datas.sort((a, b) => {
+            return a.time?.localeCompare(b?.time);
+          });
+          const currentTime = moment().format("HH:mm");
+          datas.forEach((data) => {
+            const activityTime = data.time;
+            if (activityTime < currentTime) {
+              const index = datas.indexOf(data);
+              datas.splice(index, 1);
+            }
+          });
+          setData(datas.slice(0, 3));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isFocused]);
+
   return (
     <View style={styles.upcomingContainer}>
-      <View style={styles.upcomingHeader}>
+      <TouchableOpacity
+        activeOpacity={0.9}
+        style={styles.upcomingHeader}
+        onPress={() => {
+          navigation.navigate("ActivitiesMain");
+        }}
+      >
         <Text style={styles.upcomingHeaderText}>Upcoming Events</Text>
         <Icon name="arrow-forward-outline" size={24} color="#222" />
-      </View>
+      </TouchableOpacity>
       <LinearGradient
         style={styles.upcomingBox}
         colors={["rgba(154, 160, 241, 0.85)", "rgba(113, 123, 251, 0.85)"]}
@@ -28,22 +98,29 @@ const UpcomingEvents = () => {
             <Text style={styles.upcomingDayName}>{dayShort}</Text>
           </View>
           <View style={styles.timeContainer}>
-            <View style={styles.timeSingleContainer}>
-              <Text style={styles.time}>13.30</Text>
-              <Text style={styles.activity}>Food</Text>
-            </View>
-            <View style={styles.timeSingleContainer}>
-              <Text style={styles.time}>15.30</Text>
-              <Text style={styles.activity}>Walk</Text>
-            </View>
-            <View style={styles.timeSingleContainer}>
-              <Text style={styles.time}>15.30</Text>
-              <Text style={styles.activity}>Walk</Text>
-            </View>
+            {data.length === 0 && (
+              <View style={styles.timeSingleContainer}>
+                <Text style={styles.activity}>No Events Found</Text>
+              </View>
+            )}
+            {data.map((item, index) => {
+              return (
+                <View key={item.id} style={styles.timeSingleContainer}>
+                  <Text style={styles.time}>{item.time}</Text>
+                  <Text style={styles.activity}>{item.name}</Text>
+                </View>
+              );
+            })}
           </View>
         </View>
         <View style={styles.upcomingButtonContainer}>
-          <TouchableOpacity activeOpacity={0.9} style={styles.upcomingButton}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={styles.upcomingButton}
+            onPress={() => {
+              navigation.navigate("ActivitiesMain");
+            }}
+          >
             <Text style={styles.upcomingText}>See Details</Text>
           </TouchableOpacity>
         </View>
@@ -124,8 +201,9 @@ const styles = StyleSheet.create({
   },
   timeContainer: {
     flexDirection: "column",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "space-evenly",
+    marginLeft: 20,
   },
   timeSingleContainer: {
     marginTop: "5%",

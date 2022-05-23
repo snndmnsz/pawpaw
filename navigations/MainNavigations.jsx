@@ -12,7 +12,7 @@ import { setPetData } from "../redux/slice/myPetSlice";
 import * as SplashScreen from "expo-splash-screen";
 
 import { getMyPets } from "../database/tables/myPet";
-
+import { setSelectedDate } from "../redux/slice/myPetSlice"
 import { dbInit } from "../database/database";
 
 
@@ -33,6 +33,8 @@ const MainNavigations = () => {
                 console.log(myPets);
                 if (myPets.length > 0) {
                   dispatch(setPetData(myPets[0]));
+                  const date = new Date().toISOString();
+                  dispatch(setSelectedDate(date));
                 }
                 setAppIsReady(true);
               })

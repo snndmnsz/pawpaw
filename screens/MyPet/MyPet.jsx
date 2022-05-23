@@ -15,7 +15,7 @@ const MyPet = ({ navigation }) => {
     >
       <Text style={styles.headerText}>TODAY</Text>
       <StatsContainer />
-      <UpcomingEvents />
+      <UpcomingEvents navigation={navigation}/>
       <ActivityRing />
       <CustomBarChart title="Weight History" />
       <CustomLineChart />
