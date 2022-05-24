@@ -39,6 +39,7 @@ const Play = ({ navigation }) => {
     const newActivityDate = `${activityFormattedDate}T${time}`
     ;
     // return console.log(new Date(newActivityDate).getTime());
+  
 
     const playActivity = {
       petId: +currentPetId,

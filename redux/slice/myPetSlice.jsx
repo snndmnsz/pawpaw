@@ -51,6 +51,9 @@ const myPetSlice = createSlice({
       state.currentPetInfo = action.payload;
       state.currentPetId = action.payload.id;
     },
+    setPetImage: (state, action) => {
+      state.currentPetInfo.photoURL = action.payload;
+    },
     resetPetInfo(state) {
       state.currentPetInfo = {
         id: "",
@@ -59,8 +62,29 @@ const myPetSlice = createSlice({
         spicie: "",
         birthDate: "",
         breed: "",
+        gender: "",
+        weight: "",
+        ownerName: "",
       };
       state.currentPetId = null;
+    },
+    resetEverything(state) {
+      state.myPets = [];
+      state.currentPetId = null;
+      state.currentPetInfo = {
+        id: "",
+        name: "",
+        photoURL: "",
+        spicie: "",
+        birthDate: "",
+        breed: "",
+        gender: "",
+        weight: "",
+        ownerName: "",
+      };
+      state.loading = false;
+      state.error = null;
+      state.calender.selectedDate = "";
     },
   },
 });
@@ -73,7 +97,9 @@ export const {
   setOwnerName,
   setSelectedDate,
   setPetData,
-  resetPetInfo
+  resetPetInfo,
+  resetEverything,
+  setPetImage
 } = myPetSlice.actions;
 
 export default myPetSlice.reducer;

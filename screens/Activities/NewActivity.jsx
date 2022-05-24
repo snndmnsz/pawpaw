@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { useSelector } from "react-redux";
 import React from "react";
 import food from "../../assets/activityImages/food.png";
 import care from "../../assets/activityImages/care.png";
@@ -15,7 +16,14 @@ import sleep from "../../assets/activityImages/sleep.png";
 import toilet from "../../assets/activityImages/toilet.png";
 import walk from "../../assets/activityImages/walk.png";
 
+import cat1 from "../../assets/activityImages/cat/cat--1.png";
+import cat2 from "../../assets/activityImages/cat/cat--2.png";
+import cat3 from "../../assets/activityImages/cat/cat--3.png";
+import cat4 from "../../assets/activityImages/cat/cat--4.png";
+import cat5 from "../../assets/activityImages/cat/cat--5.png";
+
 const NewActivity = ({ navigation }) => {
+  const spicie = useSelector((state) => state.myPet.currentPetInfo.spicie);
   const playPressHandler = () => {
     navigation.navigate("Play");
   };
@@ -67,7 +75,10 @@ const NewActivity = ({ navigation }) => {
             </Text>
           </View>
           <View style={styles.imageContainer}>
-            <Image source={walk} style={styles.activityImage} />
+            <Image
+              source={spicie === "dog" ? walk : cat3}
+              style={styles.activityImage}
+            />
           </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -95,7 +106,7 @@ const NewActivity = ({ navigation }) => {
           </View>
           <View style={styles.imageContainer}>
             <Image
-              source={food}
+              source={spicie === "dog" ? food : cat2}
               style={[
                 styles.activityImage,
                 {
@@ -128,7 +139,10 @@ const NewActivity = ({ navigation }) => {
             </Text>
           </View>
           <View style={styles.imageContainer}>
-            <Image source={care} style={styles.activityImage} />
+            <Image
+              source={spicie === "dog" ? care : cat1}
+              style={styles.activityImage}
+            />
           </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -156,7 +170,7 @@ const NewActivity = ({ navigation }) => {
           </View>
           <View style={styles.imageContainer}>
             <Image
-              source={sleep}
+              source={spicie === "dog" ? sleep : cat4}
               style={[
                 styles.activityImage,
                 {
@@ -189,7 +203,10 @@ const NewActivity = ({ navigation }) => {
             </Text>
           </View>
           <View style={styles.imageContainer}>
-            <Image source={toilet} style={styles.activityImage} />
+            <Image
+              source={spicie === "dog" ? toilet : cat5}
+              style={styles.activityImage}
+            />
           </View>
         </TouchableOpacity>
       </ScrollView>

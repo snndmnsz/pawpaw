@@ -133,3 +133,80 @@ export const dbInit = () => {
 
   return promise;
 };
+
+export const dropDatabase = () => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `drop table myPets`,
+        [],
+        () => {
+          // resolve();
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+
+      tx.executeSql(
+        `drop table activities`,
+        [],
+        () => {
+          // resolve();
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+      tx.executeSql(
+        `drop table medical`,
+        [],
+        () => {
+          // resolve();
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+      tx.executeSql(
+        `drop table vaccine`,
+        [],
+        () => {
+          // resolve();
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+      tx.executeSql(
+        `drop table vet`,
+        [],
+        () => {
+          // resolve();
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+      tx.executeSql(
+        `drop table weight`,
+        [],
+        () => {
+          // resolve();
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+    });
+    resolve();
+  });
+
+  return promise;
+};

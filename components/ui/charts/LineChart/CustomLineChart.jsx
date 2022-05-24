@@ -1,20 +1,46 @@
 import { StyleSheet, Text, View, Dimensions } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { LineChart } from "react-native-chart-kit";
+import { useSelector, useDispatch } from "react-redux";
+import moment from "moment";
+import { useIsFocused } from "@react-navigation/native";
+import { getAllVaccinebyPetId } from "../../../../database/tables/vaccine";
 
-const CustomLineChart = ({title}) => {
+const CustomLineChart = ({ title }) => {
   const screenWidth = Dimensions.get("window").width * 0.8;
+  const isFocused = useIsFocused();
+  const [data, setData] = React.useState([0, 0, 0, 0, 0, 0]);
 
-  const data = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    datasets: [
-      {
-        data: [20, 45, 28, 80, 99, 43],
-        color: (opacity = 1) => `#FD5B71`, // optional
-        strokeWidth: 2, // optional
-      },
-    ],
-  };
+  const [dataLabels, setDataLabels] = useState();
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
+
+  useEffect(() => {
+    setDataLabels([]);
+    setData([0, 0, 0, 0, 0, 0]);
+    const lastSixMont = [];
+    for (let i = 0; i < 6; i++) {
+      lastSixMont.push(moment().subtract(i, "month").format("MMM"));
+    }
+    setDataLabels(lastSixMont.reverse());
+
+    if (isFocused) {
+      getAllVaccinebyPetId(currentPetId)
+        .then((res) => {
+          const allMontData = [0, 0, 0, 0, 0, 0];
+          res.forEach((element) => {
+            const date = moment(element.date).format("MMM");
+            const index = lastSixMont.indexOf(date);
+            if (index !== -1) {
+              allMontData[index]++;
+            }
+          });
+          setData(allMontData);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.barContainer}>
@@ -26,7 +52,16 @@ const CustomLineChart = ({title}) => {
         // style={graphStyle}
         bezier={true}
         bezierCurve={1}
-        data={data}
+        data={{
+          labels: dataLabels,
+          datasets: [
+            {
+              data: data,
+              color: (opacity = 1) => `#FD5B71`, // optional
+              strokeWidth: 2, // optional
+            },
+          ],
+        }}
         width={screenWidth}
         height={168}
         // yAxisLabel="$"

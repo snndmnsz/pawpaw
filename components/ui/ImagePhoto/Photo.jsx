@@ -1,15 +1,83 @@
-import { StyleSheet, Text, View, Image } from "react-native";
-import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Platform,
+  Pressable,
+  Alert,
+} from "react-native";
+import React, { useState, useEffect } from "react";
 import dog from "../../../assets/images/photoDog.png";
+import {
+  launchCameraAsync,
+  useCameraPermissions,
+  PermissionStatus,
+} from "expo-image-picker";
+import { setPetImage } from "../../../redux/slice/myPetSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
 
 const Photo = () => {
+  const [image, setImage] = useState(null);
+  const dispatch = useDispatch();
+  const myPetPhoto = useSelector(
+    (state) => state.myPet.currentPetInfo.photoURL
+  );
+  const isFocused = useIsFocused();
+  const [cameraPermissionInformation, requestPermission] =
+    useCameraPermissions();
+
+  async function verifyPermissions() {
+    if (cameraPermissionInformation.status === PermissionStatus.UNDETERMINED) {
+      const permissionResponse = await requestPermission();
+      return permissionResponse.granted;
+    }
+
+    if (cameraPermissionInformation.status === PermissionStatus.DENIED) {
+      Alert.alert(
+        "Insufficient Permissions!",
+        "You need to grant camera permissions to use this app."
+      );
+      return false;
+    }
+    return true;
+  }
+
+  const pickImage = async () => {
+    const hasPermission = await verifyPermissions();
+    if (!hasPermission) {
+      return Alert.alert(
+        "Insufficient Permissions!",
+        "You need to grant camera permissions to use this app."
+      );
+    }
+    const image = await launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+    dispatch(setPetImage(image.uri));
+    setImage(image.uri);
+  };
+
+  useEffect(() => {
+    if (isFocused) {
+      setImage(myPetPhoto);
+    }
+  }, [isFocused]);
+
   return (
-    <View style={styles.photoContainer}>
+    <Pressable style={styles.photoContainer} onPress={pickImage}>
       <View style={styles.boxContainer}>
-        <Image source={dog} style={styles.image} />
-        <Text style={styles.photoText}>Upload Photo</Text>
+        {image ? (
+          <Image source={{ uri: image }} style={styles.imageTaken} />
+        ) : (
+          <Image source={dog} style={styles.image} />
+        )}
+        {!image && <Text style={styles.photoText}>Take a Photo</Text>}
       </View>
-    </View>
+    </Pressable>
   );
 };
 
@@ -25,14 +93,19 @@ const styles = StyleSheet.create({
   },
   boxContainer: {
     backgroundColor: "#F8FAFD",
-    borderRadius: 1,
+    borderWidth: 2,
+    borderColor: "#F7F7F7",
     width: 120,
     height: 120,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
   },
-  image: {},
+  imageTaken: {
+    width: 115,
+    height: 115,
+    borderRadius: 12,
+  },
   photoText: {
     paddingTop: 10,
     fontSize: 14,

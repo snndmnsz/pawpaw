@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, Alert } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import image from "../../../assets/images/owner.png";
+import cat6 from "../../../assets/activityImages/cat/cat--6.png";
 import Input from "../../../components/ui/Input/Input";
 import Button from "../../../components/ui/Button/Button";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -34,7 +35,7 @@ const Owner = ({ navigation }) => {
       gender: currentPetInfo.gender,
       name: currentPetInfo.name,
       ownerName: owner,
-      photoURL: "",
+      photoURL: currentPetInfo.photoURL,
       spicie: currentPetInfo.spicie,
       weight: currentPetInfo.weight,
     };
@@ -65,8 +66,13 @@ const Owner = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.circle}></View>
         <Text style={styles.headerText}>Please Fill Your Info</Text>
-        <View style={styles.imageContainer}>
-          <Image style={styles.image} source={image} />
+        <View style={[styles.imageContainer,{
+          height: currentPetInfo.spicie === "dog" ? 300 : 280
+        }]}>
+          <Image
+            style={styles.image}
+            source={currentPetInfo.spicie === "dog" ? image : cat6}
+          />
         </View>
         <View style={styles.inputContainer}>
           <Input

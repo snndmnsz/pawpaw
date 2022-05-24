@@ -14,12 +14,17 @@ import Icon from "react-native-vector-icons/Ionicons";
 import driveImage from "../../assets/images/drive.png";
 import { useSelector, useDispatch } from "react-redux";
 
+import catImage from "../../assets/emptyPetImages/cat.png";
+import dogImage from "../../assets/emptyPetImages/dog.png";
+
 import { deleteAPet } from "../../database/tables/myPet";
-import { resetPetInfo } from "../../redux/slice/myPetSlice";
+import { resetPetInfo, resetEverything } from "../../redux/slice/myPetSlice";
+import { dropDatabase, dbInit } from "../../database/database";
 
 const Menu = () => {
   const dispatch = useDispatch();
   const currentPetInfo = useSelector((state) => state.myPet.currentPetInfo);
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
   let yearOld = 0;
 
   const calculateYearOldwithMonth = () => {
@@ -46,8 +51,6 @@ const Menu = () => {
   };
 
   const petDeleteHandler = () => {
-    8;
-
     Alert.alert(
       "Ohoii Boiiii",
       `You are about to delete ${currentPetInfo.name}. 
@@ -60,9 +63,41 @@ const Menu = () => {
         {
           text: "Delete",
           onPress: () => {
-            deleteAPet(currentPetInfo.id)
+            deleteAPet(currentPetId)
               .then(() => {
                 dispatch(resetPetInfo());
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const deleteEverything = () => {
+    Alert.alert(
+      "Wait a minute",
+      `You are about to delete everything.
+        Are you sure?`,
+      [
+        {
+          text: "Cancel",
+          onPress: () => {},
+        },
+        {
+          text: "Delete All",
+          onPress: () => {
+            dropDatabase()
+              .then(() => {
+                dispatch(resetEverything());
+                dbInit()
+                  .then(() => {})
+                  .catch((err) => {
+                    console.log(err);
+                  });
               })
               .catch((err) => {
                 console.log(err);
@@ -85,7 +120,17 @@ const Menu = () => {
       <View style={styles.petControlContainer}>
         <View style={styles.pet}>
           <View style={styles.petImageContainer}>
-            <Image source={petImage} style={styles.petImage} />
+            {currentPetInfo.photoURL ? (
+              <Image
+                source={{ uri: currentPetInfo.photoURL }}
+                style={styles.petImage}
+              />
+            ) : (
+              <Image
+                source={currentPetInfo.spicie === "dog" ? dogImage : catImage}
+                style={styles.petImage}
+              />
+            )}
           </View>
           <View style={styles.petInfoContainer}>
             <Text style={styles.petName}>{currentPetInfo.name}</Text>
@@ -127,7 +172,7 @@ const Menu = () => {
         <TouchableOpacity
           activeOpacity={0.8}
           style={styles.deleteData}
-          onPress={() => {}}
+          onPress={deleteEverything}
         >
           <Icon
             style={styles.deleteImageContainer}

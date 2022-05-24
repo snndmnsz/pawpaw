@@ -46,7 +46,7 @@ const Food = ({ navigation }) => {
       );
     }
     const activityFormattedDate = selectedDate.split("T")[0];
-    const newActivityDate = `${activityFormattedDate}T${time}`;
+    const newActivityDate = `${activityFormattedDate}T${time}`
 
     const foodActivity = {
       petId: +currentPetId,

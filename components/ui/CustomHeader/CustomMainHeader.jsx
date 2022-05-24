@@ -4,13 +4,25 @@ import dog from "../../../assets/images/dog-ex.png";
 import { useSelector, useDispatch } from "react-redux";
 import { setSelectedDate } from "../../../redux/slice/myPetSlice";
 import moment from "moment";
+import catImage from "../../../assets/emptyPetImages/cat.png";
+import dogImage from "../../../assets/emptyPetImages/dog.png";
 
 export const CustomMainHeaderLeft = ({ isNameVisible }) => {
   const currentPetInfo = useSelector((state) => state.myPet.currentPetInfo);
   return (
     <View style={styles.leftContainer}>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={dog} />
+        {currentPetInfo.photoURL ? (
+          <Image
+            source={{ uri: currentPetInfo.photoURL }}
+            style={styles.image}
+          />
+        ) : (
+          <Image
+            style={styles.image}
+            source={currentPetInfo.spicie === "dog" ? dogImage : catImage}
+          />
+        )}
       </View>
       {isNameVisible && (
         <View style={styles.leftTextContainer}>

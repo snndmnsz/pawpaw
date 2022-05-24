@@ -9,6 +9,7 @@ import {
   LogBox,
   Alert,
 } from "react-native";
+import Input from "../../../components/ui/Input/Input";
 import { useIsFocused } from "@react-navigation/native";
 import * as Location from "expo-location";
 import Icons from "react-native-vector-icons/Ionicons";
@@ -36,6 +37,7 @@ const Walk = ({ navigation }) => {
   const [isScheduled, setIsScheduled] = useState(false);
   const [isStopwatchStart, setIsStopwatchStart] = useState(false);
   const [resetStopwatch, setResetStopwatch] = useState(false);
+  const [locationPermission, setLocationPermission] = useState(true);
 
   const [position, setPosition] = useState(null);
   const [initialPosition, setInitialPosition] = useState({
@@ -48,12 +50,17 @@ const Walk = ({ navigation }) => {
 
   const [time, setTime] = useState("");
   const [note, setNote] = useState("");
+  const [meterInput, setMeterInput] = useState(0);
 
   const clockHandler = (time) => {
     setTime(`${time}:00`);
   };
   const noteHandler = (note) => {
     setNote(note);
+  };
+
+  const meterInputhandler = (meter) => {
+    setMeterInput(+meter);
   };
 
   const calculatePreciseDistance = () => {
@@ -72,24 +79,49 @@ const Walk = ({ navigation }) => {
   useEffect(() => {
     const requestPermissions = async () => {
       const foreground = await Location.requestForegroundPermissionsAsync();
-      if (foreground.granted)
+
+      if (foreground.granted !== "granted") {
+        // setLocationPermission(false);
+        // setIsScheduled(true);
+        // setIsStopwatchStart(false);
+        // setResetStopwatch(true);
+        // setLiveMeters({
+        //   distance: 0,
+        // });
+        return;
+      }
+      if (foreground.granted) {
+        // setLocationPermission(true);
+        // setIsScheduled(false);
         await Location.requestBackgroundPermissionsAsync();
+      }
     };
     requestPermissions();
   }, []);
 
   const startForegroundUpdate = async () => {
     const { granted } = await Location.getForegroundPermissionsAsync();
+    console.log("granted ===>>>>>>>>>>>>>  ", granted);
+    if (!granted) {
+      setLocationPermission(false);
+      setIsScheduled(true);
+      setIsStopwatchStart(false);
+      setResetStopwatch(true);
+      setLiveMeters({
+        distance: 0,
+      });
+      console.log("location tracking denied");
+      return;
+    }
+
     const { coords } = await Location.getCurrentPositionAsync({});
     setInitialPosition({
       latitude: coords.latitude,
       longitude: coords.longitude,
     });
 
-    if (!granted) {
-      console.log("location tracking denied");
-      return;
-    }
+    // setLocationPermission(true);
+    // setIsScheduled(false);
     foregroundSubscription?.remove();
     foregroundSubscription = await Location.watchPositionAsync(
       {
@@ -129,6 +161,9 @@ const Walk = ({ navigation }) => {
 
   const walkSubmitHandler = () => {
     if (liveMeters.distance === 0) {
+      // if (meterInput === 0 && !locationPermission) {
+      //   return Alert.alert("oops...", "Please enter a meter value");
+      // }
       if (note.length === 0 || time.length === 0) {
         return Alert.alert("oops...", "Please fill all the fields");
       } else if (note.length > 100) {
@@ -163,6 +198,7 @@ const Walk = ({ navigation }) => {
       startTime: time ? time : timeFormattedForWalk,
       endTime: "",
       calorie: "",
+      // meter: !locationPermission ? meterInput : liveMeters.distance,
       meter: liveMeters.distance,
     };
 
@@ -205,6 +241,15 @@ const Walk = ({ navigation }) => {
               placeHolder="Start Time"
               buttonPlaceHolder="Set Time"
             />
+            {/* {!locationPermission && (
+              <Input
+                placeholder="Meter"
+                type="numeric"
+                label=""
+                showLabel={false}
+                onChange={meterInputhandler}
+              />
+            )} */}
             <View
               style={[
                 styles.submitButtonContainer,
@@ -254,6 +299,7 @@ const Walk = ({ navigation }) => {
                   ]}
                   onPress={() => {
                     // startForegroundUpdate();
+                    // if (locationPermission) {
                     if (isStopwatchStart === false) {
                       startForegroundUpdate();
                     } else if (isStopwatchStart === true) {
@@ -261,6 +307,7 @@ const Walk = ({ navigation }) => {
                     }
                     setIsStopwatchStart(!isStopwatchStart);
                     setResetStopwatch(false);
+                    // }
                   }}
                 >
                   <Text style={styles.startButtonText}>

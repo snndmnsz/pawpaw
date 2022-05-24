@@ -25,7 +25,7 @@ const CustomBarChart = ({ title }) => {
     }
     setDataLabels(lastSixMont.reverse());
 
-    if (title === "Weight Stats" || title === "Weight History") {
+    if ((title === "Weight Stats" || title === "Weight History") && isFocused) {
       getAllWeightbyPetId(currentPetId)
         .then((res) => {
           const allMontData = [0, 0, 0, 0, 0, 0];
@@ -51,7 +51,7 @@ const CustomBarChart = ({ title }) => {
         .catch((err) => {
           console.log(err);
         });
-    } else if (title === "Vet Appoitments") {
+    } else if (title === "Vet Appoitments" && isFocused) {
       getAllVetbyPetId(currentPetId)
         .then((res) => {
           const allMontData = [0, 0, 0, 0, 0, 0];

@@ -1,34 +1,49 @@
 import { StyleSheet, Text, View, Dimensions } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { StackedBarChart } from "react-native-chart-kit";
+import { useSelector, useDispatch } from "react-redux";
+import moment from "moment";
+import { useIsFocused } from "@react-navigation/native";
+const { getAllMedicalbyPetId } = require("../../../../database/tables/medical");
 
 const CustomStackedBarChart = () => {
   const screenWidth = Dimensions.get("window").width * 0.8;
-  const data = {
-    labels: ["Maximus"],
-    legend: ["Heartworm", "Parvovirus", "Rabies"],
-    data: [[3, 3, 6]],
-    barColors: ["#FFA556", "#FD5B71", "#67C5A3"],
-  };
+  const [data, setData] = useState([]);
+  const [labels, setLabels] = useState([]);
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const isFocused = useIsFocused();
 
+  useEffect(() => {
+    setData([]);
+    setLabels([]);
 
+    if (isFocused) {
+      getAllMedicalbyPetId(currentPetId)
+        .then((res) => {
+          const sicknessArray = [];
+          const sicknessCount = [];
+          res.forEach((sickness) => {
+            if (sicknessArray.includes(sickness.medicalName)) {
+              //find index of sickness
+              const index = sicknessArray.indexOf(sickness.medicalName);
+              sicknessCount[index]++;
+            } else if (!sicknessArray.includes(sickness.medicalName)) {
+              sicknessArray.push(sickness.medicalName);
+              sicknessCount.push(1);
+            }
+          });
+          // console.log(sicknessArray);
+          // console.log("----------");
+          // console.log(sicknessCount);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
+          setData(sicknessCount);
+          setLabels(sicknessArray);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.barContainer}>
@@ -38,7 +53,19 @@ const CustomStackedBarChart = () => {
       </View>
       <StackedBarChart
         // style={graphStyle}
-        data={data}
+        data={{
+          labels: ["Maximus"],
+          legend: labels,
+          data: [data],
+          barColors: [
+            "#FFA556",
+            "#FD5B71",
+            "#67C5A3",
+            "#CADD45",
+            "#AD5B71",
+            "#88A3D3",
+          ],
+        }}
         width={screenWidth}
         height={170}
         // yAxisLabel="$"

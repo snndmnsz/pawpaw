@@ -1,6 +1,5 @@
 import { db } from "../database";
 
-
 export const getMyPets = () => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -58,6 +57,8 @@ export const addAPet = (pet) => {
   return promise;
 };
 
+
+
 export const deleteAPet = (id) => {
   const promise = new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -69,11 +70,9 @@ export const deleteAPet = (id) => {
         },
         (_, err) => {
           console.log(err);
-          reject(err);
+          // reject(err);
         }
       );
-    });
-    db.transaction((tx) => {
       tx.executeSql(
         `delete from vet where petId = ?`,
         [+id],
@@ -82,11 +81,10 @@ export const deleteAPet = (id) => {
         },
         (_, err) => {
           console.log(err);
-          reject(err);
+          // reject(err);
         }
       );
-    });
-    db.transaction((tx) => {
+
       tx.executeSql(
         `delete from weight where petId = ?`,
         [+id],
@@ -95,11 +93,10 @@ export const deleteAPet = (id) => {
         },
         (_, err) => {
           console.log(err);
-          reject(err);
+          // reject(err);
         }
       );
-    });
-    db.transaction((tx) => {
+
       tx.executeSql(
         `delete from vaccine where petId = ?`,
         [+id],
@@ -108,11 +105,10 @@ export const deleteAPet = (id) => {
         },
         (_, err) => {
           console.log(err);
-          reject(err);
+          // reject(err);
         }
       );
-    });
-    db.transaction((tx) => {
+
       tx.executeSql(
         `delete from medical where petId = ?`,
         [+id],
@@ -121,11 +117,10 @@ export const deleteAPet = (id) => {
         },
         (_, err) => {
           console.log(err);
-          reject(err);
+          // reject(err);
         }
       );
-    });
-    db.transaction((tx) => {
+
       tx.executeSql(
         `delete from activities where petId = ?`,
         [+id],
@@ -134,10 +129,11 @@ export const deleteAPet = (id) => {
         },
         (_, err) => {
           console.log(err);
-          reject(err);
+          // reject(err);
         }
       );
     });
+
     resolve();
   });
   return promise;
