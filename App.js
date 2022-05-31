@@ -10,7 +10,7 @@ import MainNavigations from "./navigations/MainNavigations";
 export default function App() {
   if (Platform.OS === "android") {
     NavigationBar.setBackgroundColorAsync("white");
-    NavigationBar.setButtonStyleAsync("dark");
+    // NavigationBar.setButtonStyleAsync("dark");
   }
 
   LogBox.ignoreLogs([

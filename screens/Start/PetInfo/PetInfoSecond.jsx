@@ -15,7 +15,6 @@ import Input from "../../../components/ui/Input/Input";
 import Button from "../../../components/ui/Button/Button";
 import Photo from "../../../components/ui/ImagePhoto/Photo";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
 import { useDispatch, useSelector } from "react-redux";
 import { setGenderBreedWeight } from "../../../redux/slice/myPetSlice";
 

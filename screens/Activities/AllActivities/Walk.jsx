@@ -25,6 +25,7 @@ import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { addAnActivity } from "../../../database/tables/activities";
+import { schedulePushNotification } from "../../../utils/notifications";
 
 const LOCATION_TASK_NAME = "LOCATION_TASK_NAME";
 let foregroundSubscription = null;
@@ -34,6 +35,7 @@ const Walk = ({ navigation }) => {
     (state) => state.myPet.calender.selectedDate
   );
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const petName = useSelector((state) => state.myPet.currentPetInfo.name);
   const spicie = useSelector((state) => state.myPet.currentPetInfo.spicie);
   const isFocused = useIsFocused();
   const [isScheduled, setIsScheduled] = useState(false);
@@ -159,7 +161,7 @@ const Walk = ({ navigation }) => {
         setIsScheduled(true);
       }
     }
-  }, [isFocused,currentPetId]);
+  }, [isFocused, currentPetId]);
 
   const walkSubmitHandler = () => {
     if (liveMeters.distance === 0) {
@@ -188,7 +190,7 @@ const Walk = ({ navigation }) => {
     const newActivityDate = `${activityFormattedDate}T${
       time ? time : timeFormattedForWalkIso
     }`;
-
+    const datui = new Date(activityFormattedDate);
     const walkActivity = {
       petId: +currentPetId,
       activityType: "walk",
@@ -207,6 +209,12 @@ const Walk = ({ navigation }) => {
     addAnActivity(currentPetId, walkActivity)
       .then(() => {
         navigation.navigate("ActivitiesMain");
+        schedulePushNotification(
+          `${petName} has a Walk Activity`,
+          `Pssttt ${petName} has a walk activity now...`,
+          datui,
+          time ? time : timeFormattedForWalk
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -226,9 +234,15 @@ const Walk = ({ navigation }) => {
     >
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image style={[styles.image,{
-            left: spicie === "cat" ? 25 : 47,
-          }]} source={spicie === "dog" ? walk : cat3} />
+          <Image
+            style={[
+              styles.image,
+              {
+                left: spicie === "cat" ? 25 : 47,
+              },
+            ]}
+            source={spicie === "dog" ? walk : cat3}
+          />
         </View>
         <View style={styles.circle}></View>
         {isScheduled ? (

@@ -19,8 +19,9 @@ import {
   setOwnerName,
   addNewMyPets,
 } from "../../../redux/slice/myPetSlice";
+import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-
+import { addWeight } from "../../../database/tables/weight";
 import { addAPet } from "../../../database/tables/myPet";
 
 const Owner = ({ navigation }) => {
@@ -80,6 +81,14 @@ const Owner = ({ navigation }) => {
           weight: currentPetInfo.weight,
         };
         dispatch(addNewMyPets(newPushPetData));
+        const dates = moment().format("YYYY-MM-DD");
+        const time = moment().format("HH:mm:ss");
+        const formattedDateString = dates + "T" + time;
+        addWeight(res, parseFloat(currentPetInfo.weight), formattedDateString)
+          .then(() => {})
+          .catch((err) => {
+            console.log(err);
+          });
         navigation.navigate("bottomNavStack", {
           screen: "My Pet",
         });

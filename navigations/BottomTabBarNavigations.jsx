@@ -2,7 +2,6 @@ import { StyleSheet } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-
 import Mypet from "../screens/MyPet/MyPet";
 import ActivitiesNavigation from "./ActivitiesNavigation";
 import HealtNavigations from "./HealtNavigations";
@@ -17,9 +16,7 @@ import CustomTabBar from "../components/ui/CustomTabBar/CustomTabBar";
 
 const Tab = createBottomTabNavigator();
 
-const BottomTabBarNavigations = ({navigation}) => {
-
-
+const BottomTabBarNavigations = ({ navigation }) => {
   // const currentPetId = useSelector((state) => state.myPet.currentPetId);
 
   // if(currentPetId === null) {
@@ -29,68 +26,64 @@ const BottomTabBarNavigations = ({navigation}) => {
   // }
 
   return (
-      <Tab.Navigator
-        tabBar={(props) => <CustomTabBar {...props} />}
-        screenOptions={{
-          tabBarHideOnKeyboard: false,
-          style: {
-            position: "absolute",
-          },
-          lazy: false,
-        }}
-      >
-        <Tab.Screen
-          name="My Pet"
-          component={Mypet}
-          options={({ navigation }) => ({
-            headerStyle: {
-              shadowColor: "transparent", // this covers iOS
-              elevation: 0, // this covers Android
-              height: 120,
-            },
-            headerTitleStyle: {
-              display: "none",
-            },
-            headerLeft: () => <CustomMainHeaderLeft isNameVisible={true} />,
-            headerRight: () => (
-              <CustomMainHeaderRight navigation={navigation} />
-            ),
-          })}
-        />
-        <Tab.Screen
-          name="Activities"
-          options={{
-            headerShown: false,
-          }}
-          component={ActivitiesNavigation}
-        />
-        <Tab.Screen
-          name="Health"
-          options={{
-            headerShown: false,
-          }}
-          component={HealtNavigations}
-        />
-        <Tab.Screen
-          name="Menu"
-          component={Menu}
-          options={({ navigation }) => ({
-            headerStyle: {
-              shadowColor: "transparent", // this covers iOS
-              elevation: 0, // this covers Android
-              height: 120,
-            },
-            headerTitleStyle: {
-              display: "none",
-            },
-            headerLeft: () => <CustomMainHeaderLeft isNameVisible={true} />,
-            headerRight: () => (
-              <CustomMainHeaderRight navigation={navigation} />
-            ),
-          })}
-        />
-      </Tab.Navigator>
+    <Tab.Navigator
+      tabBar={(props) => <CustomTabBar {...props} />}
+      screenOptions={{
+        tabBarHideOnKeyboard: false,
+        style: {
+          position: "absolute",
+          elevation: 0,
+        },
+      }}
 
+    >
+      <Tab.Screen
+        name="My Pet"
+        component={Mypet}
+        options={({ navigation }) => ({
+          headerStyle: {
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+            height: 120,
+          },
+          headerTitleStyle: {
+            display: "none",
+          },
+          headerLeft: () => <CustomMainHeaderLeft isNameVisible={true} />,
+          headerRight: () => <CustomMainHeaderRight navigation={navigation} />,
+        })}
+      />
+      <Tab.Screen
+        name="Activities"
+        options={{
+          headerShown: false,
+        }}
+        component={ActivitiesNavigation}
+      />
+      <Tab.Screen
+        name="Health"
+        options={{
+          headerShown: false,
+        }}
+        component={HealtNavigations}
+      />
+      <Tab.Screen
+        name="Menu"
+        component={Menu}
+        options={({ navigation }) => ({
+          headerStyle: {
+            shadowColor: "transparent", // this covers iOS
+            elevation: 0, // this covers Android
+            height: 120,
+          },
+          headerTitleStyle: {
+            display: "none",
+          },
+          headerLeft: () => <CustomMainHeaderLeft isNameVisible={true} />,
+          headerRight: () => <CustomMainHeaderRight navigation={navigation} />,
+        })}
+      />
+    </Tab.Navigator>
   );
 };
 

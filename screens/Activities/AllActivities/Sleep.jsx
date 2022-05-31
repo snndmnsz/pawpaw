@@ -8,7 +8,7 @@ import Button from "../../../components/ui/Button/Button";
 import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSelector } from "react-redux";
-
+import { schedulePushNotification } from "../../../utils/notifications"
 import { addAnActivity } from "../../../database/tables/activities";
 
 const Sleep = ({ navigation }) => {
@@ -16,6 +16,7 @@ const Sleep = ({ navigation }) => {
     (state) => state.myPet.calender.selectedDate
   );
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const petName = useSelector((state) => state.myPet.currentPetInfo.name);
   const spicie = useSelector((state) => state.myPet.currentPetInfo.spicie);
   const [note, setNote] = useState("");
   const [bedTime, setBedTime] = useState("");
@@ -56,10 +57,16 @@ const Sleep = ({ navigation }) => {
       calorie: "",
       meter: "",
     };
-
+    const datui = new Date(activityFormattedDate);
     addAnActivity(currentPetId, sleepActivity)
       .then(() => {
         navigation.navigate("ActivitiesMain");
+        schedulePushNotification(
+          `${petName} has a Sleep Activity`,
+          `Pssttt ${petName} has a sleep activity now...`,
+          datui,
+          bedTime
+        );
       })
       .catch((err) => {
         console.log(err);

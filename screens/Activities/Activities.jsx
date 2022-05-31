@@ -1,9 +1,23 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import CustomCalender from "../../components/Calender/CustomCalender";
 import CalenderDateDetail from "../../components/CalenderDateDetail/CalenderDateDetail";
 
-const Activities = () => {
+const Activities = ({ route, navigation }) => {
+  const isFocused = useIsFocused();
+  const isRedirect = route?.params?.redirectToNewActivity;
+
+  useEffect(() => {
+    if (isFocused && isRedirect) {
+      navigation.setParams({ redirectToNewActivity: false });
+      navigation.navigate("Activities", {
+        screen: "NewActivity",
+      });
+    }
+  }, [isFocused]);
+
+  
   return (
     <View style={styles.activityContainer}>
       <View style={styles.calender}>

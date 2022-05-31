@@ -8,7 +8,7 @@ import Button from "../../../components/ui/Button/Button";
 import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSelector } from "react-redux";
-
+import { schedulePushNotification } from "../../../utils/notifications"
 import { addAnActivity } from "../../../database/tables/activities";
 
 const Food = ({ navigation }) => {
@@ -16,6 +16,7 @@ const Food = ({ navigation }) => {
     (state) => state.myPet.calender.selectedDate
   );
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const petName = useSelector((state) => state.myPet.currentPetInfo.name);
   const spicie = useSelector((state) => state.myPet.currentPetInfo.spicie);
 
   const [note, setNote] = useState("");
@@ -60,9 +61,16 @@ const Food = ({ navigation }) => {
       calorie: calorie,
       meter: "",
     };
+    const datui = new Date(activityFormattedDate);
     addAnActivity(currentPetId, foodActivity)
       .then(() => {
         navigation.navigate("ActivitiesMain");
+        schedulePushNotification(
+          `${petName} has a Food Activity`,
+          `Pssttt ${petName} has a food activity now...`,
+          datui,
+          time
+        );
       })
       .catch((err) => {
         console.log(err);

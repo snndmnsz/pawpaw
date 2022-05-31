@@ -8,7 +8,7 @@ import Button from "../../../components/ui/Button/Button";
 import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSelector } from "react-redux";
-
+import { schedulePushNotification } from "../../../utils/notifications"
 import { addAnActivity } from "../../../database/tables/activities";
 
 const Toilet = ({ navigation }) => {
@@ -16,6 +16,7 @@ const Toilet = ({ navigation }) => {
     (state) => state.myPet.calender.selectedDate
   );
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const petName = useSelector((state) => state.myPet.currentPetInfo.name);
   const spicie = useSelector((state) => state.myPet.currentPetInfo.spicie);
   const [note, setNote] = useState("");
   const [time, setTime] = useState("");
@@ -39,7 +40,7 @@ const Toilet = ({ navigation }) => {
     }
     const activityFormattedDate = selectedDate.split("T")[0];
     const newActivityDate = `${activityFormattedDate}T${time}`;
-
+    const datui = new Date(activityFormattedDate);
     const toiletActivity = {
       petId: +currentPetId,
       activityType: "toilet",
@@ -53,6 +54,12 @@ const Toilet = ({ navigation }) => {
     addAnActivity(currentPetId, toiletActivity)
       .then(() => {
         navigation.navigate("ActivitiesMain");
+        schedulePushNotification(
+          `${petName} has a Toilet Activity`,
+          `Pssttt ${petName} has a toilet activity now...`,
+          datui,
+          time
+        );
       })
       .catch((err) => {
         console.log(err);

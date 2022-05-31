@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Button,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import profile from "../../assets/images/profile.png";
 import petImage from "../../assets/images/dog-ex.png";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -38,13 +39,12 @@ const Menu = ({ navigation }) => {
     if (isFocused) {
       //find the current pet inside the myPets array
       const currentPet = myPets.find((pet) => pet.id === currentPetId);
-      console.log("currentPet===>>>>>  ", currentPet);
       //if the current pet is found, set the currentPetInfo to the current pet
       if (currentPet) {
         dispatch(setPetData(currentPet));
       }
     }
-  }, [isFocused,currentPetId]);
+  }, [isFocused, currentPetId]);
 
   const calculateYearOldwithMonth = (birthdate) => {
     let yearOld = 0;

@@ -16,8 +16,6 @@ export const CustomMainHeaderLeft = ({ isNameVisible }) => {
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
 
   const petChangeHandler = () => {
-
-    
     if (myPets.length === 2) {
       // swap the current pet
       dispatch(
@@ -30,12 +28,12 @@ export const CustomMainHeaderLeft = ({ isNameVisible }) => {
   };
 
   return (
-    <View style={styles.leftContainer}>
-      <TouchableOpacity
-        activeOpacity={0.6}
-        style={styles.imageContainer}
-        onPress={petChangeHandler}
-      >
+    <TouchableOpacity
+      activeOpacity={0.7}
+      style={styles.leftContainer}
+      onPress={petChangeHandler}
+    >
+      <View style={styles.imageContainer}>
         {currentPetInfo.photoURL ? (
           <Image
             source={{ uri: currentPetInfo.photoURL }}
@@ -47,14 +45,14 @@ export const CustomMainHeaderLeft = ({ isNameVisible }) => {
             source={currentPetInfo.spicie === "dog" ? dogImage : catImage}
           />
         )}
-      </TouchableOpacity>
+      </View>
       {isNameVisible && (
         <View style={styles.leftTextContainer}>
           <Text style={styles.spicie}>{currentPetInfo.breed}</Text>
           <Text style={styles.name}>{currentPetInfo.name}</Text>
         </View>
       )}
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -65,10 +63,20 @@ export const CustomMainHeaderRight = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const pressHandler = () => {
-    navigation.navigate("Activities", {
-      screen: "NewActivity",
-    });
     dispatch(setSelectedDate(date));
+
+    // navigation.navigate("ActivitiesMain", {
+    //   screen: "NewActivity",
+    // });
+
+    // "Activities", "NewActivity";
+
+    navigation.navigate("Activities", {
+      screen: "ActivitiesMain",
+      params: {
+        redirectToNewActivity: true,
+      },
+    });
   };
 
   return (

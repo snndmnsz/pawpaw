@@ -49,6 +49,7 @@ const DatePickerInput = ({
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <DatePicker
+              minuteInterval={1}
               style={styles.datepicker}
               selected={getFormatedDate(new Date(selectedDateForUpdate), 'jYYYY/jMM/jDD')}
               onSelectedChange={(date) => {
