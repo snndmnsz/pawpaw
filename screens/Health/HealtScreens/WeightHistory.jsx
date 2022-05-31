@@ -34,7 +34,7 @@ const WeightHistory = ({ route, navigation }) => {
           console.log(err);
         });
     }
-  }, [isFocused]);
+  }, [isFocused,currentPetId]);
 
   return (
     <View style={styles.weightContainer}>

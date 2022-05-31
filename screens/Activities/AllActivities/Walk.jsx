@@ -15,6 +15,7 @@ import * as Location from "expo-location";
 import Icons from "react-native-vector-icons/Ionicons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import walk from "../../../assets/activityImages/walk.png";
+import cat3 from "../../../assets/activityImages/cat/cat--3.png";
 import * as TaskManager from "expo-task-manager";
 import { getDistance, getPreciseDistance } from "geolib";
 import { Stopwatch, Timer } from "react-native-stopwatch-timer";
@@ -33,6 +34,7 @@ const Walk = ({ navigation }) => {
     (state) => state.myPet.calender.selectedDate
   );
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const spicie = useSelector((state) => state.myPet.currentPetInfo.spicie);
   const isFocused = useIsFocused();
   const [isScheduled, setIsScheduled] = useState(false);
   const [isStopwatchStart, setIsStopwatchStart] = useState(false);
@@ -157,7 +159,7 @@ const Walk = ({ navigation }) => {
         setIsScheduled(true);
       }
     }
-  }, [isFocused]);
+  }, [isFocused,currentPetId]);
 
   const walkSubmitHandler = () => {
     if (liveMeters.distance === 0) {
@@ -224,7 +226,9 @@ const Walk = ({ navigation }) => {
     >
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image style={styles.image} source={walk} />
+          <Image style={[styles.image,{
+            left: spicie === "cat" ? 25 : 47,
+          }]} source={spicie === "dog" ? walk : cat3} />
         </View>
         <View style={styles.circle}></View>
         {isScheduled ? (

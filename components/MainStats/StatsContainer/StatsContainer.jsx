@@ -67,7 +67,7 @@ const StatsContainer = () => {
           console.log(err);
         });
     }
-  }, [isFocused]);
+  }, [isFocused,currentPetId]);
 
   return (
     <View style={styles.statsContainer}>

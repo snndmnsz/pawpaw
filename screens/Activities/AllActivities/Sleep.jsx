@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import React, { useState } from "react";
 import sleep from "../../../assets/activityImages/sleep.png";
+import cat4 from "../../../assets/activityImages/cat/cat--4.png";
 import Input from "../../../components/ui/Input/Input";
 import ClockPicker from "../../../components/ui/ClockPicker/ClockPicker";
 import Button from "../../../components/ui/Button/Button";
@@ -15,6 +16,7 @@ const Sleep = ({ navigation }) => {
     (state) => state.myPet.calender.selectedDate
   );
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const spicie = useSelector((state) => state.myPet.currentPetInfo.spicie);
   const [note, setNote] = useState("");
   const [bedTime, setBedTime] = useState("");
   const [wakeupTime, setWakeupTime] = useState("");
@@ -71,7 +73,9 @@ const Sleep = ({ navigation }) => {
     >
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image style={styles.image} source={sleep} />
+          <Image style={[styles.image,{
+             left : spicie === "cat" ? 4 : 37,
+          }]} source={spicie === "dog" ? sleep : cat4} />
         </View>
         <View style={styles.inputContainer}>
           <MultiLineInput

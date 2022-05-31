@@ -26,7 +26,8 @@ const myPetSlice = createSlice({
   initialState,
   reducers: {
     setId: (state, action) => {
-      state.currentPetId = action.payload;
+      state.currentPetInfo = action.payload.data;
+      state.currentPetId = action.payload.id;
       state.currentPetInfo.id = action.payload.id;
     },
     setPetSpicie: (state, action) => {
@@ -86,6 +87,29 @@ const myPetSlice = createSlice({
       state.error = null;
       state.calender.selectedDate = "";
     },
+    fillPetInfo(state, action) {
+      state.myPets = action.payload;
+    },
+    addNewMyPets(state, action) {
+      state.myPets.push(action.payload);
+    },
+    resetCurrentPetInfo(state) {
+      state.currentPetInfo = {
+        id: "",
+        name: "",
+        photoURL: "",
+        spicie: "",
+        birthDate: "",
+        breed: "",
+        gender: "",
+        weight: "",
+        ownerName: "",
+      };
+    },
+    removePetFromMyPetArray(state, action) {
+      const newArray = state.myPets.filter((pet)=> +pet.id !== +action.payload);
+      state.myPets = newArray;
+    },
   },
 });
 
@@ -99,7 +123,11 @@ export const {
   setPetData,
   resetPetInfo,
   resetEverything,
-  setPetImage
+  setPetImage,
+  fillPetInfo,
+  resetCurrentPetInfo,
+  addNewMyPets,
+  removePetFromMyPetArray
 } = myPetSlice.actions;
 
 export default myPetSlice.reducer;

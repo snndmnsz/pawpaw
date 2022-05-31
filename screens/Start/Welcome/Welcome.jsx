@@ -1,13 +1,25 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import image from "../../../assets/images/welcome-1.png";
 import { useFonts } from "expo-font";
 import Button from "../../../components/ui/Button/Button";
+import { useSelector } from "react-redux";
 
 const Welcome = ({ navigation }) => {
+  const isFocused = useIsFocused();
+  const myPets = useSelector((state) => state.myPet.myPets);
   let [fontsLoaded] = useFonts({
     "Nunito-Bold": require("../../../assets/fonts/Nunito-ExtraBold.ttf"),
   });
+
+  useEffect(() => {
+    if (isFocused && myPets.length === 1) {
+      return navigation.navigate("bottomNavStack", {
+        screen: "Menu",
+      });
+    }
+  }, [isFocused]);
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;

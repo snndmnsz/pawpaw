@@ -94,7 +94,7 @@ const ActivityRing = () => {
           console.log(error);
         });
     }
-  }, [isFocused]);
+  }, [isFocused,currentPetId]);
 
   const activityConfig = {
     width: 150,

@@ -7,29 +7,49 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import profile from "../../assets/images/profile.png";
 import petImage from "../../assets/images/dog-ex.png";
 import Icon from "react-native-vector-icons/Ionicons";
 import driveImage from "../../assets/images/drive.png";
 import { useSelector, useDispatch } from "react-redux";
-
+import { useIsFocused } from "@react-navigation/native";
 import catImage from "../../assets/emptyPetImages/cat.png";
 import dogImage from "../../assets/emptyPetImages/dog.png";
 
 import { deleteAPet } from "../../database/tables/myPet";
-import { resetPetInfo, resetEverything } from "../../redux/slice/myPetSlice";
+import {
+  resetPetInfo,
+  resetEverything,
+  setPetData,
+  resetCurrentPetInfo,
+  removePetFromMyPetArray,
+} from "../../redux/slice/myPetSlice";
 import { dropDatabase, dbInit } from "../../database/database";
 
-const Menu = () => {
+const Menu = ({ navigation }) => {
   const dispatch = useDispatch();
+  const myPets = useSelector((state) => state.myPet.myPets);
   const currentPetInfo = useSelector((state) => state.myPet.currentPetInfo);
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
-  let yearOld = 0;
+  const isFocused = useIsFocused();
 
-  const calculateYearOldwithMonth = () => {
-    if (currentPetInfo.birthDate !== "") {
-      let birthday = new Date(currentPetInfo.birthDate.split("-")[0]);
+  useEffect(() => {
+    if (isFocused) {
+      //find the current pet inside the myPets array
+      const currentPet = myPets.find((pet) => pet.id === currentPetId);
+      console.log("currentPet===>>>>>  ", currentPet);
+      //if the current pet is found, set the currentPetInfo to the current pet
+      if (currentPet) {
+        dispatch(setPetData(currentPet));
+      }
+    }
+  }, [isFocused,currentPetId]);
+
+  const calculateYearOldwithMonth = (birthdate) => {
+    let yearOld = 0;
+    if (birthdate !== "") {
+      let birthday = new Date(birthdate.split("-")[0]);
       let today = new Date();
       let age = today.getFullYear() - birthday.getFullYear();
       let m = today.getMonth() - birthday.getMonth();
@@ -50,7 +70,7 @@ const Menu = () => {
     }
   };
 
-  const petDeleteHandler = () => {
+  const petDeleteHandler = (id) => {
     Alert.alert(
       "Ohoii Boiiii",
       `You are about to delete ${currentPetInfo.name}. 
@@ -63,9 +83,21 @@ const Menu = () => {
         {
           text: "Delete",
           onPress: () => {
-            deleteAPet(currentPetId)
+            deleteAPet(id)
               .then(() => {
-                dispatch(resetPetInfo());
+                if (myPets.length === 2) {
+                  const otherPet = myPets.find((pet) => pet.id !== id);
+                  dispatch(setPetData(otherPet));
+                  dispatch(removePetFromMyPetArray(id));
+                  navigation.navigate("bottomNavStack", {
+                    screen: "My Pet",
+                  });
+                } else {
+                  dispatch(resetEverything());
+                  navigation.navigate("startStack", {
+                    screen: "Welcome",
+                  });
+                }
               })
               .catch((err) => {
                 console.log(err);
@@ -77,36 +109,46 @@ const Menu = () => {
     );
   };
 
-  const deleteEverything = () => {
-    Alert.alert(
-      "Wait a minute",
-      `You are about to delete everything.
-        Are you sure?`,
-      [
-        {
-          text: "Cancel",
-          onPress: () => {},
-        },
-        {
-          text: "Delete All",
-          onPress: () => {
-            dropDatabase()
-              .then(() => {
-                dispatch(resetEverything());
-                dbInit()
-                  .then(() => {})
-                  .catch((err) => {
-                    console.log(err);
-                  });
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          },
-        },
-      ],
-      { cancelable: false }
-    );
+  // const deleteEverything = () => {
+  //   Alert.alert(
+  //     "Wait a minute",
+  //     `You are about to delete everything.
+  //       Are you sure?`,
+  //     [
+  //       {
+  //         text: "Cancel",
+  //         onPress: () => {},
+  //       },
+  //       {
+  //         text: "Delete All",
+  //         onPress: () => {
+  //           dropDatabase()
+  //             .then(() => {
+  //               dispatch(resetEverything());
+  //               dbInit()
+  //                 .then(() => {})
+  //                 .catch((err) => {
+  //                   console.log(err);
+  //                 });
+  //             })
+  //             .catch((err) => {
+  //               console.log(err);
+  //             });
+  //         },
+  //       },
+  //     ],
+  //     { cancelable: false }
+  //   );
+  // };
+
+  const addNewPet = () => {
+    dispatch(resetCurrentPetInfo());
+    navigation.navigate("startStack", {
+      screen: "PetSpicie",
+      params: {
+        hasBack: true,
+      },
+    });
   };
 
   return (
@@ -118,45 +160,59 @@ const Menu = () => {
         <Text style={styles.profileText}>{currentPetInfo.ownerName}</Text>
       </View>
       <View style={styles.petControlContainer}>
-        <View style={styles.pet}>
-          <View style={styles.petImageContainer}>
-            {currentPetInfo.photoURL ? (
-              <Image
-                source={{ uri: currentPetInfo.photoURL }}
-                style={styles.petImage}
-              />
-            ) : (
-              <Image
-                source={currentPetInfo.spicie === "dog" ? dogImage : catImage}
-                style={styles.petImage}
-              />
-            )}
-          </View>
-          <View style={styles.petInfoContainer}>
-            <Text style={styles.petName}>{currentPetInfo.name}</Text>
-            <Text style={styles.petAge}>{calculateYearOldwithMonth()}</Text>
-            <Text style={styles.petBreed}>{currentPetInfo.breed}</Text>
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.deleteButton}
-              onPress={petDeleteHandler}
-            >
-              <Text style={styles.buttonText}>DELETE</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.pet}>
-          <View style={styles.petImageContainer}>
-            <View style={styles.emptypetImage}>
-              <Icon name={"add-circle-outline"} size={55} color={"#EAEFF5"} />
+        {myPets.map((pet, index) => {
+          return (
+            <View key={pet.id} style={styles.pet}>
+              <View style={styles.petImageContainer}>
+                {pet.photoURL ? (
+                  <Image
+                    source={{ uri: pet.photoURL }}
+                    style={styles.petImage}
+                  />
+                ) : (
+                  <Image
+                    source={pet.spicie === "dog" ? dogImage : catImage}
+                    style={styles.petImage}
+                  />
+                )}
+              </View>
+              <View style={styles.petInfoContainer}>
+                <Text style={styles.petName}>{pet.name}</Text>
+                <Text style={styles.petAge}>
+                  {calculateYearOldwithMonth(pet.birthDate)}
+                </Text>
+                <Text style={styles.petBreed}>{pet.breed}</Text>
+              </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.deleteButton}
+                  onPress={() => {
+                    petDeleteHandler(pet.id);
+                  }}
+                >
+                  <Text style={styles.buttonText}>DELETE</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-          <View style={styles.petInfoContainer}>
-            <Text style={styles.petAge}>Add New Pet</Text>
-          </View>
-        </View>
+          );
+        })}
+        {myPets.length === 1 && (
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.pet}
+            onPress={addNewPet}
+          >
+            <View style={styles.petImageContainer}>
+              <View style={styles.emptypetImage}>
+                <Icon name={"add-circle-outline"} size={55} color={"#EAEFF5"} />
+              </View>
+            </View>
+            <View style={styles.petInfoContainer}>
+              <Text style={styles.petAge}>Add New Pet</Text>
+            </View>
+          </TouchableOpacity>
+        )}
       </View>
       <View style={styles.bottomButtonContainers}>
         {/* <TouchableOpacity
@@ -169,7 +225,8 @@ const Menu = () => {
           </View>
           <Text style={styles.syncText}>Google Drive</Text>
         </TouchableOpacity> */}
-        <TouchableOpacity
+
+        {/* <TouchableOpacity
           activeOpacity={0.8}
           style={styles.deleteData}
           onPress={deleteEverything}
@@ -181,7 +238,8 @@ const Menu = () => {
             color={"#FFFFFF"}
           />
           <Text style={styles.deleteText}>Delete Everything</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+
         {/* <TouchableOpacity
           activeOpacity={0.8}
           style={styles.aboutButton}
@@ -198,7 +256,7 @@ const Menu = () => {
       </View>
       {/* <View style={styles.abotUsContainer}>
         <View style={styles.abotUsIconContainer}>
-          <Icon name={"paw"} size={35} color={"#FFFFFF"} />
+          <Icon name={"paw"} size={30} color={"#8D94F4"} />
         </View>
         <Text style={styles.aboutUsText}>PawPaw 2022</Text>
       </View> */}
@@ -219,19 +277,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 20,
+    marginTop: 80,
   },
   abotUsIconContainer: {
-    width: 60,
-    height: 60,
+    width: 35,
+    height: 35,
     borderRadius: 12,
-    backgroundColor: "#8D94F4",
+    backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
   },
   aboutUsText: {
-    marginTop: 5,
-    fontSize: 15,
+    marginTop: 0,
+    fontSize: 12,
     fontWeight: "bold",
     color: "#7D7D7D",
   },

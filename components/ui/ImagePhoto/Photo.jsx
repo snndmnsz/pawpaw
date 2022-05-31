@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 
 const Photo = () => {
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
   const [image, setImage] = useState(null);
   const dispatch = useDispatch();
   const myPetPhoto = useSelector(
@@ -65,7 +66,7 @@ const Photo = () => {
     if (isFocused) {
       setImage(myPetPhoto);
     }
-  }, [isFocused]);
+  }, [isFocused,currentPetId]);
 
   return (
     <Pressable style={styles.photoContainer} onPress={pickImage}>

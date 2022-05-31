@@ -7,7 +7,7 @@ import Mypet from "../screens/MyPet/MyPet";
 import ActivitiesNavigation from "./ActivitiesNavigation";
 import HealtNavigations from "./HealtNavigations";
 import Menu from "../screens/Menu/Menu";
-
+import { useSelector } from "react-redux";
 import {
   CustomMainHeaderLeft,
   CustomMainHeaderRight,
@@ -17,9 +17,18 @@ import CustomTabBar from "../components/ui/CustomTabBar/CustomTabBar";
 
 const Tab = createBottomTabNavigator();
 
-const BottomTabBarNavigations = () => {
+const BottomTabBarNavigations = ({navigation}) => {
+
+
+  // const currentPetId = useSelector((state) => state.myPet.currentPetId);
+
+  // if(currentPetId === null) {
+  //   navigation.navigate("startStack");
+  // }else{
+  //   navigation.navigate("bottomNavStack");
+  // }
+
   return (
-    <NavigationContainer>
       <Tab.Navigator
         tabBar={(props) => <CustomTabBar {...props} />}
         screenOptions={{
@@ -81,7 +90,7 @@ const BottomTabBarNavigations = () => {
           })}
         />
       </Tab.Navigator>
-    </NavigationContainer>
+
   );
 };
 

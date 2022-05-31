@@ -45,7 +45,7 @@ const UpcomingHealthEvents = () => {
         setEvents(upcomingEvents);
       });
     }
-  }, [isfocused]);
+  }, [isfocused,currentPetId]);
 
   return (
     <View style={styles.upcomingContainer}>

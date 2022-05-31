@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Image, Dimensions, Alert } from "react-native";
 import React, { useState } from "react";
 import food from "../../../assets/activityImages/food.png";
+import cat2 from "../../../assets/activityImages/cat/cat--2.png";
 import Input from "../../../components/ui/Input/Input";
 import ClockPicker from "../../../components/ui/ClockPicker/ClockPicker";
 import Button from "../../../components/ui/Button/Button";
@@ -15,6 +16,7 @@ const Food = ({ navigation }) => {
     (state) => state.myPet.calender.selectedDate
   );
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const spicie = useSelector((state) => state.myPet.currentPetInfo.spicie);
 
   const [note, setNote] = useState("");
   const [time, setTime] = useState("");
@@ -46,7 +48,7 @@ const Food = ({ navigation }) => {
       );
     }
     const activityFormattedDate = selectedDate.split("T")[0];
-    const newActivityDate = `${activityFormattedDate}T${time}`
+    const newActivityDate = `${activityFormattedDate}T${time}`;
 
     const foodActivity = {
       petId: +currentPetId,
@@ -74,7 +76,15 @@ const Food = ({ navigation }) => {
     >
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image style={styles.image} source={food} />
+          <Image
+            style={[
+              styles.image,
+              {
+                left: spicie === "cat" ? -150 : 17,
+              },
+            ]}
+            source={spicie === "dog" ? food : cat2}
+          />
         </View>
         <View style={styles.inputContainer}>
           <MultiLineInput

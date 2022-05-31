@@ -16,7 +16,7 @@ import Button from "../../../components/ui/Button/Button";
 import Photo from "../../../components/ui/ImagePhoto/Photo";
 import DatePickerInput from "../../../components/ui/DatePicker/DatePickerInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
+import moment from "moment";
 import { setpetNameAndBirthDate } from "../../../redux/slice/myPetSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -45,6 +45,23 @@ const PetInfoFirst = ({ navigation }) => {
     } else if (birthDate === "") {
       return Alert.alert("oops...", "Please enter your pet's birth date");
     }
+
+    const onlyDate = birthDate.split(" ");
+    const time = onlyDate[1] + ":00";
+    // if (time === "00:00:00") {
+    //   return Alert.alert("oops...", "Please select a timeother than 00:00:00");
+    // }
+    const datui = new Date(onlyDate[0]);
+    const dates = moment(datui).format("YYYY-MM-DD");
+    const formattedDateString = dates + "T" + time;
+    const today = new Date().toISOString().split("T")[0];
+    if (dates > today) {
+      return Alert.alert(
+        "oops...",
+        "Please enter a birthDate that is not in the future"
+      );
+    }
+
     dispatch(setpetNameAndBirthDate({ name, birthDate }));
     navigation.navigate("PetInfoSecond");
   };
@@ -74,6 +91,7 @@ const PetInfoFirst = ({ navigation }) => {
       />
       {/* <Input placeholder="Birth Date" type="numeric" label="Birth Date" /> */}
       <DatePickerInput
+        selectedDateForUpdate={birthDate}
         onChange={birthDateHandler}
         title="Birth Date"
         isStartingScreenBirthDate={true}

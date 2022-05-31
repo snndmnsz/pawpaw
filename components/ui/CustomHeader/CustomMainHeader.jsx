@@ -7,11 +7,35 @@ import moment from "moment";
 import catImage from "../../../assets/emptyPetImages/cat.png";
 import dogImage from "../../../assets/emptyPetImages/dog.png";
 
+import { setId } from "../../../redux/slice/myPetSlice";
+
 export const CustomMainHeaderLeft = ({ isNameVisible }) => {
+  const dispatch = useDispatch();
   const currentPetInfo = useSelector((state) => state.myPet.currentPetInfo);
+  const myPets = useSelector((state) => state.myPet.myPets);
+  const currentPetId = useSelector((state) => state.myPet.currentPetId);
+
+  const petChangeHandler = () => {
+
+    
+    if (myPets.length === 2) {
+      // swap the current pet
+      dispatch(
+        setId({
+          id: currentPetId === myPets[0].id ? myPets[1].id : myPets[0].id,
+          data: currentPetId === myPets[0].id ? myPets[1] : myPets[0],
+        })
+      );
+    }
+  };
+
   return (
     <View style={styles.leftContainer}>
-      <View style={styles.imageContainer}>
+      <TouchableOpacity
+        activeOpacity={0.6}
+        style={styles.imageContainer}
+        onPress={petChangeHandler}
+      >
         {currentPetInfo.photoURL ? (
           <Image
             source={{ uri: currentPetInfo.photoURL }}
@@ -23,7 +47,7 @@ export const CustomMainHeaderLeft = ({ isNameVisible }) => {
             source={currentPetInfo.spicie === "dog" ? dogImage : catImage}
           />
         )}
-      </View>
+      </TouchableOpacity>
       {isNameVisible && (
         <View style={styles.leftTextContainer}>
           <Text style={styles.spicie}>{currentPetInfo.breed}</Text>
@@ -91,8 +115,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    left: Platform.OS === "android" ? 5 : 25,
+    justifyContent: "flex-start",
+    left: Platform.OS === "android" ? 3 : 3,
   },
   imageContainer: {
     // left: 20,

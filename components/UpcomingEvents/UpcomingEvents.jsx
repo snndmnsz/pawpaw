@@ -70,7 +70,7 @@ const UpcomingEvents = ({ navigation }) => {
           console.log(err);
         });
     }
-  }, [isFocused]);
+  }, [isFocused,currentPetId]);
 
   return (
     <View style={styles.upcomingContainer}>

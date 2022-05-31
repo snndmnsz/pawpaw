@@ -9,7 +9,7 @@ import {
 import Icons from "react-native-vector-icons/Ionicons";
 import React, { useState } from "react";
 import Button from "../Button/Button";
-import DatePicker from "react-native-modern-datepicker";
+import DatePicker ,{ getFormatedDate } from "react-native-modern-datepicker";
 
 const DatePickerInput = ({
   showLabel = true,
@@ -18,6 +18,7 @@ const DatePickerInput = ({
   onChange,
   isStartingScreenBirthDate,
   title,
+  selectedDateForUpdate,
 }) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [time, setTime] = useState("");
@@ -49,6 +50,7 @@ const DatePickerInput = ({
           <View style={styles.modalView}>
             <DatePicker
               style={styles.datepicker}
+              selected={getFormatedDate(new Date(selectedDateForUpdate), 'jYYYY/jMM/jDD')}
               onSelectedChange={(date) => {
                 setSelectedDate(date);
               }}

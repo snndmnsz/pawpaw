@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Image, Dimensions, Alert } from "react-native";
 import React, { useState } from "react";
 import toilet from "../../../assets/activityImages/toilet.png";
+import cat5 from "../../../assets/activityImages/cat/cat--5.png";
 import Input from "../../../components/ui/Input/Input";
 import ClockPicker from "../../../components/ui/ClockPicker/ClockPicker";
 import Button from "../../../components/ui/Button/Button";
@@ -15,6 +16,7 @@ const Toilet = ({ navigation }) => {
     (state) => state.myPet.calender.selectedDate
   );
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const spicie = useSelector((state) => state.myPet.currentPetInfo.spicie);
   const [note, setNote] = useState("");
   const [time, setTime] = useState("");
 
@@ -64,7 +66,9 @@ const Toilet = ({ navigation }) => {
     >
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image style={styles.image} source={toilet} />
+          <Image style={[styles.image,{
+             left : spicie === "cat" ? 5 : 58,
+          }]} source={spicie === "dog" ? toilet : cat5} />
         </View>
         <View style={styles.inputContainer}>
           <MultiLineInput
