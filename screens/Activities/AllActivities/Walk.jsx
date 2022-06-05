@@ -105,7 +105,7 @@ const Walk = ({ navigation }) => {
 
   const startForegroundUpdate = async () => {
     const { granted } = await Location.getForegroundPermissionsAsync();
-    console.log("granted ===>>>>>>>>>>>>>  ", granted);
+    //console.log("granted ===>>>>>>>>>>>>>  ", granted);
     if (!granted) {
       setLocationPermission(false);
       setIsScheduled(true);

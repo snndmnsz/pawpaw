@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableHighlight,
+  Alert,
+} from "react-native";
 import React from "react";
 // import care from "../../../assets/IconImages/care.png";
 import care from "../../../assets/healthImages/vet.png";
@@ -8,6 +15,10 @@ import sleep from "../../../assets/IconImages/sleep.png";
 import toilet from "../../../assets/IconImages/toilet.png";
 import walk from "../../../assets/IconImages/walk.png";
 import vaccine from "../../../assets/healthImages/vaccine.png";
+import { deleteAActivity } from "../../../database/tables/activities";
+
+import { useDispatch } from "react-redux";
+import { loadingChanger ,dateRefreshLoadingChanger } from "../../../redux/slice/myPetSlice";
 
 const backgroundColorConverter = (activity) => {
   switch (activity) {
@@ -31,49 +42,135 @@ const backgroundColorConverter = (activity) => {
 };
 
 const DetailListItem = ({ item }) => {
+  const dispatch = useDispatch();
+  const { activity, id } = item;
+
+  const activityDeleteHandler = () => {
+    deleteAActivity(id)
+      .then(() => {
+        dispatch(dateRefreshLoadingChanger(false));
+        dispatch(loadingChanger());
+        dispatch(dateRefreshLoadingChanger(true));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    if (activity === "food") {
+      console.log("food", id);
+    } else if (activity === "vet") {
+      // delete from both
+      console.log("vet ", id);
+    } else if (activity === "toilet") {
+      console.log("toilet ", id);
+    } else if (activity === "play") {
+      console.log("play ", id);
+    } else if (activity === "walk") {
+      console.log("walk ", id);
+    } else if (activity === "sleep") {
+      console.log("sleep ", id);
+    } else if (activity === "vaccine") {
+      // delete from both
+      console.log("vaccine ", id);
+    }
+  };
+
+  const onPressHandler = () => {
+    const foodCalorie = `\n\n Calorie: ${item.cal}`;
+    const meter = `\n\n Meter: ${item.meter}`;
+    const time = `\n Time: ${item.time}`;
+    const name = `\n\n Activity: ${item.activity}`;
+    const note = `\n\n Note: ${item.note}`;
+
+    Alert.alert(
+      "Activity Detail",
+      `${time} ${name} ${
+        item.activity === "food"
+          ? foodCalorie
+          : item.activity === "walk"
+          ? meter
+          : ""
+      }  ${note}`,
+      [{ text: "OK", style: "cancel" }],
+      { cancelable: false }
+    );
+  };
+
+  const onLongPressButton = () => {
+    Alert.alert(
+      "Delete Activity",
+      "Are you sure you want to delete this activity?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "OK", onPress: () => activityDeleteHandler() },
+      ]
+    );
+  };
   return (
-    <View style={styles.itemContainer}>
-      <View style={styles.foodImageContainer}>
-        <View
-          style={[
-            styles.foodImageinner,
-            {
-              backgroundColor: backgroundColorConverter(item.activity),
-            },
-          ]}
-        >
-          <Image
-            source={
-              item.activity === "food"
-                ? food
-                : item.activity === "vet"
-                ? care
-                : item.activity === "toilet"
-                ? toilet
-                : item.activity === "play"
-                ? play
-                : item.activity === "walk"
-                ? walk
-                : item.activity === "sleep"
-                ? sleep
-                : item.activity === "vaccine"
-                ? vaccine
-                : null
-            }
-            style={styles.foodImage}
-          />
+    <TouchableHighlight
+      onPress={onPressHandler}
+      onLongPress={onLongPressButton}
+      underlayColor="#FAFAFA"
+    >
+      <View
+        style={[
+          styles.itemContainer,
+          {
+            borderLeftColor: backgroundColorConverter(activity),
+            borderRightColor: backgroundColorConverter(activity),
+            borderTopWidth: 2,
+            borderRightWidth: 3,
+            borderBottomWidth: 2,
+            borderLeftWidth: 3,
+          },
+        ]}
+      >
+        <View style={styles.foodImageContainer}>
+          <View
+            style={[
+              styles.foodImageinner,
+              {
+                backgroundColor: backgroundColorConverter(item.activity),
+              },
+            ]}
+          >
+            <Image
+              source={
+                item.activity === "food"
+                  ? food
+                  : item.activity === "vet"
+                  ? care
+                  : item.activity === "toilet"
+                  ? toilet
+                  : item.activity === "play"
+                  ? play
+                  : item.activity === "walk"
+                  ? walk
+                  : item.activity === "sleep"
+                  ? sleep
+                  : item.activity === "vaccine"
+                  ? vaccine
+                  : null
+              }
+              style={styles.foodImage}
+            />
+          </View>
+        </View>
+        <View style={styles.itemTextContainer}>
+          <View style={styles.itemTextUpper}>
+            <Text style={styles.activityName}>{item.activity}</Text>
+            <Text style={styles.activityTime}>{item.time}</Text>
+          </View>
+          <View style={styles.itemTextLower}>
+            <Text style={styles.activityNote}>
+              {item.note.length > 30
+                ? item.note.slice(0, 30) + "..."
+                : item.note}
+            </Text>
+          </View>
         </View>
       </View>
-      <View style={styles.itemTextContainer}>
-        <View style={styles.itemTextUpper}>
-          <Text style={styles.activityName}>{item.activity}</Text>
-          <Text style={styles.activityTime}>{item.time}</Text>
-        </View>
-        <View style={styles.itemTextLower}>
-          <Text style={styles.activityNote}>{item.note}</Text>
-        </View>
-      </View>
-    </View>
+    </TouchableHighlight>
   );
 };
 
@@ -89,7 +186,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: "#EAEFF5",
+    // borderColor: "#F8F8F8",
+    borderBottomColor: "#F8F8F8",
+    borderTopColor: "#F8F8F8",
+    borderRightColor: "#F8F8F8",
     marginBottom: 6,
   },
   foodImageContainer: {
@@ -97,7 +197,7 @@ const styles = StyleSheet.create({
   },
   foodImageinner: {
     backgroundColor: "#FD5B71",
-    borderRadius: 35 / 2,
+    borderRadius: 8,
     height: 35,
     width: 35,
     alignItems: "center",

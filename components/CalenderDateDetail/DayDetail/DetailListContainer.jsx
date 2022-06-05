@@ -12,6 +12,7 @@ const DetailListContainer = () => {
   const selectedDate = useSelector(
     (state) => state.myPet.calender.selectedDate
   );
+  const loading = useSelector((state) => state.myPet.loading);
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
 
   useEffect(() => {
@@ -32,12 +33,14 @@ const DetailListContainer = () => {
                 ? activity.startTime + " - " + activity.endTime
                 : activity.startTime,
             note: activity.note,
+            cal: activity.calorie,
+            meter: activity.meter,
           };
         });
         setData(formattedArray);
       });
     }
-  }, [selectedDate]);
+  }, [selectedDate, loading]);
 
   return (
     <View style={styles.itemListContainer}>

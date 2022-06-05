@@ -1,8 +1,15 @@
-import { StyleSheet, Text, View, FlatList, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Alert,
+  TouchableHighlight,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomBarChart from "../../../components/ui/charts/BarChart/CustomBarChart";
 import Icons from "react-native-vector-icons/Ionicons";
-
+import { deleteAWeight } from "../../../database/tables/weight";
 import { useIsFocused } from "@react-navigation/native";
 import { getAllWeightbyPetId } from "../../../database/tables/weight";
 import { useSelector } from "react-redux";
@@ -34,7 +41,36 @@ const WeightHistory = ({ route, navigation }) => {
           console.log(err);
         });
     }
-  }, [isFocused,currentPetId]);
+  }, [isFocused, currentPetId]);
+
+  const onLongPressButton = (id) => {
+    Alert.alert(
+      "Delete Weight",
+      "Are you sure you want to delete this weight?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "DELETE",
+          onPress: () => {
+            deleteAWeight(id)
+              .then(() => {
+                const deleteFormWeightData = weightData.filter(
+                  (item) => item.id !== id
+                );
+                setWeightData(deleteFormWeightData);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   return (
     <View style={styles.weightContainer}>
@@ -52,18 +88,42 @@ const WeightHistory = ({ route, navigation }) => {
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.listItemContainer}>
-            <View style={styles.iconContainer}>
-              <Icons name="bar-chart-outline" size={20} color="#ffffff" />
-            </View>
-            <View style={styles.infoContainer}>
-              <View style={styles.monthContainer}>
-                <Text style={styles.monthText}>{item.month}</Text>
-                <Text style={styles.dateText}>{item.date}</Text>
+          <TouchableHighlight
+            onLongPress={() => {
+              onLongPressButton(item.id);
+            }}
+            underlayColor="#FAFAFA"
+            style={{
+              width: "100%",
+            }}
+          >
+            <View
+              style={[
+                styles.listItemContainer,
+                {
+                  borderLeftColor: "#2871C8",
+                  borderRightColor: "#2871C8",
+                  borderBottomColor: "#F8F8F8",
+                  borderTopColor: "#F8F8F8",
+                  borderTopWidth: 2,
+                  borderRightWidth: 3,
+                  borderBottomWidth: 2,
+                  borderLeftWidth: 3,
+                },
+              ]}
+            >
+              <View style={styles.iconContainer}>
+                <Icons name="bar-chart-outline" size={20} color="#ffffff" />
               </View>
-              <Text style={styles.weightText}>{item.weight}kg</Text>
+              <View style={styles.infoContainer}>
+                <View style={styles.monthContainer}>
+                  <Text style={styles.monthText}>{item.month}</Text>
+                  <Text style={styles.dateText}>{item.date}</Text>
+                </View>
+                <Text style={styles.weightText}>{item.weight}kg</Text>
+              </View>
             </View>
-          </View>
+          </TouchableHighlight>
         )}
       />
     </View>
@@ -94,7 +154,7 @@ const styles = StyleSheet.create({
     width: "90%",
     minWidth: "90%",
     height: 63,
-    borderColor: "#EAEFF5",
+    // borderColor: "#EAEFF5",
     borderRadius: 12,
     borderWidth: 2,
     flexDirection: "row",

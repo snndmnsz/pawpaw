@@ -1,5 +1,5 @@
 import * as Notifications from "expo-notifications";
-
+import moment from "moment";
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -9,19 +9,20 @@ Notifications.setNotificationHandler({
 });
 
 export const schedulePushNotification = (title, body, time, hours) => {
-  console.log(time);
   const trigger = new Date(time);
   trigger.setHours(hours.split(":")[0]);
   trigger.setMinutes(hours.split(":")[1]);
   trigger.setSeconds(hours.split(":")[2]);
 
-  console.log(trigger);
+  //15  minute before 
+  const date = new Date(time);
+  date.setHours(hours.split(":")[0]);
+  date.setMinutes(hours.split(":")[1]);
+  date.setSeconds(hours.split(":")[2]);
+  date.setMinutes(date.getMinutes() - 15);
 
-  //set a date for 15  minute later from time and hour
-  //   const date = new Date(time);
-  //   date.setMinutes(date.getMinutes() + 15);
-
-  //TODO: set a date for 15  minute later from time and hour
+  console.log("trigger= ", trigger);
+  console.log("date= ", date);
 
   Notifications.scheduleNotificationAsync({
     content: {
@@ -30,6 +31,17 @@ export const schedulePushNotification = (title, body, time, hours) => {
       data: { data: "goes here" },
     },
     trigger: trigger,
+  })
+    .then()
+    .catch();
+
+  Notifications.scheduleNotificationAsync({
+    content: {
+      title: title,
+      body: "15 minute left to activity......",
+      data: { data: "goes here" },
+    },
+    trigger: date,
   })
     .then()
     .catch();

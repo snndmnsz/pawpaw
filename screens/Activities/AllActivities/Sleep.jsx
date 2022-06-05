@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Image, Dimensions, Alert } from "react-native";
 import React, { useState } from "react";
 import sleep from "../../../assets/activityImages/sleep.png";
 import cat4 from "../../../assets/activityImages/cat/cat--4.png";
@@ -8,7 +8,7 @@ import Button from "../../../components/ui/Button/Button";
 import MultiLineInput from "../../../components/ui/MultilineInput/MultiLineInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSelector } from "react-redux";
-import { schedulePushNotification } from "../../../utils/notifications"
+import { schedulePushNotification } from "../../../utils/notifications";
 import { addAnActivity } from "../../../database/tables/activities";
 
 const Sleep = ({ navigation }) => {
@@ -42,6 +42,8 @@ const Sleep = ({ navigation }) => {
         "oops...",
         "Please enter a note less than 100 characters"
       );
+    } else if (bedTime > wakeupTime) {
+      return Alert.alert("oops...", "Please enter a valid time interval");
     }
     const activityFormattedDate = selectedDate.split("T")[0];
     const newActivityDate = `${activityFormattedDate}T${bedTime}`;
@@ -80,9 +82,15 @@ const Sleep = ({ navigation }) => {
     >
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image style={[styles.image,{
-             left : spicie === "cat" ? 4 : 37,
-          }]} source={spicie === "dog" ? sleep : cat4} />
+          <Image
+            style={[
+              styles.image,
+              {
+                left: spicie === "cat" ? 4 : 37,
+              },
+            ]}
+            source={spicie === "dog" ? sleep : cat4}
+          />
         </View>
         <View style={styles.inputContainer}>
           <MultiLineInput
@@ -135,16 +143,16 @@ const styles = StyleSheet.create({
     width: 700,
     height: 700,
     borderRadius: 700 / 2,
-    top: -450,
+    top: -470,
     // left: -15,
     backgroundColor: "#E6EDFA",
     position: "absolute",
     zIndex: -1,
   },
   imageContainer: {
-    marginTop: 20,
+    marginTop: 10,
     width: "100%",
-    height: 260,
+    height: 230,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -160,6 +168,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: "90%",
-    marginTop: 20,
+    marginTop: 15,
   },
 });

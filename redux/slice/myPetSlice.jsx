@@ -15,6 +15,7 @@ const initialState = {
     ownerName: "",
   },
   loading: false,
+  dateRefreshLoading: true,
   error: null,
   calender: {
     selectedDate: "",
@@ -107,8 +108,16 @@ const myPetSlice = createSlice({
       };
     },
     removePetFromMyPetArray(state, action) {
-      const newArray = state.myPets.filter((pet)=> +pet.id !== +action.payload);
+      const newArray = state.myPets.filter(
+        (pet) => +pet.id !== +action.payload
+      );
       state.myPets = newArray;
+    },
+    loadingChanger(state, action) {
+      state.loading = !state.loading;
+    },
+    dateRefreshLoadingChanger(state, action) {
+      state.dateRefreshLoading = action.payload;
     },
   },
 });
@@ -127,7 +136,9 @@ export const {
   fillPetInfo,
   resetCurrentPetInfo,
   addNewMyPets,
-  removePetFromMyPetArray
+  removePetFromMyPetArray,
+  loadingChanger,
+  dateRefreshLoadingChanger
 } = myPetSlice.actions;
 
 export default myPetSlice.reducer;

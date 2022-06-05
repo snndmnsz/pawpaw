@@ -28,10 +28,10 @@ const NewActivity = ({ navigation }) => {
     navigation.navigate("Play");
   };
   const walkPressHandler = () => {
-    //navigation.navigate("Walk");
-    Alert.alert("Upssss...", "Still working on it bro, a little patiences", [
-      { text: "ok", onPress: () => console.log("OK Pressed") },
-    ]);
+    navigation.navigate("Walk");
+    // Alert.alert("Upssss...", "Still working on it bro, a little patiences", [
+    //   { text: "ok", onPress: () => console.log("OK Pressed") },
+    // ]);
   };
   const foodPressHandler = () => {
     navigation.navigate("Food");
@@ -186,7 +186,7 @@ const NewActivity = ({ navigation }) => {
             styles.activityContainer,
             {
               backgroundColor: "#F5EEFC",
-              marginBottom: 80,
+              // marginBottom: 80,
             },
           ]}
         >

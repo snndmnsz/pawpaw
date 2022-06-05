@@ -13,16 +13,6 @@ export default function App() {
     // NavigationBar.setButtonStyleAsync("dark");
   }
 
-  LogBox.ignoreLogs([
-    "android: block-permissions",
-    "No permissions provided",
-    "android: block-permissions: No permissions provided",
-    "android:",
-    "» android: block-permissions: No permissions provided",
-    "block-permissions",
-    "» android:",
-  ]);
-
   return (
     <Provider store={store}>
       <StatusBar style="dark" />

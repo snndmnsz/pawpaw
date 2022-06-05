@@ -5,7 +5,7 @@ import StatsBox from "../StatsBox/StatsBox";
 import { useSelector } from "react-redux";
 import { getActivitiesForADate } from "../../../database/tables/activities";
 import { getAllWeightForADate } from "../../../database/tables/weight";
-
+import moment from "moment";
 const StatsContainer = () => {
   const selectedDate = useSelector(
     (state) => state.myPet.calender.selectedDate
@@ -24,7 +24,8 @@ const StatsContainer = () => {
     setSleep(0);
     setCalorie(0);
     if (isFocused) {
-      getActivitiesForADate(currentPetId, selectedDate)
+      const currentDate = moment().format("YYYY-MM-DDTHH:mm:ss");
+      getActivitiesForADate(currentPetId, currentDate)
         .then((activities) => {
           let calorieData = 0;
           let walkMeters = 0;

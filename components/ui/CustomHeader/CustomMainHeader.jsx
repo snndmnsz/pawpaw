@@ -60,10 +60,12 @@ export const CustomMainHeaderRight = ({ navigation }) => {
   const currentDay = moment().format("ddd");
   const currentDayNumber = moment().format("D");
   const date = new Date().toISOString();
+  const currentDate = moment(date).format("YYYY-MM-DDTHH:mm:ss");
   const dispatch = useDispatch();
 
   const pressHandler = () => {
-    dispatch(setSelectedDate(date));
+    dispatch(setSelectedDate(currentDate));
+    //console.log(currentDate);
 
     // navigation.navigate("ActivitiesMain", {
     //   screen: "NewActivity",

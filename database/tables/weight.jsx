@@ -60,3 +60,24 @@ export const addWeight = (petId, weight, date) => {
   });
   return promise;
 };
+
+export const deleteAWeight = (id) => {
+  const promise = new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `delete from weight where id = ?`,
+        [+id],
+        (_, { rows }) => {
+          resolve(rows._array);
+        },
+        (_, err) => {
+          console.log(err);
+          reject(err);
+        }
+      );
+    });
+  });
+  return promise;
+}
+
+

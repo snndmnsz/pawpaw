@@ -3,7 +3,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import AppLoading from "expo-app-loading";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
 import StartingScreensNavigations from "./StartingScreensNavigations";
 import BottomTabBarNavigations from "./BottomTabBarNavigations";
 
@@ -37,7 +36,7 @@ const MainNavigations = () => {
           .then(() => {
             getMyPets()
               .then((myPets) => {
-                console.log(myPets);
+                //console.log(myPets);
                 dispatch(fillPetInfo(myPets));
                 if (myPets.length > 0) {
                   dispatch(setPetData(myPets[0]));

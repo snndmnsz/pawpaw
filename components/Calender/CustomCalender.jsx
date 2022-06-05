@@ -84,7 +84,11 @@ const CustomCalender = () => {
   const selectedDate = useSelector(
     (state) => state.myPet.calender.selectedDate
   );
+  const loading = useSelector((state) => state.myPet.loading);
   const currentPetId = useSelector((state) => state.myPet.currentPetId);
+  const dateRefreshLoading = useSelector(
+    (state) => state.myPet.dateRefreshLoading
+  );
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
@@ -113,8 +117,11 @@ const CustomCalender = () => {
     if (isFocused) {
       setMarkedDates({});
       const today = new Date();
-      const todayDate = moment(today).format("YYYY-MM-DD");
-      dispatch(setSelectedDate(today.toISOString()));
+      const currentDate = moment().format("YYYY-MM-DDTHH:mm:ss");
+      const todayDate = moment().format("YYYY-MM-DD");
+      if (dateRefreshLoading) {
+      }
+      dispatch(setSelectedDate(currentDate));
       // setSelectedDateHandler(todayDate);
 
       setIsLoading(true);
@@ -150,7 +157,7 @@ const CustomCalender = () => {
           console.log(err);
         });
     }
-  }, [isFocused,currentPetId]);
+  }, [isFocused, currentPetId, loading]);
 
   return (
     <View style={styles.calenderContainer}>
@@ -166,6 +173,9 @@ const CustomCalender = () => {
         onDayPress={(day) => {
           //console.log("selected day", day.timestamp);
           const today = new Date().toISOString().split("T")[1];
+
+          // moment get current hour
+          const currentHour = moment().format("HH:mm:ss");
           dispatch(setSelectedDate(`${day.dateString}T${today}`));
           // console.log(`${day.dateString}T${today}`);
 

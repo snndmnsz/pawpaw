@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, FlatList, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Alert,
+  TouchableHighlight,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import Icons from "react-native-vector-icons/Ionicons";
 import { useIsFocused } from "@react-navigation/native";
@@ -6,6 +13,7 @@ import CustomBarChart from "../../../components/ui/charts/BarChart/CustomBarChar
 import { getAllVetbyPetId } from "../../../database/tables/vet";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import { deleteAVet } from "../../../database/tables/vet";
 
 const VetAppoitments = () => {
   const [vetData, setVetData] = useState([]);
@@ -33,7 +41,36 @@ const VetAppoitments = () => {
           console.log(err);
         });
     }
-  }, [isFocused,currentPetId]);
+  }, [isFocused, currentPetId]);
+
+  const onLongPressButton = (id) => {
+    Alert.alert(
+      "Delete Vet Appointment",
+      "Are you sure you want to delete this vet appointment?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "DELETE",
+          onPress: () => {
+            deleteAVet(id)
+              .then(() => {
+                const deleteFormVetData = vetData.filter((item) => {
+                  return item.id !== id;
+                });
+                setVetData(deleteFormVetData);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   return (
     <View style={styles.vetContainer}>
@@ -51,18 +88,42 @@ const VetAppoitments = () => {
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.listItemContainer}>
-            <View style={styles.iconContainer}>
-              <Icons name="paw" size={20} color="#ffffff" />
-            </View>
-            <View style={styles.infoContainer}>
-              <View style={styles.monthContainer}>
-                <Text style={styles.monthText}>{item.month}</Text>
-                <Text style={styles.dateText}>{item.date}</Text>
+          <TouchableHighlight
+            onLongPress={() => {
+              onLongPressButton(item.id);
+            }}
+            underlayColor="#FAFAFA"
+            style={{
+              width: "100%",
+            }}
+          >
+            <View
+              style={[
+                styles.listItemContainer,
+                {
+                  borderLeftColor: "#1DA8B1",
+                  borderRightColor: "#1DA8B1",
+                  borderBottomColor: "#F8F8F8",
+                  borderTopColor: "#F8F8F8",
+                  borderTopWidth: 2,
+                  borderRightWidth: 3,
+                  borderBottomWidth: 2,
+                  borderLeftWidth: 3,
+                },
+              ]}
+            >
+              <View style={styles.iconContainer}>
+                <Icons name="paw" size={20} color="#ffffff" />
               </View>
-              <Text style={styles.weightText}>{item.time}</Text>
+              <View style={styles.infoContainer}>
+                <View style={styles.monthContainer}>
+                  <Text style={styles.monthText}>{item.month}</Text>
+                  <Text style={styles.dateText}>{item.date}</Text>
+                </View>
+                <Text style={styles.weightText}>{item.time}</Text>
+              </View>
             </View>
-          </View>
+          </TouchableHighlight>
         )}
       />
     </View>
@@ -93,7 +154,7 @@ const styles = StyleSheet.create({
     width: "90%",
     minWidth: "90%",
     height: 63,
-    borderColor: "#EAEFF5",
+    // borderColor: "#EAEFF5",
     borderRadius: 12,
     borderWidth: 2,
     flexDirection: "row",

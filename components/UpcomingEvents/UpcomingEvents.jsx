@@ -27,7 +27,8 @@ const UpcomingEvents = ({ navigation }) => {
   useEffect(() => {
     setData([]);
     if (isFocused) {
-      getActivitiesForADate(currentPetId, selectedDate)
+      const currentDate = moment().format("YYYY-MM-DDTHH:mm:ss");
+      getActivitiesForADate(currentPetId, currentDate)
         .then((activities) => {
           const datas = [];
           activities.forEach((activity) => {
