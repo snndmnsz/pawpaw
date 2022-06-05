@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import catImage from "../../assets/emptyPetImages/cat.png";
 import dogImage from "../../assets/emptyPetImages/dog.png";
-
+import moment from "moment";
 import { deleteAPet } from "../../database/tables/myPet";
 import {
   resetPetInfo,
@@ -48,25 +48,20 @@ const Menu = ({ navigation }) => {
 
   const calculateYearOldwithMonth = (birthdate) => {
     let yearOld = 0;
-    if (birthdate !== "") {
-      let birthday = new Date(birthdate.split("-")[0]);
-      let today = new Date();
-      let age = today.getFullYear() - birthday.getFullYear();
-      let m = today.getMonth() - birthday.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
-        age--;
-      }
-      if (m === 0) {
-        //calculate day
-        let day = today.getDate() - birthday.getDate();
-        return `${day} days`;
-      }
-      if (age === 0) {
-        yearOld = m + " months";
-      } else {
-        yearOld = age + " years";
-      }
-      return yearOld;
+    const birthdateWithMonth = moment(birthdate, "YYYY-MM-DD");
+    const currentDateWithMonth = moment();
+    const diff = currentDateWithMonth.diff(birthdateWithMonth, "months");
+    yearOld = diff / 12;
+    const birthdateWithDay = moment(birthdate, "YYYY-MM-DD");
+    const currentDateWithDay = moment();
+    const diffDay = currentDateWithDay.diff(birthdateWithDay, "days");
+    if (diffDay < 40) {
+      return diffDay + " days";
+    }
+    if (yearOld < 1) {
+      return `${Math.round(yearOld * 12)} months`;
+    } else if (yearOld >= 1) {
+      return `${Math.round(yearOld)} years`;
     }
   };
 

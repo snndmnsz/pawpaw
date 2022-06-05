@@ -29,10 +29,10 @@ const PetInfoSecond = ({ navigation }) => {
   const ownerPageHandler = () => {
     if (gender === "") {
       return Alert.alert("oops...", "Please pick your pet's gender");
-    } else if (breed.length > 20 || breed.length < 1) {
+    } else if (breed.length > 15 || breed.length < 2) {
       return Alert.alert(
         "oops...",
-        "Please pick enter pet's breed(max 20 chracter and min 1)"
+        "Please pick enter pet's breed(max 15 chracter and min 2)"
       );
     } else if (parseInt(weight) < 0 || parseInt(weight) > 30 || weight === "") {
       return Alert.alert(

@@ -37,15 +37,14 @@ const PetInfoFirst = ({ navigation }) => {
   const petInfoSecondHandler = () => {
     if (name === "") {
       return Alert.alert("oops...", "Please enter your pet's name");
-    } else if (name.length > 12 || name.length < 1) {
+    } else if (name.length > 10 || name.length < 2) {
       return Alert.alert(
         "oops...",
-        "Please enter your pet's name(max 12 chracter and min 1)"
+        "Please enter your pet's name(max 10 chracter and min 2)"
       );
     } else if (birthDate === "") {
       return Alert.alert("oops...", "Please enter your pet's birth date");
     }
-
     const onlyDate = birthDate.split(" ");
     const time = onlyDate[1] + ":00";
     // if (time === "00:00:00") {
@@ -59,6 +58,13 @@ const PetInfoFirst = ({ navigation }) => {
       return Alert.alert(
         "oops...",
         "Please enter a birthDate that is not in the future"
+      );
+    }
+    const year = dates.split("-")[0];
+    if (year < 2010) {
+      return Alert.alert(
+        "oops...",
+        "Please enter a birthDate that is not in the past"
       );
     }
 
