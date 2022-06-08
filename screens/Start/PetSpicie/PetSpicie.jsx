@@ -1,4 +1,12 @@
-import { StyleSheet, Text, View, Image, Pressable, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Pressable,
+  Alert,
+  Dimensions,
+} from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import Level from "../../../components/level/Level";
@@ -94,31 +102,34 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
+    flex: 2,
     widht: "100%",
-    marginTop: 50,
+    // marginTop: Dimensions.get("window").height * 0.12,
     paddingRight: 25,
     paddingHorizontal: 180,
     flexDirection: "column",
   },
   headerText: {
+    flex: 1,
     fontSize: 20,
     color: "#7D7D7D",
     textAlign: "center",
     fontWeight: "500",
-    marginTop: 20,
+    // marginTop: 20,
   },
   spicies: {
+    flex:10,
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
-    marginTop: 15,
+    justifyContent: "flex-start",
+    // marginBottom: 65,
     width: "100%",
   },
   spicie: {
     marginTop: 20,
     paddingHorizontal: 20,
     width: "90%",
-    height: 189,
+    height: Dimensions.get("window").height * 0.25,
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
@@ -131,13 +142,15 @@ const styles = StyleSheet.create({
   },
   spiciePhoto: {
     width: "60%",
-    height: "100%",
+    height: "80%",
     alignItems: "center",
     justifyContent: "center",
   },
   spicieImage: {
-    width: 160,
-    height: 160,
+    flex: 1,
+    // width: null,
+    // height: null,
+    resizeMode: "contain",
   },
   spicieText: {
     fontSize: 45,

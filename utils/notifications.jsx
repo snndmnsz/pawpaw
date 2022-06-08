@@ -21,8 +21,8 @@ export const schedulePushNotification = (title, body, time, hours) => {
   date.setSeconds(hours.split(":")[2]);
   date.setMinutes(date.getMinutes() - 15);
 
-  console.log("trigger= ", trigger);
-  console.log("date= ", date);
+  // console.log("trigger= ", trigger);
+  // console.log("date= ", date);
 
   Notifications.scheduleNotificationAsync({
     content: {

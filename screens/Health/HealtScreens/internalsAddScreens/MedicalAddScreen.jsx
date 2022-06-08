@@ -94,7 +94,7 @@ const MedicalAddScreen = ({ navigation }) => {
         <DatePickerInput
           showLabel={true}
           title="End Date"
-          buttonText="Pick Start End Date"
+          buttonText="Pick End Date"
           onChange={endTimeHandler}
         />
         <Input

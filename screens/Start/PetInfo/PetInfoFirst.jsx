@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Alert,
+  Dimensions,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     widht: "100%",
-    marginTop: 80,
+    marginTop: Dimensions.get("window").height * 0.1,
     marginBottom: 25,
     paddingRight: 25,
     paddingHorizontal: 180,

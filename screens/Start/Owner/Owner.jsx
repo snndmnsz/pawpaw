@@ -46,8 +46,6 @@ const Owner = ({ navigation }) => {
       return Alert.alert("oops...", "Please enter your name without number");
     }
 
-
-
     dispatch(setOwnerName(owner));
 
     const pet = {
@@ -121,13 +119,26 @@ const Owner = ({ navigation }) => {
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.container}>
-        <View style={styles.circle}></View>
+        <View
+          style={[
+            styles.circle,
+            {
+              height:
+                currentPetInfo.spicie === "dog"
+                  ? Dimensions.get("window").height * 0.37
+                  : Dimensions.get("window").height * 0.43,
+            },
+          ]}
+        ></View>
         <Text style={styles.headerText}>Please Fill Your Info</Text>
         <View
           style={[
             styles.imageContainer,
             {
-              height: currentPetInfo.spicie === "dog" ? 300 : 280,
+              height:
+                currentPetInfo.spicie === "dog"
+                  ? Dimensions.get("window").height * 0.35
+                  : Dimensions.get("window").height * 0.34,
             },
           ]}
         >
@@ -168,8 +179,11 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
     alignItems: "center",
+    justifyContent: "flex-start",
+    // paddingHorizontal: 25,
+    // paddingTop: 60,
+    backgroundColor: "#FFFFFF",
   },
   loading: {
     position: "absolute",
@@ -189,19 +203,22 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   circle: {
-    width: 700,
-    height: 700,
-    borderRadius: 700 / 2,
-    top: -380,
+    width: "100%",
+    // height: Dimensions.get("window").height * 0.35,
+    // borderRadius: 75,
+    // borderBottomEndRadius: 50,
+    borderBottomLeftRadius: Dimensions.get("window").width * 0.5,
+    borderBottomRightRadius: Dimensions.get("window").width * 0.5,
+    // top: -340,
     // left: -15,
     backgroundColor: "#FEE8DC",
     position: "absolute",
     zIndex: -1,
   },
   imageContainer: {
-    marginTop: 15,
+    marginTop: 10,
     width: "100%",
-    height: 300,
+    // height: Dimensions.get("window").height * 0.5,
     alignItems: "center",
     justifyContent: "center",
   },
