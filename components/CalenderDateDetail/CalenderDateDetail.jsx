@@ -9,7 +9,6 @@ const CalenderDateDetail = () => {
     (state) => state.myPet.calender.selectedDate
   );
 
-
   return (
     <View style={styles.detailsContainer}>
       <View style={styles.detailDateContainer}>

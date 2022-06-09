@@ -157,7 +157,20 @@ const Menu = ({ navigation }) => {
       <View style={styles.petControlContainer}>
         {myPets.map((pet, index) => {
           return (
-            <View key={pet.id} style={styles.pet}>
+            <View
+              key={pet.id}
+              style={[
+                styles.pet,
+                {
+                  borderColor:
+                    pet.gender === "male"
+                      ? "#E6EAF2"
+                      : pet.gender === "female"
+                      ? "rgba(247, 143, 143, 0.25)"
+                      : "#EAEFF5",
+                },
+              ]}
+            >
               <View style={styles.petImageContainer}>
                 {pet.photoURL ? (
                   <Image

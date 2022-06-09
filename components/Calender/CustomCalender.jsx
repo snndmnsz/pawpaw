@@ -166,7 +166,7 @@ const CustomCalender = () => {
         // current={"2012-03-01"}
 
         // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
-        minDate={todayMoment}
+        // minDate={todayMoment}
         // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
         maxDate={"2023-05-30"}
         // Handler which gets executed on day press. Default = undefined

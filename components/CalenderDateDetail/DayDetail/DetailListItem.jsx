@@ -17,8 +17,12 @@ import walk from "../../../assets/IconImages/walk.png";
 import vaccine from "../../../assets/healthImages/vaccine.png";
 import { deleteAActivity } from "../../../database/tables/activities";
 
-import { useDispatch } from "react-redux";
-import { loadingChanger ,dateRefreshLoadingChanger } from "../../../redux/slice/myPetSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loadingChanger,
+  dateRefreshLoadingChanger,
+} from "../../../redux/slice/myPetSlice";
+import moment from "moment";
 
 const backgroundColorConverter = (activity) => {
   switch (activity) {
@@ -44,6 +48,9 @@ const backgroundColorConverter = (activity) => {
 const DetailListItem = ({ item }) => {
   const dispatch = useDispatch();
   const { activity, id } = item;
+  const selectedDate = useSelector(
+    (state) => state.myPet.calender.selectedDate
+  );
 
   const activityDeleteHandler = () => {
     deleteAActivity(id)
@@ -96,6 +103,12 @@ const DetailListItem = ({ item }) => {
     );
   };
 
+  const momentTime = moment(
+    `${selectedDate.split("T")[0]} ${item.time.split(" ")[0]}`
+  ).format("YYYY-MM-DD HH:mm:ss");
+  const currentMoment = moment().format("YYYY-MM-DD HH:mm:ss");
+  const isPastTime = momentTime < currentMoment;
+
   const onLongPressButton = () => {
     Alert.alert(
       "Delete Activity",
@@ -122,9 +135,15 @@ const DetailListItem = ({ item }) => {
             borderRightWidth: 3,
             borderBottomWidth: 2,
             borderLeftWidth: 3,
+            backgroundColor: isPastTime ? "#F2F2F2" : "#FFFFFF",
           },
         ]}
       >
+        {isPastTime && (
+          <View style={styles.itemPastDate}>
+            <Text style={styles.itemPastDateText}>Time Passed</Text>
+          </View>
+        )}
         <View style={styles.foodImageContainer}>
           <View
             style={[
@@ -234,5 +253,23 @@ const styles = StyleSheet.create({
   activityNote: {
     fontSize: 13,
     color: "#828282",
+  },
+  itemPastDate: {
+    position: "absolute",
+    top: 0,
+    right: "35%",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FF6363",
+    paddingHorizontal: 12,
+    paddingVertical: 3,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    zIndex: 1,
+  },
+  itemPastDateText: {
+    color: "#fff",
+    fontSize: 13,
+    fontWeight: "bold",
   },
 });

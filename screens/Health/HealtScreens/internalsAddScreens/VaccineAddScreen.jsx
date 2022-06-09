@@ -42,13 +42,13 @@ const VaccineAddScreen = ({ navigation }) => {
       petId: currentPetId,
       activityType: "vaccine",
       date: formattedDateString,
-      note: `Vaccine: ${name}`,
+      note: `Vaccine: ${name.trim()}`,
       startTime: time,
       endTime: "",
       calorie: "",
       meter: "",
     };
-    addAVaccine(currentPetId, name, formattedDateString)
+    addAVaccine(currentPetId, name.trim(), formattedDateString)
       .then(() => {
         addAnActivity(currentPetId, vetActivityData)
           .then((res) => {

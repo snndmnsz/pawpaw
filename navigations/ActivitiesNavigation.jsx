@@ -4,17 +4,26 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Activities from "../screens/Activities/Activities";
 import { CustomMainHeaderLeft } from "../components/ui/CustomHeader/CustomMainHeader";
 import IconButton from "../components/ui/IconButton/IconButton";
-
+import moment from "moment";
 import NewActivity from "../screens/Activities/NewActivity";
 import Food from "../screens/Activities/AllActivities/Food";
 import Play from "../screens/Activities/AllActivities/Play";
 import Sleep from "../screens/Activities/AllActivities/Sleep";
 import Toilet from "../screens/Activities/AllActivities/Toilet";
 import Walk from "../screens/Activities/AllActivities/Walk";
-
+import { useSelector } from "react-redux";
 const StartingStack = createStackNavigator();
 
 const ActivitiesNavigation = () => {
+  const selectedDate = useSelector(
+    (state) => state.myPet.calender.selectedDate
+  );
+  const momentTime = moment(`${selectedDate.split("T")[0]}`).format(
+    "YYYY-MM-DD"
+  );
+  const currentMoment = moment().format("YYYY-MM-DD");
+  const isPastTime = momentTime < currentMoment;
+
   return (
     <StartingStack.Navigator
       initialRouteName="ActivitiesMain"
@@ -34,11 +43,17 @@ const ActivitiesNavigation = () => {
           headerTitleStyle: {
             display: "none",
           },
-          headerLeft: () => <CustomMainHeaderLeft isNameVisible={false} />,
+          headerLeft: () => (
+            <CustomMainHeaderLeft isNameVisible={isPastTime ? true : false} />
+          ),
           headerRight: () => {
             const newActivityScreenHandler = () => {
               navigation.navigate("NewActivity");
             };
+
+            if (isPastTime) {
+              return <View></View>;
+            }
 
             return (
               <IconButton

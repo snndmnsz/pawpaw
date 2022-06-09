@@ -68,8 +68,8 @@ const PetInfoFirst = ({ navigation }) => {
         "Please enter a birthDate that is not in the past"
       );
     }
-
-    dispatch(setpetNameAndBirthDate({ name, birthDate }));
+    let trimName = name.trim();
+    dispatch(setpetNameAndBirthDate({ name: trimName, birthDate: birthDate }));
     navigation.navigate("PetInfoSecond");
   };
 

@@ -65,7 +65,7 @@ const MedicalAddScreen = ({ navigation }) => {
 
     addAMedical(
       currentPetId,
-      illness,
+      illness.trim(),
       todayDateString,
       formattedDateStringStart,
       formattedDateStringEnd

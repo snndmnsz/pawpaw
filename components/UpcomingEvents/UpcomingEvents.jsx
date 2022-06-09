@@ -64,14 +64,14 @@ const UpcomingEvents = ({ navigation }) => {
           const currentTime = moment().format("HH:mm");
           const filteredData = datas.filter((element) => {
             return element.time >= currentTime;
-          })
+          });
           setData(filteredData.slice(0, 3));
         })
         .catch((err) => {
           console.log(err);
         });
     }
-  }, [isFocused,currentPetId]);
+  }, [isFocused, currentPetId]);
 
   return (
     <View style={styles.upcomingContainer}>
@@ -79,7 +79,9 @@ const UpcomingEvents = ({ navigation }) => {
         activeOpacity={0.9}
         style={styles.upcomingHeader}
         onPress={() => {
-          navigation.navigate("ActivitiesMain");
+          navigation.navigate("Activities", {
+            screen: "ActivitiesMain",
+          });
         }}
       >
         <Text style={styles.upcomingHeaderText}>Upcoming Events</Text>
@@ -115,7 +117,9 @@ const UpcomingEvents = ({ navigation }) => {
             activeOpacity={0.9}
             style={styles.upcomingButton}
             onPress={() => {
-              navigation.navigate("ActivitiesMain");
+              navigation.navigate("Activities", {
+                screen: "ActivitiesMain",
+              });
             }}
           >
             <Text style={styles.upcomingText}>See Details</Text>

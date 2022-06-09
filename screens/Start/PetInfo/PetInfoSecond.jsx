@@ -46,7 +46,10 @@ const PetInfoSecond = ({ navigation }) => {
         "Please enter your pet's weight(max 30kg and min 0kg)"
       );
     }
-    dispatch(setGenderBreedWeight({ gender, breed, weight }));
+    let breedTrim = breed.trim();
+    dispatch(
+      setGenderBreedWeight({ gender: gender, breed: breedTrim, weight: weight })
+    );
     navigation.navigate("Owner");
   };
 

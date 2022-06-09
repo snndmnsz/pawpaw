@@ -5,11 +5,14 @@ import {
   Modal,
   Pressable,
   TextInput,
+  Dimensions,
+  LogBox
 } from "react-native";
 import Icons from "react-native-vector-icons/Ionicons";
 import React, { useState } from "react";
 import Button from "../Button/Button";
-import DatePicker ,{ getFormatedDate } from "react-native-modern-datepicker";
+import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
+import moment from "moment";
 
 const DatePickerInput = ({
   showLabel = true,
@@ -23,6 +26,10 @@ const DatePickerInput = ({
   const [selectedDate, setSelectedDate] = useState("");
   const [time, setTime] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+
+  LogBox.ignoreLogs(['Deprecation warning:']); 
+
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -31,7 +38,7 @@ const DatePickerInput = ({
         )}
         <Pressable style={styles.input} onPress={() => setModalVisible(true)}>
           <Text style={styles.inputText}>
-            {selectedDate ? selectedDate : title}
+            {selectedDate !== "" ? selectedDate : title}
           </Text>
           <Icons name="calendar-outline" size={24} color="#7D7D7D" />
         </Pressable>
@@ -49,9 +56,17 @@ const DatePickerInput = ({
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <DatePicker
-              // minuteInterval={1}
+              minuteInterval={3}
               style={styles.datepicker}
-              selected={getFormatedDate(new Date(selectedDateForUpdate), 'jYYYY/jMM/jDD')}
+              selected={
+                selectedDate &&
+                moment(selectedDateForUpdate).format("YYYY/MM/DD")
+              }
+              current={
+                selectedDate && selectedDateForUpdate
+                  ? moment(selectedDateForUpdate).format("YYYY/MM/DD")
+                  : moment().format("YYYY/MM/DD")
+              }
               onSelectedChange={(date) => {
                 setSelectedDate(date);
               }}
@@ -60,6 +75,7 @@ const DatePickerInput = ({
                 onChange(selectedTime);
                 // setModalVisible(!modalVisible);
               }}
+              // current={getFormatedDate(new Date(), 'YYYY-MM-DD')}
               options={{
                 backgroundColor: "#FFFFFF",
                 textHeaderColor: "#000000",
@@ -67,6 +83,8 @@ const DatePickerInput = ({
                 selectedTextColor: "#FFFFFF",
                 mainColor: "#707BFB",
                 textSecondaryColor: "#8D94F4",
+                margin: 0,
+                padding: 0,
               }}
             />
             <Pressable
@@ -127,7 +145,7 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     width: "72%",
-    height: 350,
+    // height: Dimensions.get("window").height * 0.40,
     backgroundColor: "white",
     borderRadius: 12,
     padding: 0,
@@ -145,6 +163,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     elevation: 2,
+    marginBottom: 10,
   },
   buttonOpen: {
     backgroundColor: "#F194FF",
@@ -152,8 +171,8 @@ const styles = StyleSheet.create({
   buttonClose: {
     backgroundColor: "#707BFB",
     borderRadius: 8,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    // paddingHorizontal: 15,
+    // paddingVertical: 10,
   },
   textStyle: {
     color: "white",

@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   leftTextContainer: {
     // left: Platform.OS === "android" ? 5 : 25,
-    height: "58%",
+    height: "59%",
     justifyContent: "center",
     alignItems: "flex-start",
     flexDirection: "column",

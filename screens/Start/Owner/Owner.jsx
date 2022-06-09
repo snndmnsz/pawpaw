@@ -45,15 +45,16 @@ const Owner = ({ navigation }) => {
     if (/\d/.test(owner)) {
       return Alert.alert("oops...", "Please enter your name without number");
     }
+    let ownerTrim = owner.trim();
 
-    dispatch(setOwnerName(owner));
+    dispatch(setOwnerName(ownerTrim));
 
     const pet = {
       birthDate: currentPetInfo.birthDate,
       breed: currentPetInfo.breed,
       gender: currentPetInfo.gender,
       name: currentPetInfo.name,
-      ownerName: owner,
+      ownerName: ownerTrim,
       photoURL: currentPetInfo.photoURL,
       spicie: currentPetInfo.spicie,
       weight: currentPetInfo.weight,
@@ -79,7 +80,7 @@ const Owner = ({ navigation }) => {
           breed: currentPetInfo.breed,
           gender: currentPetInfo.gender,
           name: currentPetInfo.name,
-          ownerName: owner,
+          ownerName: ownerTrim,
           photoURL: currentPetInfo.photoURL,
           spicie: currentPetInfo.spicie,
           weight: currentPetInfo.weight,
